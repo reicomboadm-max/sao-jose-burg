@@ -2215,15 +2215,15 @@
       // Envio definitivo para o WhatsApp
       const encoded = encodeURIComponent(msg);
       const whatsappNumber = (STORE_DATA && STORE_DATA.store && STORE_DATA.store.whatsapp) ? STORE_DATA.store.whatsapp : "5599991040222";
-      const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encoded}`;
+      showToast("Pedido gerado! Abrindo WhatsApp... 🚀");
 
-      showToast("Abrindo WhatsApp com seu pedido... 🚀");
-
-      // Redirecionamento anti-bloqueio de popup
-      const opened = window.open(whatsappUrl, '_blank');
-      if (!opened || opened.closed || typeof opened.closed === 'undefined') {
-        window.location.href = whatsappUrl;
-      }
+      // Redirecionamento anti-bloqueio com garantia de persistência
+      setTimeout(() => {
+        const opened = window.open(whatsappUrl, '_blank');
+        if (!opened || opened.closed || typeof opened.closed === 'undefined') {
+          window.location.href = whatsappUrl;
+        }
+      }, 250);
     }
 
     function contactWhatsApp() {

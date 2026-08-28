@@ -263,6 +263,26 @@
 
         </div>
 
+        <!-- SEÇÃO DE PEDIDOS EM TEMPO REAL NO DASHBOARD (ACESSO RÁPIDO) -->
+        <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
+              <h3 class="font-anton text-lg text-white tracking-wide">ÚLTIMOS PEDIDOS RECEBIDOS (AO VIVO)</h3>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="createSampleTestOrder()" class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 text-xs font-bold transition-colors">
+                🧪 Criar Pedido de Teste
+              </button>
+              <button onclick="switchTab('orders')" class="px-3 py-1.5 rounded-xl bg-brand-orange hover:bg-orange-600 text-white text-xs font-bold transition-colors">
+                Abrir Kanban Completo →
+              </button>
+            </div>
+          </div>
+
+          <div id="dashboard-recent-orders" class="space-y-3 font-poppins text-xs"></div>
+        </div>
+
         <!-- GRÁFICOS (LINHA 1) -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
@@ -941,7 +961,75 @@
       document.getElementById('kpi-products-count').innerText = `${allItems.length} itens`;
       document.getElementById('kpi-categories-info').innerText = `Em ${STORE.categories.length} categorias ativas`;
 
+      renderDashboardRecentOrders();
       renderCharts();
+    }
+
+    function renderDashboardRecentOrders() {
+      const container = document.getElementById('dashboard-recent-orders');
+      if (!container) return;
+
+      if (!ORDERS || ORDERS.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-stone-500">
+            <span class="text-3xl block mb-2">🍔</span>
+            <p class="text-white font-anton text-sm">NENHUM PEDIDO RECEBIDO AINDA</p>
+            <p class="text-[11px] mt-1 text-stone-400">Assim que um cliente fizer um pedido no site, ele aparecerá aqui instantaneamente!</p>
+          </div>
+        `;
+        return;
+      }
+
+      const recent = ORDERS.slice(0, 5);
+      container.innerHTML = recent.map(o => {
+        let statusBadge = `<span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 font-bold text-[10px]">🟡 Novo Pedido</span>`;
+        if (o.status === 'preparing') statusBadge = `<span class="px-2 py-0.5 rounded-full bg-orange-500/20 text-brand-orange font-bold text-[10px]">🔥 No Fogo</span>`;
+        if (o.status === 'delivery') statusBadge = `<span class="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 font-bold text-[10px]">🛵 Em Entrega</span>`;
+        if (o.status === 'completed') statusBadge = `<span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">🟢 Concluído</span>`;
+
+        return `
+          <div class="p-3.5 bg-white/5 border border-white/10 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-brand-orange/40 transition-colors">
+            <div class="space-y-1 flex-1">
+              <div class="flex items-center gap-2">
+                <span class="font-anton text-white text-sm tracking-wide">${o.id}</span>
+                ${statusBadge}
+                <span class="text-stone-400 text-[11px]">• ${new Date(o.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+              </div>
+              <p class="text-white font-bold text-xs">${o.customer?.name || 'Cliente'} <span class="text-stone-400 font-normal font-mono">(${o.customer?.phone || 'Sem telefone'})</span></p>
+              <p class="text-stone-300 text-[11px]">${(o.items || []).map(i => `${i.qty}x ${i.title}`).join(', ')}</p>
+              <p class="text-stone-400 text-[10px]">📍 ${o.address || 'Retirada no Balcão'} • <strong class="text-emerald-400">${o.payment || 'PIX'}</strong></p>
+            </div>
+
+            <div class="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-white/5">
+              <span class="font-anton text-brand-orange text-base tracking-wide">R$ ${(o.total || 0).toFixed(2).replace('.', ',')}</span>
+              <button onclick="notifyCustomerWhatsApp('${o.id}')" class="px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 text-xs font-bold transition-colors">
+                💬 WhatsApp
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function createSampleTestOrder() {
+      const sampleOrder = {
+        id: "PED-" + (Math.floor(Math.random() * 9000) + 1000),
+        date: new Date().toISOString(),
+        customer: { name: "Cliente Teste", phone: "(99) 99104-0222" },
+        address: "Avenida Mariano Lisboa, 1370 - Engenho",
+        mode: "delivery",
+        payment: "PIX",
+        items: [{ title: "Burguer São José", qty: 2, price: 33.00 }, { title: "Coca Zero 1 Litro", qty: 1, price: 12.00 }],
+        total: 78.00,
+        status: "pending"
+      };
+
+      ORDERS.unshift(sampleOrder);
+      saveOrdersToStorage();
+      renderOrdersKanban();
+      refreshDashboard();
+      playNewOrderSound();
+      showAdminToast("Pedido de teste criado e sincronizado com sucesso! 🍔");
     }
 
     function renderCharts() {
