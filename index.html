@@ -121,6 +121,16 @@
       scrollbar-width: none;
     }
 
+    /* OTIMIZAÇÃO MÓVEL CRÍTICA: Elimina lag/zoom de teclado em inputs no mobile */
+    @media screen and (max-width: 768px) {
+      input, select, textarea {
+        font-size: 16px !important;
+        line-height: 1.4 !important;
+        transform: translateZ(0);
+        touch-action: manipulation;
+      }
+    }
+
     .ease-spring {
       transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
@@ -1072,7 +1082,7 @@
           type="text" 
           id="customer-change" 
           placeholder="Precisa de troco para quanto? (Ex: R$ 50,00)" 
-          class="w-full bg-white/5 border border-amber-500/40 rounded-xl px-3.5 py-2 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+          class="w-full bg-white/5 border border-amber-500/40 rounded-xl px-3.5 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
         />
       </div>
 
@@ -1086,15 +1096,17 @@
             type="text" 
             id="customer-name" 
             placeholder="Seu Nome Completo *" 
-            class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+            class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
             required
+            autocomplete="name"
           />
           <input 
             type="tel" 
             id="customer-phone" 
             placeholder="Telefone / WhatsApp *" 
-            class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+            class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
             required
+            autocomplete="tel"
           />
         </div>
 
@@ -1108,13 +1120,15 @@
               id="customer-cep" 
               oninput="handleCepAutofill(this.value)"
               placeholder="CEP (Opcional)" 
-              class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+              class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+              autocomplete="postal-code"
             />
             <input 
               type="text" 
               id="customer-neighborhood" 
               placeholder="Bairro *" 
-              class="col-span-2 w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+              class="col-span-2 w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+              autocomplete="address-level2"
             />
           </div>
 
@@ -1124,13 +1138,14 @@
               type="text" 
               id="customer-street" 
               placeholder="Rua / Avenida *" 
-              class="col-span-2 w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+              class="col-span-2 w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+              autocomplete="address-line1"
             />
             <input 
               type="text" 
               id="customer-number" 
               placeholder="Nº da Casa *" 
-              class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+              class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
             />
           </div>
 
@@ -1140,13 +1155,13 @@
               type="text" 
               id="customer-reference" 
               placeholder="Ponto de Referência *" 
-              class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+              class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
             />
             <input 
               type="text" 
               id="customer-complement" 
               placeholder="Complemento (Apto, etc.)" 
-              class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+              class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
             />
           </div>
 
@@ -1158,7 +1173,7 @@
             type="text" 
             id="customer-notes" 
             placeholder="Observações do pedido (ponto da carne, molho à parte, etc.)" 
-            class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+            class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
           />
         </div>
 
@@ -2081,6 +2096,24 @@
       }).catch(() => {
         showToast("Chave PIX: 99991040222");
       });
+    }
+
+    function handleCepAutofill(val) {
+      if (!val) return;
+      const cleanCep = val.replace(/\D/g, '');
+      if (cleanCep.length === 8) {
+        fetch(`https://viacep.com.br/ws/${cleanCep}/json/`)
+          .then(res => res.json())
+          .then(data => {
+            if (!data.erro) {
+              const streetInput = document.getElementById('customer-street');
+              const neighInput = document.getElementById('customer-neighborhood');
+              if (streetInput && data.logradouro) streetInput.value = data.logradouro;
+              if (neighInput && data.bairro) neighInput.value = data.bairro;
+            }
+          })
+          .catch(() => {});
+      }
     }
 
     let pendingOrderMessage = "";
