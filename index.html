@@ -2207,6 +2207,16 @@
           const channel = new BroadcastChannel('sao_jose_channel');
           channel.postMessage({ type: 'NEW_ORDER', order: orderObj });
         } catch (err) {}
+
+        // Transmitir pedido em tempo real pela Nuvem (para qualquer computador ou celular)
+        try {
+          fetch('https://ntfy.sh/sao_jose_burguer_pedidos', {
+            method: 'POST',
+            headers: { 'Title': 'Novo Pedido!', 'Priority': 'high' },
+            body: JSON.stringify(orderObj),
+            keepalive: true
+          }).catch(() => {});
+        } catch (err) {}
       } catch (e) {}
 
       // Se for PIX, copiar a chave PIX automaticamente

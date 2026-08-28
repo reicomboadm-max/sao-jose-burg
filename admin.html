@@ -798,53 +798,107 @@
       } catch (e) {}
     }
 
-    // SINCRONIZAÇÃO EM TEMPO REAL (STORAGE + BROADCAST CHANNEL + AUTO-POLL)
+    // SINCRONIZAÇÃO EM TEMPO REAL GLOBAL (NUVEM + SSE + POLLING + LOCAL)
+    const CLOUD_SYNC_TOPIC = 'https://ntfy.sh/sao_jose_burguer_pedidos';
+
     function setupRealTimeOrderListener() {
-      // 1. BroadcastChannel (tempo real instantâneo entre abas)
+      // 1. Carregar histórico recente de pedidos da nuvem (últimas 24 horas)
+      fetch(`${CLOUD_SYNC_TOPIC}/json?poll=1&since=24h`)
+        .then(res => res.text())
+        .then(data => {
+          if (!data) return;
+          const lines = data.trim().split('\n').filter(Boolean);
+          let addedCount = 0;
+          lines.forEach(line => {
+            try {
+              const parsedEvent = JSON.parse(line);
+              if (parsedEvent.message) {
+                const orderData = JSON.parse(parsedEvent.message);
+                if (orderData && orderData.id && !ORDERS.some(o => o.id === orderData.id)) {
+                  ORDERS.unshift(orderData);
+                  addedCount++;
+                }
+              }
+            } catch (err) {}
+          });
+          if (addedCount > 0) {
+            saveOrdersToStorage();
+            renderOrdersKanban();
+            refreshDashboard();
+          }
+        })
+        .catch(() => {});
+
+      // 2. Conexão SSE em Tempo Real Direta (Disparo instantâneo em < 200ms de qualquer celular)
+      try {
+        const sse = new EventSource(`${CLOUD_SYNC_TOPIC}/sse`);
+        sse.onmessage = (event) => {
+          try {
+            const parsedEvent = JSON.parse(event.data);
+            if (parsedEvent.message) {
+              const orderData = JSON.parse(parsedEvent.message);
+              if (orderData && orderData.id && !ORDERS.some(o => o.id === orderData.id)) {
+                ORDERS.unshift(orderData);
+                saveOrdersToStorage();
+                renderOrdersKanban();
+                refreshDashboard();
+                playNewOrderSound();
+                showAdminToast(`🔔 NOVO PEDIDO RECEBIDO! #${orderData.id} - ${orderData.customer?.name || 'Cliente'}`);
+              }
+            }
+          } catch (e) {}
+        };
+      } catch (e) {}
+
+      // 3. BroadcastChannel (para testes na mesma máquina/abas)
       try {
         const channel = new BroadcastChannel('sao_jose_channel');
         channel.onmessage = (event) => {
           if (event.data && event.data.type === 'NEW_ORDER') {
-            loadOrdersFromStorage();
-            renderOrdersKanban();
-            refreshDashboard();
-            playNewOrderSound();
-            showAdminToast(`🔔 NOVO PEDIDO RECEBIDO! #${event.data.order.id} - ${event.data.order.customer.name}`);
+            const orderData = event.data.order;
+            if (orderData && !ORDERS.some(o => o.id === orderData.id)) {
+              ORDERS.unshift(orderData);
+              saveOrdersToStorage();
+              renderOrdersKanban();
+              refreshDashboard();
+              playNewOrderSound();
+              showAdminToast(`🔔 NOVO PEDIDO RECEBIDO! #${orderData.id} - ${orderData.customer?.name || 'Cliente'}`);
+            }
           }
         };
       } catch (e) {}
 
-      // 2. Storage Event (detecta mudanças no localStorage)
-      window.addEventListener('storage', (e) => {
-        if (e.key === 'SAO_JOSE_ORDERS') {
-          loadOrdersFromStorage();
-          renderOrdersKanban();
-          refreshDashboard();
-          playNewOrderSound();
-          showAdminToast('🔔 Lista de pedidos atualizada automaticamente!');
-        }
-      });
-
-      // 3. Polling automático a cada 2 segundos
-      let lastOrdersCount = ORDERS.length;
+      // 4. Polling periódico na nuvem e no storage a cada 3 segundos
       setInterval(() => {
-        const saved = localStorage.getItem('SAO_JOSE_ORDERS');
-        if (saved) {
-          try {
-            const parsed = JSON.parse(saved);
-            if (Array.isArray(parsed) && parsed.length !== lastOrdersCount) {
-              if (parsed.length > lastOrdersCount) {
-                playNewOrderSound();
-                showAdminToast(`🔔 Novo pedido detectado! Total: ${parsed.length}`);
-              }
-              ORDERS = parsed;
-              lastOrdersCount = parsed.length;
+        // Checar nuvem
+        fetch(`${CLOUD_SYNC_TOPIC}/json?poll=1&since=1m`)
+          .then(res => res.text())
+          .then(data => {
+            if (!data) return;
+            const lines = data.trim().split('\n').filter(Boolean);
+            let hasNew = false;
+            lines.forEach(line => {
+              try {
+                const parsedEvent = JSON.parse(line);
+                if (parsedEvent.message) {
+                  const orderData = JSON.parse(parsedEvent.message);
+                  if (orderData && orderData.id && !ORDERS.some(o => o.id === orderData.id)) {
+                    ORDERS.unshift(orderData);
+                    hasNew = true;
+                  }
+                }
+              } catch (err) {}
+            });
+            if (hasNew) {
+              saveOrdersToStorage();
               renderOrdersKanban();
               refreshDashboard();
+              playNewOrderSound();
+              showAdminToast('🔔 Novo pedido sincronizado da nuvem!');
             }
-          } catch (err) {}
-        }
-      }, 2000);
+          })
+          .catch(() => {});
+      }, 3000);
     }
 
     function loadOrdersFromStorage() {
@@ -1221,12 +1275,22 @@
 
     function setOrderStatus(orderId, newStatus) {
       const order = ORDERS.find(o => o.id === orderId);
-      if (order) {
-        order.status = newStatus;
-        saveOrdersToStorage();
-        renderOrdersKanban();
-        showAdminToast(`Status do pedido ${orderId} atualizado!`);
+      if (!order) return;
+
+      let msg = "";
+      if (newStatus === 'preparing') msg = `Deseja aprovar e colocar o pedido #${orderId} no fogo/preparo? 🔥`;
+      else if (newStatus === 'delivery') msg = `Deseja despachar o pedido #${orderId} para entrega com o motoboy? 🛵`;
+      else if (newStatus === 'completed') msg = `Deseja marcar o pedido #${orderId} como finalizado e concluído? 🟢`;
+
+      if (msg && !confirm(msg)) {
+        return;
       }
+
+      order.status = newStatus;
+      saveOrdersToStorage();
+      renderOrdersKanban();
+      refreshDashboard();
+      showAdminToast(`Pedido #${orderId} atualizado com sucesso!`);
     }
 
     function notifyCustomerWhatsApp(orderId) {
@@ -1243,10 +1307,10 @@
     }
 
     function openCreateOrderModal() {
-      const name = prompt("Nome do cliente:");
+      const name = prompt("Nome completo do cliente:");
       if (!name) return;
-      const phone = prompt("Telefone do cliente (WhatsApp):") || "";
-      const totalStr = prompt("Valor total do pedido (R$):", "35.00");
+      const phone = prompt("Telefone / WhatsApp do cliente:") || "";
+      const totalStr = prompt("Valor total do pedido em Reais (R$):", "35.00");
       const total = parseFloat(totalStr) || 35.00;
 
       const newOrder = {
@@ -1265,15 +1329,16 @@
       saveOrdersToStorage();
       renderOrdersKanban();
       refreshDashboard();
-      showAdminToast("Novo pedido adicionado!");
+      showAdminToast("Novo pedido adicionado com sucesso!");
     }
 
     function clearCompletedOrders() {
-      if (confirm("Deseja arquivar todos os pedidos concluídos?")) {
+      if (confirm("Tem certeza de que deseja limpar todos os pedidos finalizados da lista?")) {
         ORDERS = ORDERS.filter(o => o.status !== 'completed');
         saveOrdersToStorage();
         renderOrdersKanban();
-        showAdminToast("Pedidos concluídos limpos!");
+        refreshDashboard();
+        showAdminToast("Lista de pedidos concluídos limpa!");
       }
     }
 
