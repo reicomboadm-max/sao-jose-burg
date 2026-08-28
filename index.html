@@ -1700,11 +1700,17 @@
       const dock = document.getElementById('mobile-bottom-dock');
       
       document.body.classList.add('overflow-hidden');
-      if (dock) dock.classList.add('pointer-events-none', 'opacity-0');
-      backdrop.classList.remove('opacity-0', 'pointer-events-none');
-      backdrop.classList.add('opacity-100', 'pointer-events-auto');
-      modal.classList.remove('translate-y-full', 'sm:scale-95');
-      modal.classList.add('translate-y-0', 'sm:scale-100');
+      if (dock) dock.style.display = 'none';
+
+      if (backdrop) {
+        backdrop.style.pointerEvents = 'auto';
+        backdrop.classList.remove('opacity-0', 'pointer-events-none');
+        backdrop.classList.add('opacity-100', 'pointer-events-auto');
+      }
+      if (modal) {
+        modal.classList.remove('translate-y-full', 'sm:scale-95');
+        modal.classList.add('translate-y-0', 'sm:scale-100');
+      }
     }
 
     function openProductById(id) {
@@ -1722,7 +1728,8 @@
       const dock = document.getElementById('mobile-bottom-dock');
 
       document.body.classList.remove('overflow-hidden');
-      if (dock) dock.classList.remove('pointer-events-none', 'opacity-0');
+      if (dock) dock.style.display = '';
+
       if (backdrop) {
         backdrop.style.pointerEvents = 'none';
         backdrop.classList.remove('opacity-100', 'pointer-events-auto');
