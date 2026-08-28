@@ -1834,21 +1834,18 @@
         notes: notes
       });
 
-      // Fechar modal de personalização primeiro de forma instantânea
+      // Fechar modal de personalização instantaneamente
       closeProductModal();
       renderCart();
-      showToast(`"${itemTitle}" adicionado!`);
 
-      // Abrir sacola sem atraso e de forma fluida
-      requestAnimationFrame(() => {
-        const overlay = document.getElementById('cart-drawer-overlay');
-        const drawer = document.getElementById('cart-drawer');
-        drawer.classList.remove('translate-x-full');
-        drawer.classList.add('translate-x-0');
-        overlay.classList.remove('opacity-0', 'pointer-events-none');
-        overlay.classList.add('opacity-100', 'pointer-events-auto');
-        document.body.classList.add('overflow-hidden');
-      });
+      // Animar o badge da sacola mobile/desktop para dar feedback visual imediato
+      const dockBtn = document.getElementById('mobile-dock-badge');
+      if (dockBtn) {
+        dockBtn.classList.add('scale-125', 'bg-brand-orange', 'text-white');
+        setTimeout(() => dockBtn.classList.remove('scale-125', 'bg-brand-orange', 'text-white'), 300);
+      }
+
+      showToast(`✓ "${itemTitle}" adicionado!`);
     }
 
     // BUSCA
