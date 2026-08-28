@@ -1010,9 +1010,9 @@
   <!-- ========================================================================= -->
   <!-- 9. SLIDE-OVER DRAWER: SACOLA DE PEDIDOS & CHECKOUT WHATSAPP -->
   <!-- ========================================================================= -->
-  <div id="cart-drawer-overlay" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[100] opacity-0 pointer-events-none transition-opacity duration-300" onclick="toggleCartDrawer()"></div>
+  <div id="cart-drawer-overlay" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-[100] opacity-0 pointer-events-none transition-opacity duration-300 touch-none overscroll-contain" onclick="toggleCartDrawer()"></div>
 
-  <aside id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:max-w-md bg-[#100B08] z-[101] translate-x-full transition-transform duration-400 ease-spring shadow-2xl flex flex-col justify-between border-l border-white/10 text-white font-poppins">
+  <aside id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:max-w-md bg-[#100B08] z-[101] translate-x-full transition-transform duration-400 ease-spring shadow-2xl flex flex-col justify-between border-l border-white/10 text-white font-poppins overscroll-contain touch-pan-y">
     
     <!-- Drawer Header -->
     <div class="p-5 border-b border-white/10 flex items-center justify-between bg-black/40">
@@ -1682,6 +1682,7 @@
       const backdrop = document.getElementById('product-modal-backdrop');
       const modal = document.getElementById('product-modal');
       
+      document.body.classList.add('overflow-hidden');
       backdrop.classList.remove('opacity-0', 'pointer-events-none');
       backdrop.classList.add('opacity-100', 'pointer-events-auto');
       modal.classList.remove('translate-y-full', 'sm:scale-95');
@@ -1701,6 +1702,7 @@
       const backdrop = document.getElementById('product-modal-backdrop');
       const modal = document.getElementById('product-modal');
 
+      document.body.classList.remove('overflow-hidden');
       modal.classList.remove('translate-y-0', 'sm:scale-100');
       modal.classList.add('translate-y-full', 'sm:scale-95');
       backdrop.classList.remove('opacity-100', 'pointer-events-auto');
@@ -1993,11 +1995,13 @@
         drawer.classList.add('translate-x-full');
         overlay.classList.remove('opacity-100', 'pointer-events-auto');
         overlay.classList.add('opacity-0', 'pointer-events-none');
+        document.body.classList.remove('overflow-hidden');
       } else {
         drawer.classList.remove('translate-x-full');
         drawer.classList.add('translate-x-0');
         overlay.classList.remove('opacity-0', 'pointer-events-none');
         overlay.classList.add('opacity-100', 'pointer-events-auto');
+        document.body.classList.add('overflow-hidden');
       }
     }
 
@@ -2215,15 +2219,15 @@
       // Envio definitivo para o WhatsApp
       const encoded = encodeURIComponent(msg);
       const whatsappNumber = (STORE_DATA && STORE_DATA.store && STORE_DATA.store.whatsapp) ? STORE_DATA.store.whatsapp : "5599991040222";
-      showToast("Pedido gerado! Abrindo WhatsApp... 🚀");
+      const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encoded}`;
 
-      // Redirecionamento anti-bloqueio com garantia de persistência
-      setTimeout(() => {
-        const opened = window.open(whatsappUrl, '_blank');
-        if (!opened || opened.closed || typeof opened.closed === 'undefined') {
-          window.location.href = whatsappUrl;
-        }
-      }, 250);
+      showToast("Pedido gerado com sucesso! Abrindo WhatsApp... 🚀");
+
+      // Redirecionamento direto e seguro dentro do evento de clique
+      const win = window.open(whatsappUrl, '_blank');
+      if (!win || win.closed || typeof win.closed === 'undefined') {
+        window.location.href = whatsappUrl;
+      }
     }
 
     function contactWhatsApp() {
