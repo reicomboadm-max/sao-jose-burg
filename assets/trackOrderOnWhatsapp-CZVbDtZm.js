@@ -1,0 +1,1 @@
+import{r as e}from"./index-BKcz2wTT.js";const s=o=>{const t=e().getEstablishment.whatsapp;window.open(`https://api.whatsapp.com/send?phone=${t}&text=${encodeURIComponent("Quero acompanhar meu pedido!")}`)};export{s as t};

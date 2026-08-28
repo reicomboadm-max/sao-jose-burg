@@ -1,0 +1,1 @@
+import{a as e,_ as a}from"./index-BKcz2wTT.js";import{d as s,f as n,b as c,l as t,i as r}from"./vendor-vue-C_qbFeCY.js";const d={class:"badge"},p=s({__name:"BadgeCopa",setup(_){return(i,o)=>(n(),c("div",d,[t(e,{"icon-name":"bol","icon-size":"15","icon-color":"#006C2F"}),o[0]||(o[0]=r("span",null,"Torcendo com você!",-1))]))}}),B=a(p,[["__scopeId","data-v-0445d30e"]]);export{B};

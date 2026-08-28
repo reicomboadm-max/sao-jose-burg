@@ -1,0 +1,1 @@
+import{u as o}from"./orderScheduling-CP9OTGZh.js";import{r as s}from"./index-BKcz2wTT.js";function S(){const r=o(),t=s();function e(){t.acceptsScheduledOrders&&r.hydrateFromEstablishment()}return{bootstrap:e}}export{S as u};

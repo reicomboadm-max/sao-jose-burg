@@ -1,0 +1,1 @@
+import{p as o,f as r,o as d}from"./vendor-utils-DnXKf9Ne.js";function m(t){if(t.dateString){const a=o(t.dateString);let e="dd/MM/yyyy";return t.showTime&&(e+=" 'às' HH:mm"),r(a,e,{locale:d})}}export{m as d};
