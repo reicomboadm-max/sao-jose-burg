@@ -2197,6 +2197,12 @@
         const existingOrders = JSON.parse(localStorage.getItem('SAO_JOSE_ORDERS') || '[]');
         existingOrders.unshift(orderObj);
         localStorage.setItem('SAO_JOSE_ORDERS', JSON.stringify(existingOrders));
+
+        // Disparar evento para o painel Admin aberto em outra aba
+        try {
+          const channel = new BroadcastChannel('sao_jose_channel');
+          channel.postMessage({ type: 'NEW_ORDER', order: orderObj });
+        } catch (err) {}
       } catch (e) {}
 
       // Se for PIX, copiar a chave PIX automaticamente
