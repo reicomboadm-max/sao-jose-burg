@@ -2069,60 +2069,72 @@
     let pendingOrderMessage = "";
 
     function initiateCheckout() {
-      if (cart.length === 0) {
-        showToast('Sua sacola está vazia!');
+      if (!cart || cart.length === 0) {
+        showToast('Sua sacola está vazia! Adicione itens do cardápio.');
         return;
       }
 
       // Validação de Dados do Cliente
-      const name = document.getElementById('customer-name').value.trim();
-      const phone = document.getElementById('customer-phone').value.trim();
+      const nameInput = document.getElementById('customer-name');
+      const phoneInput = document.getElementById('customer-phone');
+      const streetInput = document.getElementById('customer-street');
+      const numberInput = document.getElementById('customer-number');
+      const neighborhoodInput = document.getElementById('customer-neighborhood');
+
+      // Limpar estilos de erro
+      [nameInput, phoneInput, streetInput, numberInput, neighborhoodInput].forEach(inp => {
+        if (inp) inp.classList.remove('border-red-500', 'bg-red-500/10');
+      });
+
+      const name = nameInput ? nameInput.value.trim() : '';
+      const phone = phoneInput ? phoneInput.value.trim() : '';
 
       if (!name) {
-        showToast('Por favor, informe seu Nome Completo!');
-        document.getElementById('customer-name').focus();
+        if (nameInput) {
+          nameInput.classList.add('border-red-500', 'bg-red-500/10');
+          nameInput.focus();
+        }
+        showToast('⚠️ Por favor, digite seu Nome Completo!');
         return;
       }
       if (!phone) {
-        showToast('Por favor, informe seu Telefone / WhatsApp!');
-        document.getElementById('customer-phone').focus();
+        if (phoneInput) {
+          phoneInput.classList.add('border-red-500', 'bg-red-500/10');
+          phoneInput.focus();
+        }
+        showToast('⚠️ Por favor, digite seu Telefone / WhatsApp!');
         return;
       }
 
-      const street = document.getElementById('customer-street').value.trim();
-      const number = document.getElementById('customer-number').value.trim();
-      const neighborhood = document.getElementById('customer-neighborhood').value.trim();
-      const cep = document.getElementById('customer-cep').value.trim();
-      const reference = document.getElementById('customer-reference').value.trim();
-      const complement = document.getElementById('customer-complement').value.trim();
-      const notes = document.getElementById('customer-notes').value.trim();
+      const street = streetInput ? streetInput.value.trim() : '';
+      const number = numberInput ? numberInput.value.trim() : '';
+      const neighborhood = neighborhoodInput ? neighborhoodInput.value.trim() : '';
+      const cep = document.getElementById('customer-cep') ? document.getElementById('customer-cep').value.trim() : '';
+      const reference = document.getElementById('customer-reference') ? document.getElementById('customer-reference').value.trim() : '';
+      const complement = document.getElementById('customer-complement') ? document.getElementById('customer-complement').value.trim() : '';
+      const notes = document.getElementById('customer-notes') ? document.getElementById('customer-notes').value.trim() : '';
       const changeVal = document.getElementById('customer-change') ? document.getElementById('customer-change').value.trim() : '';
 
       if (orderMode === 'delivery') {
         if (!street) {
-          showToast('Por favor, informe a Rua / Avenida!');
-          document.getElementById('customer-street').focus();
+          if (streetInput) {
+            streetInput.classList.add('border-red-500', 'bg-red-500/10');
+            streetInput.focus();
+          }
+          showToast('⚠️ Informe a Rua / Avenida para entrega!');
           return;
         }
         if (!number) {
-          showToast('Por favor, informe o Nº da Casa!');
-          document.getElementById('customer-number').focus();
-          return;
-        }
-        if (!neighborhood) {
-          showToast('Por favor, informe o Bairro!');
-          document.getElementById('customer-neighborhood').focus();
-          return;
-        }
-        if (!reference) {
-          showToast('Por favor, informe um Ponto de Referência!');
-          document.getElementById('customer-reference').focus();
+          if (numberInput) {
+            numberInput.classList.add('border-red-500', 'bg-red-500/10');
+            numberInput.focus();
+          }
+          showToast('⚠️ Informe o Número da sua residência!');
           return;
         }
       }
 
       const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-      const formattedTotal = subtotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
       let payLabel = "💠 PIX Instantâneo";
       if (selectedPayment === 'cartao') payLabel = "💳 Cartão de Crédito/Débito (Máquina na entrega)";
@@ -2139,7 +2151,7 @@
       if (orderMode === 'delivery') {
         msg += `*📍 ENDEREÇO DE ENTREGA:*\n`;
         msg += `• *Rua:* ${street}, Nº ${number}\n`;
-        msg += `• *Bairro:* ${neighborhood}\n`;
+        if (neighborhood) msg += `• *Bairro:* ${neighborhood}\n`;
         if (cep) msg += `• *CEP:* ${cep}\n`;
         if (reference) msg += `• *Ponto de Referência:* ${reference}\n`;
         if (complement) msg += `• *Complemento:* ${complement}\n\n`;
@@ -2168,105 +2180,13 @@
       msg += `------------------------------------------\n\n`;
       msg += `Por favor, confirmem o pedido e o tempo estimado!`;
 
-      pendingOrderMessage = msg;
-
-      // Montar resumo do modal de confirmação
-      const custSummary = document.getElementById('confirm-customer-summary');
-      if (orderMode === 'delivery') {
-        custSummary.innerHTML = `
-          <div class="font-bold text-white mb-1 flex items-center gap-1.5 text-xs">
-            <span>🛵 Entrega Delivery</span>
-          </div>
-          <p><strong>Cliente:</strong> ${name} • ${phone}</p>
-          <p><strong>Endereço:</strong> ${street}, Nº ${number}, ${neighborhood}</p>
-          ${reference ? `<p><strong>Ref:</strong> ${reference}</p>` : ''}
-        `;
-      } else {
-        custSummary.innerHTML = `
-          <div class="font-bold text-white mb-1 flex items-center gap-1.5 text-xs">
-            <span>🏪 Retirada no Balcão</span>
-          </div>
-          <p><strong>Cliente:</strong> ${name} • ${phone}</p>
-          <p><strong>Local:</strong> Avenida Mariano Lisboa, 1370 - Engenho</p>
-        `;
-      }
-
-      const payBox = document.getElementById('confirm-payment-box');
-      const confirmBtnText = document.getElementById('confirm-btn-text');
-
-      if (selectedPayment === 'pix') {
-        payBox.className = "p-3.5 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl space-y-2";
-        payBox.innerHTML = `
-          <div class="flex items-center justify-between">
-            <span class="font-bold text-emerald-400 text-xs flex items-center gap-1">💠 Pagamento via PIX</span>
-            <span class="text-[10px] text-stone-400">Chave Telefone</span>
-          </div>
-          <div class="p-2.5 bg-black/40 rounded-xl border border-white/5 flex items-center justify-between gap-2">
-            <span class="font-mono text-white text-xs font-bold">(99) 99104-0222</span>
-            <button type="button" onclick="copyPixKey()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1 rounded-lg text-[10px] active:scale-95 transition-all">
-              Copiar Chave PIX
-            </button>
-          </div>
-          <p class="text-[10px] text-stone-400 leading-tight">Faça a transferência no app do seu banco e envie o pedido no WhatsApp para confirmação imediata.</p>
-        `;
-        confirmBtnText.innerText = "Confirmar e Enviar no WhatsApp";
-      } else if (selectedPayment === 'cartao') {
-        payBox.className = "p-3.5 bg-blue-500/10 border border-blue-500/30 rounded-2xl space-y-1.5";
-        payBox.innerHTML = `
-          <span class="font-bold text-blue-400 text-xs flex items-center gap-1">💳 Pagamento na Maquininha</span>
-          <p class="text-[11px] text-stone-300">O entregador levará a máquina de cartão na entrega (Crédito / Débito).</p>
-        `;
-        confirmBtnText.innerText = "Confirmar e Enviar no WhatsApp";
-      } else if (selectedPayment === 'dinheiro') {
-        payBox.className = "p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-2xl space-y-1.5";
-        payBox.innerHTML = `
-          <span class="font-bold text-amber-400 text-xs flex items-center gap-1">💵 Pagamento em Dinheiro</span>
-          <p class="text-[11px] text-stone-300">${changeVal ? `Troco solicitado para: <strong>${changeVal}</strong>` : 'Pagamento exato em dinheiro (sem troco)'}</p>
-        `;
-        confirmBtnText.innerText = "Confirmar e Enviar no WhatsApp";
-      }
-
-      document.getElementById('confirm-subtotal-val').innerText = formattedTotal;
-      document.getElementById('confirm-total-val').innerText = formattedTotal;
-
-      openConfirmModal();
-    }
-
-    function openConfirmModal() {
-      const backdrop = document.getElementById('checkout-confirm-modal-backdrop');
-      const modal = document.getElementById('checkout-confirm-modal');
-      backdrop.classList.remove('opacity-0', 'pointer-events-none');
-      backdrop.classList.add('opacity-100', 'pointer-events-auto');
-      modal.classList.remove('translate-y-full', 'sm:scale-95');
-      modal.classList.add('translate-y-0', 'sm:scale-100');
-    }
-
-    function closeConfirmModal() {
-      const backdrop = document.getElementById('checkout-confirm-modal-backdrop');
-      const modal = document.getElementById('checkout-confirm-modal');
-      modal.classList.remove('translate-y-0', 'sm:scale-100');
-      modal.classList.add('translate-y-full', 'sm:scale-95');
-      backdrop.classList.remove('opacity-100', 'pointer-events-auto');
-      backdrop.classList.add('opacity-0', 'pointer-events-none');
-    }
-
-    function finalizeWhatsAppSend() {
-      if (!pendingOrderMessage) return;
-
       // Salvar pedido no localStorage para o Painel do Admin
       try {
-        const name = document.getElementById('customer-name').value.trim();
-        const phone = document.getElementById('customer-phone').value.trim();
-        const street = document.getElementById('customer-street').value.trim();
-        const number = document.getElementById('customer-number').value.trim();
-        const neighborhood = document.getElementById('customer-neighborhood').value.trim();
-        const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-
         const orderObj = {
           id: "PED-" + (Math.floor(Math.random() * 9000) + 1000),
           date: new Date().toISOString(),
-          customer: { name: name || 'Cliente', phone: phone || '' },
-          address: orderMode === 'delivery' ? `${street}, Nº ${number} - ${neighborhood}` : 'Retirada no Balcão',
+          customer: { name: name, phone: phone },
+          address: orderMode === 'delivery' ? `${street}, Nº ${number}${neighborhood ? ` - ${neighborhood}` : ''}` : 'Retirada no Balcão',
           mode: orderMode,
           payment: selectedPayment.toUpperCase(),
           items: cart.map(c => ({ title: c.title, qty: c.quantity, price: c.price })),
@@ -2279,12 +2199,25 @@
         localStorage.setItem('SAO_JOSE_ORDERS', JSON.stringify(existingOrders));
       } catch (e) {}
 
-      const encoded = encodeURIComponent(pendingOrderMessage);
-      const whatsappNumber = (STORE_DATA.store && STORE_DATA.store.whatsapp) ? STORE_DATA.store.whatsapp : "5599991040222";
-      window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encoded}`, '_blank');
-      closeConfirmModal();
-      toggleCartDrawer();
-      showToast("Pedido gerado com sucesso! Abrindo WhatsApp... 🔥");
+      // Se for PIX, copiar a chave PIX automaticamente
+      if (selectedPayment === 'pix') {
+        try {
+          navigator.clipboard.writeText("99991040222");
+        } catch (e) {}
+      }
+
+      // Envio definitivo para o WhatsApp
+      const encoded = encodeURIComponent(msg);
+      const whatsappNumber = (STORE_DATA && STORE_DATA.store && STORE_DATA.store.whatsapp) ? STORE_DATA.store.whatsapp : "5599991040222";
+      const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encoded}`;
+
+      showToast("Abrindo WhatsApp com seu pedido... 🚀");
+
+      // Redirecionamento anti-bloqueio de popup
+      const opened = window.open(whatsappUrl, '_blank');
+      if (!opened || opened.closed || typeof opened.closed === 'undefined') {
+        window.location.href = whatsappUrl;
+      }
     }
 
     function contactWhatsApp() {
