@@ -1436,10 +1436,10 @@
     </button>
   </div>
 
-  <!-- TOAST NOTIFICATION -->
-  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[120] bg-black/90 text-white text-xs font-poppins font-semibold px-5 py-3 rounded-2xl shadow-2xl border border-white/10 flex items-center gap-2.5 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-    <span class="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold">✓</span>
-    <span id="toast-text">Produto adicionado à sacola!</span>
+  <!-- TOAST NOTIFICATION (TOPO DA TELA, 100% LIVRE DE BLOQUEIO) -->
+  <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[200] bg-[#1C140F]/95 backdrop-blur-md text-white text-xs font-poppins font-semibold px-4 py-2.5 rounded-full shadow-2xl border border-brand-orange/40 flex items-center gap-2 transform -translate-y-12 opacity-0 transition-all duration-200 pointer-events-none select-none">
+    <span class="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold">✓</span>
+    <span id="toast-text">Produto adicionado!</span>
   </div>
 
   <!-- ========================================================================= -->
@@ -1703,10 +1703,15 @@
       const modal = document.getElementById('product-modal');
 
       document.body.classList.remove('overflow-hidden');
-      modal.classList.remove('translate-y-0', 'sm:scale-100');
-      modal.classList.add('translate-y-full', 'sm:scale-95');
-      backdrop.classList.remove('opacity-100', 'pointer-events-auto');
-      backdrop.classList.add('opacity-0', 'pointer-events-none');
+      if (backdrop) {
+        backdrop.style.pointerEvents = 'none';
+        backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+        backdrop.classList.add('opacity-0', 'pointer-events-none');
+      }
+      if (modal) {
+        modal.classList.remove('translate-y-0', 'sm:scale-100');
+        modal.classList.add('translate-y-full', 'sm:scale-95');
+      }
     }
 
     function renderAdditionalsList(items) {
@@ -2253,18 +2258,21 @@
       window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=Ol%C3%A1!%20Gostaria%20de%20fazer%20um%20pedido%20ou%20tirar%20uma%20d%C3%BAvida%20sobre%20o%20S%C3%A3o%20Jos%C3%A9%20Burguer.`, '_blank');
     }
 
+    let toastTimeout = null;
     function showToast(msg) {
       const toast = document.getElementById('toast');
       const toastText = document.getElementById('toast-text');
       if (toast && toastText) {
         toastText.innerText = msg;
-        toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+        if (toastTimeout) clearTimeout(toastTimeout);
+
+        toast.classList.remove('-translate-y-12', 'opacity-0');
         toast.classList.add('translate-y-0', 'opacity-100');
 
-        setTimeout(() => {
+        toastTimeout = setTimeout(() => {
           toast.classList.remove('translate-y-0', 'opacity-100');
-          toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
-        }, 2600);
+          toast.classList.add('-translate-y-12', 'opacity-0');
+        }, 1300);
       }
     }
 
