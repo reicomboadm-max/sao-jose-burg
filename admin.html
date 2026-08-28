@@ -1041,12 +1041,20 @@
         if (o.status === 'delivery') statusBadge = `<span class="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 font-bold text-[10px]">🛵 Em Entrega</span>`;
         if (o.status === 'completed') statusBadge = `<span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">🟢 Concluído</span>`;
 
+        const isPaid = !!o.isPaid;
+        const payStatusBtn = `
+          <button onclick="togglePaymentStatus('${o.id}')" class="px-2 py-1 rounded-xl text-[10px] font-bold flex items-center gap-1 transition-all active:scale-95 ${isPaid ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30'}" title="Clique para alterar status do pagamento">
+            <span>${isPaid ? '✓ PAGO' : '⏳ PENDENTE'}</span>
+          </button>
+        `;
+
         return `
           <div class="p-3.5 bg-white/5 border border-white/10 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-brand-orange/40 transition-colors">
             <div class="space-y-1 flex-1">
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-2 flex-wrap">
                 <span class="font-anton text-white text-sm tracking-wide">${o.id}</span>
                 ${statusBadge}
+                ${payStatusBtn}
                 <span class="text-stone-400 text-[11px]">• ${new Date(o.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
               </div>
               <p class="text-white font-bold text-xs">${o.customer?.name || 'Cliente'} <span class="text-stone-400 font-normal font-mono">(${o.customer?.phone || 'Sem telefone'})</span></p>
@@ -1073,6 +1081,7 @@
         address: "Avenida Mariano Lisboa, 1370 - Engenho",
         mode: "delivery",
         payment: "PIX",
+        isPaid: false,
         items: [{ title: "Burguer São José", qty: 2, price: 33.00 }, { title: "Coca Zero 1 Litro", qty: 1, price: 12.00 }],
         total: 78.00,
         status: "pending"
@@ -1219,53 +1228,65 @@
       document.getElementById('sidebar-orders-badge').innerText = pOrders.length;
       document.getElementById('mobile-orders-badge').innerText = pOrders.length;
 
-      const renderCard = (order) => `
-        <div class="bg-black/50 border border-white/10 rounded-2xl p-3.5 space-y-2.5 shadow-sm text-xs font-poppins hover:border-brand-orange/40 transition-colors">
-          <div class="flex items-center justify-between">
-            <span class="font-anton text-white tracking-wide">${order.id}</span>
-            <span class="text-[10px] text-stone-400">${new Date(order.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-          </div>
+      const renderCard = (order) => {
+        const isPaid = !!order.isPaid;
+        const payStatusBtn = `
+          <button onclick="togglePaymentStatus('${order.id}')" class="px-2 py-0.5 rounded-xl text-[10px] font-bold flex items-center gap-1 transition-all active:scale-95 ${isPaid ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30'}" title="Clique para alterar status do pagamento">
+            <span>${isPaid ? '✓ PAGO' : '⏳ PENDENTE'}</span>
+          </button>
+        `;
 
-          <div>
-            <strong class="text-white block">${order.customer?.name || 'Cliente'}</strong>
-            <span class="text-[11px] text-stone-400">${order.customer?.phone || ''}</span>
-          </div>
+        return `
+          <div class="bg-black/50 border border-white/10 rounded-2xl p-3.5 space-y-2.5 shadow-sm text-xs font-poppins hover:border-brand-orange/40 transition-colors">
+            <div class="flex items-center justify-between">
+              <span class="font-anton text-white tracking-wide">${order.id}</span>
+              <div class="flex items-center gap-1.5">
+                ${payStatusBtn}
+                <span class="text-[10px] text-stone-400">${new Date(order.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+              </div>
+            </div>
 
-          <div class="p-2 bg-white/5 rounded-xl text-[11px] text-stone-300">
-            ${(order.items || []).map(i => `<div>• ${i.qty}x ${i.title}</div>`).join('')}
-          </div>
+            <div>
+              <strong class="text-white block">${order.customer?.name || 'Cliente'}</strong>
+              <span class="text-[11px] text-stone-400">${order.customer?.phone || ''}</span>
+            </div>
 
-          <div class="flex items-center justify-between text-xs pt-1 border-t border-white/5">
-            <span class="text-stone-400">${order.mode === 'delivery' ? '🛵 Entrega' : '🏪 Balcão'} • <strong class="text-emerald-400">${order.payment}</strong></span>
-            <span class="font-anton text-brand-orange text-sm">R$ ${(order.total || 0).toFixed(2).replace('.', ',')}</span>
-          </div>
+            <div class="p-2 bg-white/5 rounded-xl text-[11px] text-stone-300">
+              ${(order.items || []).map(i => `<div>• ${i.qty}x ${i.title}</div>`).join('')}
+            </div>
 
-          <!-- Ações de Status -->
-          <div class="grid grid-cols-2 gap-1.5 pt-1">
-            ${order.status === 'pending' ? `
-              <button onclick="setOrderStatus('${order.id}', 'preparing')" class="bg-brand-orange hover:bg-orange-600 text-white font-bold py-1.5 rounded-lg text-[10px] transition-colors">
-                🔥 Preparar
+            <div class="flex items-center justify-between text-xs pt-1 border-t border-white/5">
+              <span class="text-stone-400">${order.mode === 'delivery' ? '🛵 Entrega' : '🏪 Balcão'} • <strong class="text-emerald-400">${order.payment}</strong></span>
+              <span class="font-anton text-brand-orange text-sm">R$ ${(order.total || 0).toFixed(2).replace('.', ',')}</span>
+            </div>
+
+            <!-- Ações de Status Diretas (Sem popup de confirmação) -->
+            <div class="grid grid-cols-2 gap-1.5 pt-1">
+              ${order.status === 'pending' ? `
+                <button onclick="setOrderStatus('${order.id}', 'preparing')" class="bg-brand-orange hover:bg-orange-600 text-white font-bold py-1.5 rounded-lg text-[10px] transition-colors shadow-sm active:scale-95">
+                  🔥 Preparar
+                </button>
+              ` : ''}
+
+              ${order.status === 'preparing' ? `
+                <button onclick="setOrderStatus('${order.id}', 'delivery')" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-1.5 rounded-lg text-[10px] transition-colors shadow-sm active:scale-95">
+                  🛵 Despachar
+                </button>
+              ` : ''}
+
+              ${order.status === 'delivery' ? `
+                <button onclick="setOrderStatus('${order.id}', 'completed')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 rounded-lg text-[10px] transition-colors shadow-sm active:scale-95">
+                  ✓ Concluir
+                </button>
+              ` : ''}
+
+              <button onclick="notifyCustomerWhatsApp('${order.id}')" class="bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 font-bold py-1.5 rounded-lg text-[10px] flex items-center justify-center gap-1 transition-colors active:scale-95">
+                <span>💬 Avisar</span>
               </button>
-            ` : ''}
-
-            ${order.status === 'preparing' ? `
-              <button onclick="setOrderStatus('${order.id}', 'delivery')" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-1.5 rounded-lg text-[10px] transition-colors">
-                🛵 Despachar
-              </button>
-            ` : ''}
-
-            ${order.status === 'delivery' ? `
-              <button onclick="setOrderStatus('${order.id}', 'completed')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 rounded-lg text-[10px] transition-colors">
-                ✓ Concluir
-              </button>
-            ` : ''}
-
-            <button onclick="notifyCustomerWhatsApp('${order.id}')" class="bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 font-bold py-1.5 rounded-lg text-[10px] flex items-center justify-center gap-1 transition-colors">
-              <span>💬 Avisar</span>
-            </button>
+            </div>
           </div>
-        </div>
-      `;
+        `;
+      };
 
       colPending.innerHTML = pOrders.map(renderCard).join('') || '<div class="text-[11px] text-stone-500 text-center py-8">Nenhum pedido pendente</div>';
       colPreparing.innerHTML = prOrders.map(renderCard).join('') || '<div class="text-[11px] text-stone-500 text-center py-8">Nenhum pedido no fogo</div>';
@@ -1273,24 +1294,25 @@
       colCompleted.innerHTML = cOrders.map(renderCard).join('') || '<div class="text-[11px] text-stone-500 text-center py-8">Nenhum pedido finalizado</div>';
     }
 
+    function togglePaymentStatus(orderId) {
+      const order = ORDERS.find(o => o.id === orderId);
+      if (!order) return;
+      order.isPaid = !order.isPaid;
+      saveOrdersToStorage();
+      renderOrdersKanban();
+      refreshDashboard();
+      showAdminToast(order.isPaid ? `Pagamento do pedido #${orderId} marcado como PAGO! 🟢` : `Pagamento do pedido #${orderId} marcado como PENDENTE! ⏳`);
+    }
+
     function setOrderStatus(orderId, newStatus) {
       const order = ORDERS.find(o => o.id === orderId);
       if (!order) return;
-
-      let msg = "";
-      if (newStatus === 'preparing') msg = `Deseja aprovar e colocar o pedido #${orderId} no fogo/preparo? 🔥`;
-      else if (newStatus === 'delivery') msg = `Deseja despachar o pedido #${orderId} para entrega com o motoboy? 🛵`;
-      else if (newStatus === 'completed') msg = `Deseja marcar o pedido #${orderId} como finalizado e concluído? 🟢`;
-
-      if (msg && !confirm(msg)) {
-        return;
-      }
 
       order.status = newStatus;
       saveOrdersToStorage();
       renderOrdersKanban();
       refreshDashboard();
-      showAdminToast(`Pedido #${orderId} atualizado com sucesso!`);
+      showAdminToast(`Status do pedido #${orderId} alterado! ⚡`);
     }
 
     function notifyCustomerWhatsApp(orderId) {
