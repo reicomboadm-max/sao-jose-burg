@@ -905,9 +905,9 @@
   <!-- ========================================================================= -->
   <!-- 8. MODAL DE DETALHES DO PRODUTO & ADICIONAIS (RESPONSIVO / BOTTOM SHEET MOBILE) -->
   <!-- ========================================================================= -->
-  <div id="product-modal-backdrop" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 flex items-end sm:items-center justify-center p-0 sm:p-4">
+  <div id="product-modal-backdrop" class="fixed inset-0 z-[150] bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-200 flex items-end sm:items-center justify-center p-0 sm:p-4 touch-none overscroll-contain">
     
-    <div id="product-modal" class="bg-[#120D0A] text-white w-full h-[92vh] sm:h-auto sm:max-h-[90vh] sm:max-w-2xl rounded-t-3xl sm:rounded-3xl border-t sm:border border-white/10 shadow-2xl flex flex-col overflow-hidden transform translate-y-full sm:translate-y-0 sm:scale-95 transition-all duration-300">
+    <div id="product-modal" class="bg-[#120D0A] text-white w-full h-[86dvh] sm:h-auto sm:max-h-[85vh] sm:max-w-2xl rounded-t-3xl sm:rounded-3xl border-t sm:border border-white/10 shadow-2xl flex flex-col overflow-hidden transform translate-y-full sm:translate-y-0 sm:scale-95 transition-all duration-200 relative z-[151] overscroll-contain" onclick="event.stopPropagation()">
       
       <!-- Mobile Pull Bar Indicator -->
       <div class="sm:hidden flex justify-center pt-2.5 pb-1 bg-black/40">
@@ -921,19 +921,19 @@
           <span>PERSONALIZAR PEDIDO</span>
         </h3>
         
-        <button onclick="closeProductModal()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/10 hover:bg-brand-orange text-stone-300 hover:text-white flex items-center justify-center transition-colors font-bold text-sm" aria-label="Fechar Modal">
+        <button type="button" onclick="event.stopPropagation(); closeProductModal()" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/10 hover:bg-brand-orange text-stone-300 hover:text-white flex items-center justify-center transition-colors font-bold text-sm" aria-label="Fechar Modal">
           ✕
         </button>
       </div>
 
       <!-- Modal Body (Scrollable) -->
-      <div class="p-5 overflow-y-auto flex-1 space-y-5 no-scrollbar">
+      <div class="p-5 overflow-y-auto flex-1 space-y-5 no-scrollbar overscroll-contain">
         
         <!-- Header do Produto: Imagem + Info -->
         <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4 p-4 bg-white/5 border border-white/10 rounded-2xl">
-          <div class="w-32 h-32 sm:w-36 sm:h-36 rounded-2xl overflow-hidden bg-black/30 border border-white/10 flex-shrink-0 flex items-center justify-center">
+          <div class="w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden bg-black/30 border border-white/10 flex-shrink-0 flex items-center justify-center">
             <img 
-              id="modal-product-img"
+              id="modal-product-img" 
               src="assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.jpg" 
               alt="Produto" 
               class="w-full h-full object-cover"
@@ -967,12 +967,12 @@
               id="additionals-search-input"
               oninput="filterAdditionals(this.value)"
               placeholder="Pesquisar bacon, queijo, carne, ovo..." 
-              class="w-full bg-white/5 border border-white/10 rounded-2xl pl-10 pr-4 py-2 text-xs font-poppins text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+              class="w-full bg-white/5 border border-white/10 rounded-2xl pl-10 pr-4 py-2.5 text-[16px] sm:text-xs font-poppins text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
             />
           </div>
 
           <!-- Lista de adicionais em grid de 2 colunas no desktop -->
-          <div id="additionals-list-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-60 overflow-y-auto pr-1">
+          <div id="additionals-list-container" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-56 overflow-y-auto pr-1">
             <!-- Injetado via Javascript -->
           </div>
         </div>
@@ -986,26 +986,27 @@
             id="modal-product-notes" 
             rows="2"
             placeholder="Ex: Ponto da carne bem passada, sem cebola, maionese à parte, etc."
-            class="w-full bg-white/5 border border-white/10 rounded-2xl p-3 text-xs font-poppins text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange resize-none"
+            class="w-full bg-white/5 border border-white/10 rounded-2xl p-3 text-[16px] sm:text-xs font-poppins text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange resize-none"
           ></textarea>
         </div>
 
       </div>
 
-      <!-- Modal Footer (Barra de Ação Fixa) -->
-      <div class="p-4 sm:p-5 bg-black/60 border-t border-white/10 flex items-center gap-4 flex-shrink-0">
+      <!-- Modal Footer (Barra de Ação Fixa - Protegida contra vazamento de clique) -->
+      <div class="p-4 sm:p-5 bg-[#0F0A08] border-t border-white/10 flex items-center gap-4 flex-shrink-0 relative z-[152] pb-6 sm:pb-5 touch-manipulation" onclick="event.stopPropagation()">
         
         <!-- Quantidade -->
         <div class="flex items-center gap-3 bg-white/5 border border-white/10 px-4 py-2.5 rounded-2xl font-poppins">
-          <button onclick="changeModalQty(-1)" class="text-stone-400 hover:text-white font-bold text-base px-1 active:scale-90 transition-transform"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14"></path></svg></button>
+          <button type="button" onclick="event.stopPropagation(); changeModalQty(-1)" class="text-stone-400 hover:text-white font-bold text-base px-1 active:scale-90 transition-transform"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14"></path></svg></button>
           <span id="modal-qty-display" class="text-sm font-bold text-white min-w-[20px] text-center">1</span>
-          <button onclick="changeModalQty(1)" class="text-brand-orange hover:text-white font-bold text-base px-1 active:scale-90 transition-transform"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></button>
+          <button type="button" onclick="event.stopPropagation(); changeModalQty(1)" class="text-brand-orange hover:text-white font-bold text-base px-1 active:scale-90 transition-transform"><svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg></button>
         </div>
 
         <!-- Botão Adicionar -->
         <button 
-          onclick="addCurrentProductToCart()"
-          class="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 hover:brightness-110 text-white font-poppins font-bold py-3 px-6 rounded-2xl flex items-center justify-center gap-2 shadow-orange-glow active:scale-95 transition-all text-xs sm:text-sm"
+          type="button"
+          onclick="event.stopPropagation(); addCurrentProductToCart()"
+          class="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 hover:brightness-110 text-white font-poppins font-bold py-3.5 px-6 rounded-2xl flex items-center justify-center gap-2 shadow-orange-glow active:scale-95 transition-all text-xs sm:text-sm"
         >
           <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
           <span id="modal-add-btn-text">Adicionar <span class="font-anton text-sm sm:text-base ml-1">R$ 17,00</span></span>
@@ -1020,9 +1021,9 @@
   <!-- ========================================================================= -->
   <!-- 9. SLIDE-OVER DRAWER: SACOLA DE PEDIDOS & CHECKOUT WHATSAPP -->
   <!-- ========================================================================= -->
-  <div id="cart-drawer-overlay" class="fixed inset-0 bg-black/75 z-[100] opacity-0 pointer-events-none transition-opacity duration-200 touch-none overscroll-contain" onclick="toggleCartDrawer()"></div>
+  <div id="cart-drawer-overlay" class="fixed inset-0 bg-black/75 z-[160] opacity-0 pointer-events-none transition-opacity duration-200 touch-none overscroll-contain" onclick="toggleCartDrawer()"></div>
 
-  <aside id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:max-w-md bg-[#100B08] z-[101] translate-x-full transition-transform duration-250 ease-out shadow-2xl flex flex-col justify-between border-l border-white/10 text-white font-poppins overscroll-contain touch-pan-y will-change-transform">
+  <aside id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:max-w-md bg-[#100B08] z-[161] translate-x-full transition-transform duration-250 ease-out shadow-2xl flex flex-col justify-between border-l border-white/10 text-white font-poppins overscroll-contain touch-pan-y will-change-transform">
     
     <!-- Drawer Header -->
     <div class="p-5 border-b border-white/10 flex items-center justify-between bg-black/40">
@@ -1408,7 +1409,7 @@
   <!-- ========================================================================= -->
   <!-- 10. MOBILE BOTTOM NAVIGATION DOCK (BARRA FIXA INFERIOR MOBILE) -->
   <!-- ========================================================================= -->
-  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0A0705]/95 backdrop-blur-xl border-t border-white/10 px-3 py-2.5 flex items-center justify-between shadow-2xl safe-area-bottom">
+  <nav id="mobile-bottom-dock" class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0A0705]/95 backdrop-blur-xl border-t border-white/10 px-3 py-2.5 flex items-center justify-between shadow-2xl safe-area-bottom">
     
     <!-- Botão Início / Cardápio -->
     <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" class="flex-1 flex flex-col items-center gap-0.5 text-stone-400 hover:text-white active:scale-95 transition-all">
@@ -1696,8 +1697,10 @@
 
       const backdrop = document.getElementById('product-modal-backdrop');
       const modal = document.getElementById('product-modal');
+      const dock = document.getElementById('mobile-bottom-dock');
       
       document.body.classList.add('overflow-hidden');
+      if (dock) dock.classList.add('pointer-events-none', 'opacity-0');
       backdrop.classList.remove('opacity-0', 'pointer-events-none');
       backdrop.classList.add('opacity-100', 'pointer-events-auto');
       modal.classList.remove('translate-y-full', 'sm:scale-95');
@@ -1716,8 +1719,10 @@
     function closeProductModal() {
       const backdrop = document.getElementById('product-modal-backdrop');
       const modal = document.getElementById('product-modal');
+      const dock = document.getElementById('mobile-bottom-dock');
 
       document.body.classList.remove('overflow-hidden');
+      if (dock) dock.classList.remove('pointer-events-none', 'opacity-0');
       if (backdrop) {
         backdrop.style.pointerEvents = 'none';
         backdrop.classList.remove('opacity-100', 'pointer-events-auto');
