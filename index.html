@@ -881,7 +881,13 @@
       <!-- Linha Inferior -->
       <div class="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
         <p>© 2026 São José Burguer • Avenida Mariano Lisboa, 1370 - Engenho, Pedreiras - MA.</p>
-        <p class="flex items-center gap-1">Feito com paixão por hambúrgueres artesanais 🔥</p>
+        <div class="flex items-center gap-3">
+          <p class="flex items-center gap-1">Feito com paixão por hambúrgueres artesanais 🔥</p>
+          <span>•</span>
+          <a href="admin.html" class="text-stone-400 hover:text-brand-orange transition-colors flex items-center gap-1 font-semibold" title="Painel do Administrador">
+            <span>Painel Admin 🔐</span>
+          </a>
+        </div>
       </div>
     </div>
   </footer>
@@ -1462,6 +1468,17 @@
     let selectedAdditionals = {};
 
     document.addEventListener('DOMContentLoaded', () => {
+      // Carregar dados dinâmicos do Admin caso existam
+      const dynamicStore = localStorage.getItem('SAO_JOSE_STORE_DATA');
+      if (dynamicStore) {
+        try {
+          const parsed = JSON.parse(dynamicStore);
+          if (parsed && parsed.categories && parsed.categories.length > 0) {
+            STORE_DATA = parsed;
+          }
+        } catch (e) {}
+      }
+
       initTheme();
       renderCategoryPills();
       renderProducts(STORE_DATA.categories[activeCategoryIndex]);
@@ -2235,8 +2252,35 @@
 
     function finalizeWhatsAppSend() {
       if (!pendingOrderMessage) return;
+
+      // Salvar pedido no localStorage para o Painel do Admin
+      try {
+        const name = document.getElementById('customer-name').value.trim();
+        const phone = document.getElementById('customer-phone').value.trim();
+        const street = document.getElementById('customer-street').value.trim();
+        const number = document.getElementById('customer-number').value.trim();
+        const neighborhood = document.getElementById('customer-neighborhood').value.trim();
+        const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+
+        const orderObj = {
+          id: "PED-" + (Math.floor(Math.random() * 9000) + 1000),
+          date: new Date().toISOString(),
+          customer: { name: name || 'Cliente', phone: phone || '' },
+          address: orderMode === 'delivery' ? `${street}, Nº ${number} - ${neighborhood}` : 'Retirada no Balcão',
+          mode: orderMode,
+          payment: selectedPayment.toUpperCase(),
+          items: cart.map(c => ({ title: c.title, qty: c.quantity, price: c.price })),
+          total: subtotal,
+          status: 'pending'
+        };
+
+        const existingOrders = JSON.parse(localStorage.getItem('SAO_JOSE_ORDERS') || '[]');
+        existingOrders.unshift(orderObj);
+        localStorage.setItem('SAO_JOSE_ORDERS', JSON.stringify(existingOrders));
+      } catch (e) {}
+
       const encoded = encodeURIComponent(pendingOrderMessage);
-      const whatsappNumber = "5599991040222";
+      const whatsappNumber = (STORE_DATA.store && STORE_DATA.store.whatsapp) ? STORE_DATA.store.whatsapp : "5599991040222";
       window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encoded}`, '_blank');
       closeConfirmModal();
       toggleCartDrawer();

@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#080504">
+  <title>Painel Administrativo • São José Burguer</title>
+  
+  <!-- Favicon Oficial -->
+  <link rel="icon" type="image/png" href="assets/e8392808a1c7659c_favicon.png">
+
+  <!-- Google Fonts: Anton & Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              orange: '#FF5E1E',
+              orangeHover: '#E54A0D',
+              amber: '#FF9E1B',
+              dark: '#080504',
+              darkSurface: '#120D0A',
+              darkCard: '#18120E',
+              cardDark: '#1E1713',
+            }
+          },
+          fontFamily: {
+            anton: ['Anton', 'sans-serif'],
+            poppins: ['Poppins', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #080504;
+      color: #F3F4F6;
+      font-family: 'Poppins', sans-serif;
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    .grid-bg-dark {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 94, 30, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 94, 30, 0.05) 1px, transparent 1px);
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col relative overflow-x-hidden">
+
+  <!-- AURA BACKGROUND -->
+  <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+    <div class="grid-bg-dark absolute inset-0"></div>
+    <div class="absolute top-0 right-1/4 w-[600px] h-[600px] bg-orange-600/10 blur-[140px] rounded-full"></div>
+    <div class="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-amber-600/10 blur-[130px] rounded-full"></div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 1. TELA DE LOGIN / AUTENTICAÇÃO DO ADMIN -->
+  <!-- ========================================================================= -->
+  <div id="admin-login-screen" class="fixed inset-0 z-[200] bg-[#080504] flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-[#120D0A] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 relative overflow-hidden">
+      
+      <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-orange/20 blur-3xl rounded-full pointer-events-none"></div>
+
+      <div class="text-center space-y-2">
+        <img src="assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.jpg" alt="Logo" class="w-16 h-16 rounded-2xl mx-auto object-cover border border-white/15 shadow-lg" />
+        <h2 class="text-2xl font-anton tracking-wider text-white">PAINEL ADMINISTRATIVO</h2>
+        <p class="text-xs text-stone-400">São José Burguer • Acesso Restrito</p>
+      </div>
+
+      <form id="admin-login-form" onsubmit="handleAdminLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-anton text-white tracking-wide mb-1.5">SENHA DE ACESSO:</label>
+          <input 
+            type="password" 
+            id="admin-password-input" 
+            placeholder="Digite sua senha de administrador" 
+            class="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange transition-colors"
+            required
+            autofocus
+          />
+        </div>
+
+        <button 
+          type="submit" 
+          class="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:brightness-110 text-white font-anton tracking-wide py-3.5 rounded-2xl shadow-lg active:scale-95 transition-all text-sm flex items-center justify-center gap-2"
+        >
+          <span>ENTRAR NO PAINEL</span>
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </button>
+      </form>
+
+      <div class="pt-4 border-t border-white/10 flex items-center justify-between text-xs text-stone-400">
+        <a href="index.html" class="hover:text-white transition-colors">← Voltar ao Cardápio</a>
+        <span class="text-stone-400">Senha padrão: <strong class="text-white">admin123</strong></span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 2. LAYOUT PRINCIPAL DO ADMIN (SIDEBAR + CONTEÚDO) -->
+  <!-- ========================================================================= -->
+  <div id="admin-main-layout" class="hidden flex-1 flex flex-col md:flex-row relative z-10 min-h-screen">
+    
+    <!-- SIDEBAR (DESKTOP) / HEADER (MOBILE) -->
+    <aside class="w-full md:w-64 bg-[#0E0A08]/95 backdrop-blur-xl border-b md:border-b-0 md:border-r border-white/10 flex md:flex-col justify-between p-4 md:p-6 sticky top-0 z-40 md:h-screen">
+      
+      <!-- Brand & Navigation -->
+      <div class="space-y-6 w-full flex md:block items-center justify-between">
+        
+        <!-- Logo & Titulo -->
+        <div class="flex items-center gap-3">
+          <img src="assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.jpg" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-white/10" />
+          <div class="hidden sm:block">
+            <h1 class="font-anton text-base text-white tracking-wider leading-none">SÃO JOSÉ BURGUER</h1>
+            <span class="text-[10px] text-amber-400 font-bold uppercase tracking-wider">Painel de Controle</span>
+          </div>
+        </div>
+
+        <!-- Menu Links -->
+        <nav class="hidden md:flex flex-col space-y-1.5 pt-4">
+          <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="sidebar-btn active flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-semibold text-white bg-brand-orange transition-all">
+            <span class="text-base">📊</span>
+            <span>Dashboard & Gráficos</span>
+          </button>
+          
+          <button onclick="switchTab('orders')" id="tab-btn-orders" class="sidebar-btn flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-semibold text-stone-400 hover:text-white hover:bg-white/5 transition-all">
+            <div class="flex items-center gap-3">
+              <span class="text-base">📋</span>
+              <span>Gestor de Pedidos</span>
+            </div>
+            <span id="sidebar-orders-badge" class="px-2 py-0.5 rounded-full bg-amber-500 text-black font-anton text-[10px]">0</span>
+          </button>
+
+          <button onclick="switchTab('products')" id="tab-btn-products" class="sidebar-btn flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-semibold text-stone-400 hover:text-white hover:bg-white/5 transition-all">
+            <span class="text-base">🍔</span>
+            <span>Cardápio & Produtos</span>
+          </button>
+
+          <button onclick="switchTab('categories')" id="tab-btn-categories" class="sidebar-btn flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-semibold text-stone-400 hover:text-white hover:bg-white/5 transition-all">
+            <span class="text-base">🏷️</span>
+            <span>Categorias & Adicionais</span>
+          </button>
+
+          <button onclick="switchTab('settings')" id="tab-btn-settings" class="sidebar-btn flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-semibold text-stone-400 hover:text-white hover:bg-white/5 transition-all">
+            <span class="text-base">⚙️</span>
+            <span>Configurações da Loja</span>
+          </button>
+        </nav>
+
+      </div>
+
+      <!-- Quick Actions / Logout -->
+      <div class="hidden md:flex flex-col space-y-2 pt-6 border-t border-white/10">
+        <a href="index.html" target="_blank" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-stone-300 hover:text-white bg-white/5 hover:bg-white/10 transition-colors">
+          <span>🌐</span>
+          <span>Abrir Site do Cliente</span>
+        </a>
+        <button onclick="handleAdminLogout()" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors">
+          <span>🚪</span>
+          <span>Sair da Sessão</span>
+        </button>
+      </div>
+
+      <!-- Mobile Tab Switcher Dropdown / Icons -->
+      <div class="flex md:hidden items-center gap-2">
+        <button onclick="switchTab('dashboard')" class="p-2 rounded-xl bg-white/5 text-white">📊</button>
+        <button onclick="switchTab('orders')" class="p-2 rounded-xl bg-white/5 text-white relative">
+          📋
+          <span id="mobile-orders-badge" class="absolute -top-1 -right-1 bg-amber-500 text-black text-[9px] font-anton w-4 h-4 rounded-full flex items-center justify-center">0</span>
+        </button>
+        <button onclick="switchTab('products')" class="p-2 rounded-xl bg-white/5 text-white">🍔</button>
+        <button onclick="switchTab('settings')" class="p-2 rounded-xl bg-white/5 text-white">⚙️</button>
+        <button onclick="handleAdminLogout()" class="p-2 rounded-xl bg-red-500/20 text-red-400">🚪</button>
+      </div>
+
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-8">
+      
+      <!-- ========================================================================= -->
+      <!-- TAB 1: DASHBOARD & GRÁFICOS ANALÍTICOS -->
+      <!-- ========================================================================= -->
+      <div id="view-dashboard" class="space-y-6">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-anton text-white tracking-wider flex items-center gap-2">
+              <span class="w-3 h-6 bg-brand-orange rounded-full"></span>
+              DASHBOARD DE VENDAS & MÉTRICAS
+            </h2>
+            <p class="text-xs text-stone-400 mt-1">Acompanhe faturamento, pedidos e desempenho do São José Burguer em tempo real</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <button onclick="refreshDashboard()" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-stone-200 border border-white/10 text-xs font-semibold flex items-center gap-1.5 transition-colors">
+              <span>🔄</span>
+              <span>Atualizar Métricas</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 CARDS KPIS -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-5 shadow-card-dark space-y-2">
+            <div class="flex items-center justify-between text-stone-400 text-xs">
+              <span>Faturamento Total</span>
+              <span class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-sm">💰</span>
+            </div>
+            <div id="kpi-revenue" class="text-2xl font-anton text-white tracking-wide">R$ 0,00</div>
+            <p class="text-[11px] text-emerald-400 flex items-center gap-1 font-medium">
+              <span>↑ Vendas calculadas em tempo real</span>
+            </p>
+          </div>
+
+          <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-5 shadow-card-dark space-y-2">
+            <div class="flex items-center justify-between text-stone-400 text-xs">
+              <span>Total de Pedidos</span>
+              <span class="w-8 h-8 rounded-xl bg-brand-orange/10 text-brand-orange flex items-center justify-center text-sm">🛍️</span>
+            </div>
+            <div id="kpi-orders-count" class="text-2xl font-anton text-white tracking-wide">0 pedidos</div>
+            <p class="text-[11px] text-stone-400">Desde o início do sistema</p>
+          </div>
+
+          <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-5 shadow-card-dark space-y-2">
+            <div class="flex items-center justify-between text-stone-400 text-xs">
+              <span>Ticket Médio</span>
+              <span class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-sm">📊</span>
+            </div>
+            <div id="kpi-ticket" class="text-2xl font-anton text-white tracking-wide">R$ 0,00</div>
+            <p class="text-[11px] text-amber-400">Média por cliente</p>
+          </div>
+
+          <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-5 shadow-card-dark space-y-2">
+            <div class="flex items-center justify-between text-stone-400 text-xs">
+              <span>Produtos no Cardápio</span>
+              <span class="w-8 h-8 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-sm">🍔</span>
+            </div>
+            <div id="kpi-products-count" class="text-2xl font-anton text-white tracking-wide">0 itens</div>
+            <p class="text-[11px] text-cyan-400" id="kpi-categories-info">Em 5 categorias ativas</p>
+          </div>
+
+        </div>
+
+        <!-- GRÁFICOS (LINHA 1) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Gráfico 1: Vendas por Período (2 Colunas) -->
+          <div class="lg:col-span-2 bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="font-anton text-lg text-white tracking-wide">FATURAMENTO SEMANAL ESTIMADO</h3>
+                <p class="text-xs text-stone-400">Valores em Reais (R$) por dia da semana</p>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-brand-orange/15 text-brand-orange text-[10px] font-bold">Histórico Dinâmico</span>
+            </div>
+            <div class="h-64 relative">
+              <canvas id="chart-sales-timeline"></canvas>
+            </div>
+          </div>
+
+          <!-- Gráfico 2: Formas de Pagamento (1 Coluna) -->
+          <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
+            <h3 class="font-anton text-lg text-white tracking-wide">FORMAS DE PAGAMENTO</h3>
+            <p class="text-xs text-stone-400">Distribuição percentual dos pedidos</p>
+            <div class="h-56 relative flex items-center justify-center">
+              <canvas id="chart-payments"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- GRÁFICOS (LINHA 2) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          <!-- Gráfico 3: Itens Mais Populares -->
+          <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
+            <h3 class="font-anton text-lg text-white tracking-wide">ITENS MAIS PEDIDOS NO CARDÁPIO</h3>
+            <p class="text-xs text-stone-400">Top hambúrgueres e combos mais solicitados</p>
+            <div class="h-60 relative">
+              <canvas id="chart-top-products"></canvas>
+            </div>
+          </div>
+
+          <!-- Gráfico 4: Modalidade Delivery vs Balcão -->
+          <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
+            <h3 class="font-anton text-lg text-white tracking-wide">MODALIDADE DE ENTREGA</h3>
+            <p class="text-xs text-stone-400">Proporção entre Delivery e Retirada no Balcão</p>
+            <div class="h-60 relative flex items-center justify-center">
+              <canvas id="chart-delivery-modes"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- TAB 2: GESTÃO DE PEDIDOS (LIVE KANBAN) -->
+      <!-- ========================================================================= -->
+      <div id="view-orders" class="hidden space-y-6">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-anton text-white tracking-wider flex items-center gap-2">
+              <span class="w-3 h-6 bg-brand-orange rounded-full"></span>
+              GESTOR DE PEDIDOS EM TEMPO REAL
+            </h2>
+            <p class="text-xs text-stone-400 mt-1">Gerencie os pedidos recebidos, altere status e notifique clientes no WhatsApp</p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="openCreateOrderModal()" class="px-4 py-2 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-md active:scale-95 transition-all">
+              <span>+ Novo Pedido Manual</span>
+            </button>
+            <button onclick="clearCompletedOrders()" class="px-3 py-2 rounded-2xl bg-white/5 hover:bg-white/10 text-stone-300 text-xs transition-colors">
+              Limpar Concluídos
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 COLUNAS KANBAN -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          
+          <!-- Coluna 1: Pendente / Novo -->
+          <div class="bg-[#120D0A] border border-amber-500/20 rounded-3xl p-4 space-y-3 flex flex-col min-h-[500px]">
+            <div class="flex items-center justify-between pb-2 border-b border-white/10">
+              <span class="font-anton text-sm text-amber-400 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                NOVOS PEDIDOS
+              </span>
+              <span id="count-col-pending" class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold">0</span>
+            </div>
+            <div id="col-pending" class="space-y-3 flex-1 overflow-y-auto no-scrollbar"></div>
+          </div>
+
+          <!-- Coluna 2: Em Preparo -->
+          <div class="bg-[#120D0A] border border-orange-500/20 rounded-3xl p-4 space-y-3 flex flex-col min-h-[500px]">
+            <div class="flex items-center justify-between pb-2 border-b border-white/10">
+              <span class="font-anton text-sm text-brand-orange flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-brand-orange animate-pulse"></span>
+                NO FOGO / PREPARO
+              </span>
+              <span id="count-col-preparing" class="px-2 py-0.5 rounded-full bg-brand-orange/20 text-brand-orange text-xs font-bold">0</span>
+            </div>
+            <div id="col-preparing" class="space-y-3 flex-1 overflow-y-auto no-scrollbar"></div>
+          </div>
+
+          <!-- Coluna 3: Saiu para Entrega -->
+          <div class="bg-[#120D0A] border border-blue-500/20 rounded-3xl p-4 space-y-3 flex flex-col min-h-[500px]">
+            <div class="flex items-center justify-between pb-2 border-b border-white/10">
+              <span class="font-anton text-sm text-blue-400 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+                EM ENTREGA
+              </span>
+              <span id="count-col-delivery" class="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold">0</span>
+            </div>
+            <div id="col-delivery" class="space-y-3 flex-1 overflow-y-auto no-scrollbar"></div>
+          </div>
+
+          <!-- Coluna 4: Concluído -->
+          <div class="bg-[#120D0A] border border-emerald-500/20 rounded-3xl p-4 space-y-3 flex flex-col min-h-[500px]">
+            <div class="flex items-center justify-between pb-2 border-b border-white/10">
+              <span class="font-anton text-sm text-emerald-400 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                FINALIZADOS
+              </span>
+              <span id="count-col-completed" class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold">0</span>
+            </div>
+            <div id="col-completed" class="space-y-3 flex-1 overflow-y-auto no-scrollbar"></div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- TAB 3: GESTÃO DE PRODUTOS & CARDÁPIO (CRUD) -->
+      <!-- ========================================================================= -->
+      <div id="view-products" class="hidden space-y-6">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-anton text-white tracking-wider flex items-center gap-2">
+              <span class="w-3 h-6 bg-brand-orange rounded-full"></span>
+              GESTÃO DE PRODUTOS DO CARDÁPIO
+            </h2>
+            <p class="text-xs text-stone-400 mt-1">Adicione, edite preços, altere fotos e ative ou pause qualquer item</p>
+          </div>
+
+          <button onclick="openProductEditModal(null)" class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 hover:brightness-110 text-white font-anton tracking-wide text-xs flex items-center gap-2 shadow-lg active:scale-95 transition-all">
+            <span class="text-base">+</span>
+            <span>NOVO PRODUTO</span>
+          </button>
+        </div>
+
+        <!-- Filtros & Busca -->
+        <div class="flex flex-col sm:flex-row gap-3">
+          <div class="flex-1 relative">
+            <input 
+              type="text" 
+              id="admin-product-search" 
+              oninput="filterAdminProducts(this.value)"
+              placeholder="Buscar por nome do produto..." 
+              class="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-2.5 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+            />
+          </div>
+          <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" id="admin-category-filters"></div>
+        </div>
+
+        <!-- Tabela / Lista de Produtos -->
+        <div class="bg-[#120D0A] border border-white/10 rounded-3xl overflow-hidden shadow-card-dark">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-stone-300">
+              <thead class="bg-black/40 text-stone-400 uppercase font-anton tracking-wider text-[11px] border-b border-white/10">
+                <tr>
+                  <th class="p-4">Foto</th>
+                  <th class="p-4">Título & Descrição</th>
+                  <th class="p-4">Categoria</th>
+                  <th class="p-4">Preço</th>
+                  <th class="p-4">Status</th>
+                  <th class="p-4 text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="admin-products-table-body" class="divide-y divide-white/5 font-poppins"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- TAB 4: CATEGORIAS & ADICIONAIS -->
+      <!-- ========================================================================= -->
+      <div id="view-categories" class="hidden space-y-6">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-anton text-white tracking-wider flex items-center gap-2">
+              <span class="w-3 h-6 bg-brand-orange rounded-full"></span>
+              CATEGORIAS & ADICIONAIS
+            </h2>
+            <p class="text-xs text-stone-400 mt-1">Gerencie categorias do menu e a lista de adicionais extras</p>
+          </div>
+          <button onclick="openAddAdditionalModal()" class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-anton text-xs tracking-wide">
+            + NOVO ADICIONAL
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          <!-- Lista de Categorias -->
+          <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
+            <h3 class="font-anton text-lg text-white tracking-wide">CATEGORIAS ATIVAS</h3>
+            <div id="admin-categories-list" class="space-y-2 font-poppins text-xs"></div>
+          </div>
+
+          <!-- Lista de Adicionais Extras -->
+          <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
+            <h3 class="font-anton text-lg text-white tracking-wide">ADICIONAIS ESPECIAIS (EXTRAS)</h3>
+            <div id="admin-additionals-list" class="space-y-2 font-poppins text-xs max-h-[500px] overflow-y-auto no-scrollbar"></div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ========================================================================= -->
+      <!-- TAB 5: CONFIGURAÇÕES DA LOJA -->
+      <!-- ========================================================================= -->
+      <div id="view-settings" class="hidden space-y-6">
+        
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-anton text-white tracking-wider flex items-center gap-2">
+            <span class="w-3 h-6 bg-brand-orange rounded-full"></span>
+            CONFIGURAÇÕES GERAIS DA EMPRESA
+          </h2>
+          <p class="text-xs text-stone-400 mt-1">Ajuste WhatsApp de pedidos, chave PIX, horários de atendimento e backups</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          <!-- Card de Dados Principais -->
+          <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
+            <h3 class="font-anton text-lg text-white tracking-wide">DADOS DE CONTATO & PAGAMENTO</h3>
+            
+            <form onsubmit="saveStoreSettings(event)" class="space-y-3 font-poppins text-xs">
+              <div>
+                <label class="block text-stone-300 font-semibold mb-1">Nome da Empresa:</label>
+                <input type="text" id="setting-store-name" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" />
+              </div>
+
+              <div>
+                <label class="block text-stone-300 font-semibold mb-1">WhatsApp para Receber Pedidos (com DDI):</label>
+                <input type="text" id="setting-whatsapp" placeholder="Ex: 5599991040222" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" />
+              </div>
+
+              <div>
+                <label class="block text-stone-300 font-semibold mb-1">Chave PIX Oficial:</label>
+                <input type="text" id="setting-pix-key" placeholder="Ex: 99991040222" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" />
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-stone-300 font-semibold mb-1">Pedido Mínimo (R$):</label>
+                  <input type="number" step="0.5" id="setting-min-order" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" />
+                </div>
+                <div>
+                  <label class="block text-stone-300 font-semibold mb-1">Status da Loja:</label>
+                  <select id="setting-store-status" class="w-full bg-[#1A130F] border border-white/10 rounded-xl px-3 py-2.5 text-white">
+                    <option value="auto">Automático (19:30 às 23:30)</option>
+                    <option value="open">Forçar Aberto 🟢</option>
+                    <option value="closed">Forçar Fechado 🔴</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-stone-300 font-semibold mb-1">Endereço Completo:</label>
+                <input type="text" id="setting-address" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" />
+              </div>
+
+              <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-anton tracking-wide py-3 rounded-2xl shadow-md active:scale-95 transition-all text-xs mt-2">
+                SALVAR CONFIGURAÇÕES
+              </button>
+            </form>
+          </div>
+
+          <!-- Card de Backup & Senha -->
+          <div class="space-y-6">
+            
+            <!-- Alteração de Senha -->
+            <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
+              <h3 class="font-anton text-lg text-white tracking-wide">SEGURANÇA & SENHA DO ADMIN</h3>
+              <form onsubmit="changeAdminPassword(event)" class="space-y-3 font-poppins text-xs">
+                <div>
+                  <label class="block text-stone-300 font-semibold mb-1">Nova Senha do Administrador:</label>
+                  <input type="password" id="setting-new-password" placeholder="Digite a nova senha" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" required />
+                </div>
+                <button type="submit" class="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-2.5 rounded-xl transition-all">
+                  Atualizar Senha
+                </button>
+              </form>
+            </div>
+
+            <!-- Backup & Restauração JSON -->
+            <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
+              <h3 class="font-anton text-lg text-white tracking-wide">BACKUP & RESTAURAÇÃO</h3>
+              <p class="text-xs text-stone-400">Faça o download do banco de dados completo ou importe um arquivo JSON salvo.</p>
+
+              <div class="flex flex-col sm:flex-row gap-2">
+                <button onclick="exportBackupData()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors">
+                  <span>📥 Baixar Backup JSON</span>
+                </button>
+                <label class="flex-1 bg-white/10 hover:bg-white/20 text-stone-200 font-bold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-colors text-center">
+                  <span>📤 Carregar Backup</span>
+                  <input type="file" accept=".json" onchange="importBackupData(event)" class="hidden" />
+                </label>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: CRIAR / EDITAR PRODUTO -->
+  <!-- ========================================================================= -->
+  <div id="product-modal-backdrop" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+    <div id="product-modal" class="bg-[#120D0A] border border-white/10 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col font-poppins transform scale-95 transition-all">
+      <div class="p-5 border-b border-white/10 flex items-center justify-between bg-black/40">
+        <h3 id="modal-product-header" class="font-anton text-lg text-white tracking-wide">NOVO PRODUTO</h3>
+        <button onclick="closeProductEditModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-brand-orange text-stone-300 hover:text-white flex items-center justify-center">✕</button>
+      </div>
+
+      <form onsubmit="saveProduct(event)" class="p-5 overflow-y-auto flex-1 space-y-3.5 text-xs no-scrollbar">
+        <input type="hidden" id="edit-product-id" />
+
+        <div>
+          <label class="block text-stone-300 font-semibold mb-1">Título do Produto *</label>
+          <input type="text" id="edit-product-title" placeholder="Ex: Burguer Especial" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" required />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-stone-300 font-semibold mb-1">Categoria *</label>
+            <select id="edit-product-category" class="w-full bg-[#1A130F] border border-white/10 rounded-xl px-3 py-2.5 text-white" required></select>
+          </div>
+          <div>
+            <label class="block text-stone-300 font-semibold mb-1">Preço (R$) *</label>
+            <input type="number" step="0.5" id="edit-product-price" placeholder="25.00" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" required />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-stone-300 font-semibold mb-1">Descrição / Ingredientes</label>
+          <textarea id="edit-product-desc" rows="2" placeholder="Descreva os ingredientes do item..." class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white resize-none"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-stone-300 font-semibold mb-1">Caminho da Imagem / URL</label>
+          <input type="text" id="edit-product-image" placeholder="assets/nome_da_foto.jpg" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" />
+        </div>
+
+        <div class="flex items-center gap-4 pt-1">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="edit-product-bestseller" class="rounded bg-white/10 border-white/20 text-brand-orange focus:ring-0" />
+            <span>⭐ Destaque / Mais Pedido</span>
+          </label>
+
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="edit-product-promo" class="rounded bg-white/10 border-white/20 text-brand-orange focus:ring-0" />
+            <span>🔥 Em Promoção</span>
+          </label>
+        </div>
+
+        <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-anton tracking-wide py-3 rounded-2xl shadow-lg active:scale-95 transition-all text-xs mt-3">
+          SALVAR PRODUTO
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="admin-toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[300] bg-black/90 text-white text-xs font-poppins font-semibold px-5 py-3 rounded-2xl shadow-2xl border border-white/10 flex items-center gap-2.5 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <span class="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold">✓</span>
+    <span id="admin-toast-text">Alterações salvas!</span>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- SCRIPT LOGIC ADMIN -->
+  <!-- ========================================================================= -->
+  <script>
+    // Carregar Banco de Dados do localStorage ou JSON inicial
+    let STORE = null;
+    let ORDERS = [];
+    let charts = {};
+    let activeAdminCategoryFilter = 'ALL';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initAdminDatabase();
+      checkAdminSession();
+    });
+
+    function initAdminDatabase() {
+      const savedStore = localStorage.getItem('SAO_JOSE_STORE_DATA');
+      if (savedStore) {
+        try {
+          STORE = JSON.parse(savedStore);
+        } catch (e) {}
+      }
+
+      if (!STORE) {
+        // Fallback para dados padrão completos
+        STORE = {
+          store: {
+            name: "São José Burguer",
+            whatsapp: "5599991040222",
+            minOrder: 6,
+            address: "AVENIDA MARIANO LISBOA, 1370 - ENGENHO, Pedreiras - MA, 65725-000",
+            status: "auto",
+            openHour: "19:30",
+            closeHour: "23:30",
+            pixKey: "99991040222"
+          },
+          categories: [
+            { name: "Burgers", items: [] },
+            { name: "Combos", items: [] },
+            { name: "Batata Frita", items: [] },
+            { name: "Bebidas", items: [] },
+            { name: "Molhos", items: [] }
+          ],
+          adicionais: []
+        };
+
+        // Buscar do menu_data.json se disponível
+        fetch('menu_data.json')
+          .then(res => res.json())
+          .then(data => {
+            if (data && data.categories) {
+              STORE = data;
+              saveStoreToStorage();
+              refreshAllAdminViews();
+            }
+          })
+          .catch(() => {});
+      }
+
+      // Carregar Pedidos
+      const savedOrders = localStorage.getItem('SAO_JOSE_ORDERS');
+      if (savedOrders) {
+        try {
+          ORDERS = JSON.parse(savedOrders);
+        } catch (e) {}
+      } else {
+        // Mock inicial de demonstração
+        ORDERS = [
+          {
+            id: "PED-101",
+            date: new Date().toISOString(),
+            customer: { name: "Marcos Lima", phone: "(99) 99123-4567" },
+            address: "Rua Mariano Lisboa, 1400 - Engenho",
+            mode: "delivery",
+            payment: "PIX",
+            items: [{ title: "Burguer São José", qty: 2, price: 33.00 }],
+            total: 66.00,
+            status: "preparing"
+          },
+          {
+            id: "PED-102",
+            date: new Date(Date.now() - 1800000).toISOString(),
+            customer: { name: "Camila Santos", phone: "(99) 98877-1122" },
+            address: "Retirada no Balcão",
+            mode: "pickup",
+            payment: "Cartão",
+            items: [{ title: "Combo CASAL", qty: 1, price: 44.00 }, { title: "Coca cola 1litro", qty: 1, price: 12.00 }],
+            total: 56.00,
+            status: "delivery"
+          }
+        ];
+        saveOrdersToStorage();
+      }
+    }
+
+    function saveStoreToStorage() {
+      localStorage.setItem('SAO_JOSE_STORE_DATA', JSON.stringify(STORE));
+    }
+
+    function saveOrdersToStorage() {
+      localStorage.setItem('SAO_JOSE_ORDERS', JSON.stringify(ORDERS));
+    }
+
+    // AUTENTICAÇÃO
+    function checkAdminSession() {
+      const isAuth = sessionStorage.getItem('SAO_JOSE_ADMIN_AUTH');
+      const loginScreen = document.getElementById('admin-login-screen');
+      const mainLayout = document.getElementById('admin-main-layout');
+
+      if (isAuth === 'true') {
+        loginScreen.classList.add('hidden');
+        mainLayout.classList.remove('hidden');
+        refreshAllAdminViews();
+      } else {
+        loginScreen.classList.remove('hidden');
+        mainLayout.classList.add('hidden');
+      }
+    }
+
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      const pass = document.getElementById('admin-password-input').value.trim();
+      const savedPass = localStorage.getItem('SAO_JOSE_ADMIN_PASS') || 'admin123';
+
+      if (pass === savedPass) {
+        sessionStorage.setItem('SAO_JOSE_ADMIN_AUTH', 'true');
+        showAdminToast('Login efetuado com sucesso! Bem-vindo.');
+        checkAdminSession();
+      } else {
+        showAdminToast('Senha incorreta! Tente novamente.');
+        document.getElementById('admin-password-input').value = '';
+        document.getElementById('admin-password-input').focus();
+      }
+    }
+
+    function handleAdminLogout() {
+      sessionStorage.removeItem('SAO_JOSE_ADMIN_AUTH');
+      showAdminToast('Sessão encerrada.');
+      checkAdminSession();
+    }
+
+    function changeAdminPassword(e) {
+      e.preventDefault();
+      const newPass = document.getElementById('setting-new-password').value.trim();
+      if (newPass.length < 4) {
+        showAdminToast('A senha deve ter pelo menos 4 caracteres!');
+        return;
+      }
+      localStorage.setItem('SAO_JOSE_ADMIN_PASS', newPass);
+      document.getElementById('setting-new-password').value = '';
+      showAdminToast('Senha de administrador atualizada com sucesso! 🔒');
+    }
+
+    // NAVEGAÇÃO DE ABAS
+    function switchTab(tabId) {
+      ['dashboard', 'orders', 'products', 'categories', 'settings'].forEach(t => {
+        const viewEl = document.getElementById(`view-${t}`);
+        const btnEl = document.getElementById(`tab-btn-${t}`);
+        if (t === tabId) {
+          if (viewEl) viewEl.classList.remove('hidden');
+          if (btnEl) {
+            btnEl.classList.add('active', 'bg-brand-orange', 'text-white');
+            btnEl.classList.remove('text-stone-400');
+          }
+        } else {
+          if (viewEl) viewEl.classList.add('hidden');
+          if (btnEl) {
+            btnEl.classList.remove('active', 'bg-brand-orange', 'text-white');
+            btnEl.classList.add('text-stone-400');
+          }
+        }
+      });
+
+      if (tabId === 'dashboard') refreshDashboard();
+      if (tabId === 'orders') renderOrdersKanban();
+      if (tabId === 'products') renderAdminProducts();
+      if (tabId === 'categories') renderAdminCategoriesView();
+      if (tabId === 'settings') loadSettingsForm();
+    }
+
+    function refreshAllAdminViews() {
+      refreshDashboard();
+      renderOrdersKanban();
+      renderAdminProducts();
+      renderAdminCategoriesView();
+      loadSettingsForm();
+    }
+
+    // =========================================================================
+    // 1. DASHBOARD & GRÁFICOS
+    // =========================================================================
+    function refreshDashboard() {
+      if (!STORE) return;
+
+      const allItems = [];
+      STORE.categories.forEach(c => (c.items || []).forEach(i => allItems.push(i)));
+
+      const totalRevenue = ORDERS.reduce((acc, o) => acc + (o.total || 0), 0);
+      const totalOrders = ORDERS.length;
+      const ticket = totalOrders > 0 ? (totalRevenue / totalOrders) : 0;
+
+      document.getElementById('kpi-revenue').innerText = totalRevenue.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      document.getElementById('kpi-orders-count').innerText = `${totalOrders} pedidos`;
+      document.getElementById('kpi-ticket').innerText = ticket.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      document.getElementById('kpi-products-count').innerText = `${allItems.length} itens`;
+      document.getElementById('kpi-categories-info').innerText = `Em ${STORE.categories.length} categorias ativas`;
+
+      renderCharts();
+    }
+
+    function renderCharts() {
+      // 1. Linha do Tempo de Vendas
+      const ctxTimeline = document.getElementById('chart-sales-timeline')?.getContext('2d');
+      if (ctxTimeline) {
+        if (charts.timeline) charts.timeline.destroy();
+        charts.timeline = new Chart(ctxTimeline, {
+          type: 'line',
+          data: {
+            labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+            datasets: [{
+              label: 'Faturamento (R$)',
+              data: [320, 480, 560, 780, 1420, 1890, 1650],
+              borderColor: '#FF5E1E',
+              backgroundColor: 'rgba(255, 94, 30, 0.15)',
+              fill: true,
+              tension: 0.4,
+              borderWidth: 3,
+              pointBackgroundColor: '#FF5E1E',
+              pointRadius: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8C827A' } },
+              y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8C827A' } }
+            }
+          }
+        });
+      }
+
+      // 2. Formas de Pagamento
+      const ctxPayments = document.getElementById('chart-payments')?.getContext('2d');
+      if (ctxPayments) {
+        if (charts.payments) charts.payments.destroy();
+        charts.payments = new Chart(ctxPayments, {
+          type: 'doughnut',
+          data: {
+            labels: ['PIX (Instantâneo)', 'Cartão (Maquininha)', 'Dinheiro'],
+            datasets: [{
+              data: [65, 25, 10],
+              backgroundColor: ['#10B981', '#3B82F6', '#F59E0B'],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { color: '#E5E7EB', font: { size: 10 } } }
+            },
+            cutout: '70%'
+          }
+        });
+      }
+
+      // 3. Top Produtos
+      const ctxTop = document.getElementById('chart-top-products')?.getContext('2d');
+      if (ctxTop) {
+        if (charts.top) charts.top.destroy();
+        charts.top = new Chart(ctxTop, {
+          type: 'bar',
+          data: {
+            labels: ['Burguer São José', 'Combo CASAL', 'Melt Duplo', 'Batata Suprema', 'Coca Zero 1L'],
+            datasets: [{
+              data: [42, 38, 29, 24, 35],
+              backgroundColor: '#FF9E1B',
+              borderRadius: 8
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8C827A' } },
+              y: { grid: { display: false }, ticks: { color: '#E5E7EB', font: { size: 10 } } }
+            }
+          }
+        });
+      }
+
+      // 4. Modalidades Delivery vs Balcão
+      const ctxModes = document.getElementById('chart-delivery-modes')?.getContext('2d');
+      if (ctxModes) {
+        if (charts.modes) charts.modes.destroy();
+        charts.modes = new Chart(ctxModes, {
+          type: 'doughnut',
+          data: {
+            labels: ['Entrega Delivery (82%)', 'Retirada no Balcão (18%)'],
+            datasets: [{
+              data: [82, 18],
+              backgroundColor: ['#FF5E1E', '#6366F1'],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: 'bottom', labels: { color: '#E5E7EB', font: { size: 10 } } }
+            },
+            cutout: '70%'
+          }
+        });
+      }
+    }
+
+    // =========================================================================
+    // 2. GESTÃO DE PEDIDOS (KANBAN)
+    // =========================================================================
+    function renderOrdersKanban() {
+      const colPending = document.getElementById('col-pending');
+      const colPreparing = document.getElementById('col-preparing');
+      const colDelivery = document.getElementById('col-delivery');
+      const colCompleted = document.getElementById('col-completed');
+
+      const pOrders = ORDERS.filter(o => o.status === 'pending');
+      const prOrders = ORDERS.filter(o => o.status === 'preparing');
+      const dOrders = ORDERS.filter(o => o.status === 'delivery');
+      const cOrders = ORDERS.filter(o => o.status === 'completed');
+
+      document.getElementById('count-col-pending').innerText = pOrders.length;
+      document.getElementById('count-col-preparing').innerText = prOrders.length;
+      document.getElementById('count-col-delivery').innerText = dOrders.length;
+      document.getElementById('count-col-completed').innerText = cOrders.length;
+
+      document.getElementById('sidebar-orders-badge').innerText = pOrders.length;
+      document.getElementById('mobile-orders-badge').innerText = pOrders.length;
+
+      const renderCard = (order) => `
+        <div class="bg-black/50 border border-white/10 rounded-2xl p-3.5 space-y-2.5 shadow-sm text-xs font-poppins hover:border-brand-orange/40 transition-colors">
+          <div class="flex items-center justify-between">
+            <span class="font-anton text-white tracking-wide">${order.id}</span>
+            <span class="text-[10px] text-stone-400">${new Date(order.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+          </div>
+
+          <div>
+            <strong class="text-white block">${order.customer?.name || 'Cliente'}</strong>
+            <span class="text-[11px] text-stone-400">${order.customer?.phone || ''}</span>
+          </div>
+
+          <div class="p-2 bg-white/5 rounded-xl text-[11px] text-stone-300">
+            ${(order.items || []).map(i => `<div>• ${i.qty}x ${i.title}</div>`).join('')}
+          </div>
+
+          <div class="flex items-center justify-between text-xs pt-1 border-t border-white/5">
+            <span class="text-stone-400">${order.mode === 'delivery' ? '🛵 Entrega' : '🏪 Balcão'} • <strong class="text-emerald-400">${order.payment}</strong></span>
+            <span class="font-anton text-brand-orange text-sm">R$ ${(order.total || 0).toFixed(2).replace('.', ',')}</span>
+          </div>
+
+          <!-- Ações de Status -->
+          <div class="grid grid-cols-2 gap-1.5 pt-1">
+            ${order.status === 'pending' ? `
+              <button onclick="setOrderStatus('${order.id}', 'preparing')" class="bg-brand-orange hover:bg-orange-600 text-white font-bold py-1.5 rounded-lg text-[10px] transition-colors">
+                🔥 Preparar
+              </button>
+            ` : ''}
+
+            ${order.status === 'preparing' ? `
+              <button onclick="setOrderStatus('${order.id}', 'delivery')" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-1.5 rounded-lg text-[10px] transition-colors">
+                🛵 Despachar
+              </button>
+            ` : ''}
+
+            ${order.status === 'delivery' ? `
+              <button onclick="setOrderStatus('${order.id}', 'completed')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 rounded-lg text-[10px] transition-colors">
+                ✓ Concluir
+              </button>
+            ` : ''}
+
+            <button onclick="notifyCustomerWhatsApp('${order.id}')" class="bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 font-bold py-1.5 rounded-lg text-[10px] flex items-center justify-center gap-1 transition-colors">
+              <span>💬 Avisar</span>
+            </button>
+          </div>
+        </div>
+      `;
+
+      colPending.innerHTML = pOrders.map(renderCard).join('') || '<div class="text-[11px] text-stone-500 text-center py-8">Nenhum pedido pendente</div>';
+      colPreparing.innerHTML = prOrders.map(renderCard).join('') || '<div class="text-[11px] text-stone-500 text-center py-8">Nenhum pedido no fogo</div>';
+      colDelivery.innerHTML = dOrders.map(renderCard).join('') || '<div class="text-[11px] text-stone-500 text-center py-8">Nenhum pedido em rota</div>';
+      colCompleted.innerHTML = cOrders.map(renderCard).join('') || '<div class="text-[11px] text-stone-500 text-center py-8">Nenhum pedido finalizado</div>';
+    }
+
+    function setOrderStatus(orderId, newStatus) {
+      const order = ORDERS.find(o => o.id === orderId);
+      if (order) {
+        order.status = newStatus;
+        saveOrdersToStorage();
+        renderOrdersKanban();
+        showAdminToast(`Status do pedido ${orderId} atualizado!`);
+      }
+    }
+
+    function notifyCustomerWhatsApp(orderId) {
+      const order = ORDERS.find(o => o.id === orderId);
+      if (!order) return;
+      const phoneClean = (order.customer?.phone || '').replace(/\D/g, '');
+      let text = `Olá, *${order.customer?.name}*! `;
+      if (order.status === 'preparing') text += `Seu pedido *#${order.id}* do São José Burguer já está no fogo sendo preparado com todo carinho! 🔥`;
+      else if (order.status === 'delivery') text += `Seu pedido *#${order.id}* saiu para entrega e logo chegará até você! 🛵🍔`;
+      else if (order.status === 'completed') text += `Seu pedido *#${order.id}* foi finalizado. Bom apetite e obrigado por escolher o São José Burguer! ⭐`;
+      else text += `Seu pedido *#${order.id}* foi recebido e está sendo processado! ✅`;
+
+      window.open(`https://api.whatsapp.com/send?phone=55${phoneClean}&text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    function openCreateOrderModal() {
+      const name = prompt("Nome do cliente:");
+      if (!name) return;
+      const phone = prompt("Telefone do cliente (WhatsApp):") || "";
+      const totalStr = prompt("Valor total do pedido (R$):", "35.00");
+      const total = parseFloat(totalStr) || 35.00;
+
+      const newOrder = {
+        id: "PED-" + (Math.floor(Math.random() * 900) + 100),
+        date: new Date().toISOString(),
+        customer: { name: name, phone: phone },
+        address: "Balcão / Manual",
+        mode: "pickup",
+        payment: "PIX",
+        items: [{ title: "Pedido Manual Balcão", qty: 1, price: total }],
+        total: total,
+        status: "pending"
+      };
+
+      ORDERS.unshift(newOrder);
+      saveOrdersToStorage();
+      renderOrdersKanban();
+      refreshDashboard();
+      showAdminToast("Novo pedido adicionado!");
+    }
+
+    function clearCompletedOrders() {
+      if (confirm("Deseja arquivar todos os pedidos concluídos?")) {
+        ORDERS = ORDERS.filter(o => o.status !== 'completed');
+        saveOrdersToStorage();
+        renderOrdersKanban();
+        showAdminToast("Pedidos concluídos limpos!");
+      }
+    }
+
+    // =========================================================================
+    // 3. GESTÃO DE PRODUTOS (CRUD)
+    // =========================================================================
+    function renderAdminProducts() {
+      if (!STORE) return;
+
+      const tableBody = document.getElementById('admin-products-table-body');
+      const catFiltersContainer = document.getElementById('admin-category-filters');
+
+      // Filtros de Categoria
+      let catsHtml = `
+        <button onclick="filterByAdminCat('ALL')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${activeAdminCategoryFilter === 'ALL' ? 'bg-brand-orange text-white' : 'bg-white/5 text-stone-400 hover:text-white'}">
+          Todas
+        </button>
+      `;
+      STORE.categories.forEach(c => {
+        catsHtml += `
+          <button onclick="filterByAdminCat('${c.name}')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${activeAdminCategoryFilter === c.name ? 'bg-brand-orange text-white' : 'bg-white/5 text-stone-400 hover:text-white'}">
+            ${c.name}
+          </button>
+        `;
+      });
+      catFiltersContainer.innerHTML = catsHtml;
+
+      // Lista de Itens
+      let allItems = [];
+      STORE.categories.forEach(c => {
+        if (activeAdminCategoryFilter === 'ALL' || activeAdminCategoryFilter === c.name) {
+          (c.items || []).forEach(item => {
+            allItems.push({ ...item, categoryName: c.name });
+          });
+        }
+      });
+
+      const searchVal = (document.getElementById('admin-product-search')?.value || '').toLowerCase().trim();
+      if (searchVal) {
+        allItems = allItems.filter(i => i.title.toLowerCase().includes(searchVal) || (i.description && i.description.toLowerCase().includes(searchVal)));
+      }
+
+      tableBody.innerHTML = allItems.map(item => `
+        <tr class="hover:bg-white/5 transition-colors">
+          <td class="p-4">
+            <img src="${item.image || 'assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.jpg'}" alt="${item.title}" class="w-12 h-12 rounded-xl object-cover bg-black/40 border border-white/10" onerror="this.src='assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.jpg'" />
+          </td>
+          <td class="p-4">
+            <div class="font-bold text-white text-sm">${item.title}</div>
+            <p class="text-[11px] text-stone-400 line-clamp-1 max-w-md mt-0.5">${item.description || 'Sem descrição'}</p>
+            <div class="flex items-center gap-2 mt-1">
+              ${item.isBestseller ? '<span class="text-[9px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-bold">⭐ Mais Pedido</span>' : ''}
+              ${item.isPromo ? '<span class="text-[9px] bg-red-500/20 text-red-400 px-1.5 py-0.5 rounded font-bold">🔥 Promoção</span>' : ''}
+            </div>
+          </td>
+          <td class="p-4 font-semibold text-stone-300">${item.categoryName}</td>
+          <td class="p-4 font-anton text-brand-orange text-sm">R$ ${(item.price || 0).toFixed(2).replace('.', ',')}</td>
+          <td class="p-4">
+            <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">Ativo</span>
+          </td>
+          <td class="p-4 text-right">
+            <div class="flex items-center justify-end gap-2">
+              <button onclick="openProductEditModal('${item.id}')" class="p-2 rounded-xl bg-white/5 hover:bg-brand-orange text-stone-300 hover:text-white transition-colors" title="Editar Produto">
+                ✏️
+              </button>
+              <button onclick="deleteProduct('${item.id}')" class="p-2 rounded-xl bg-red-500/10 hover:bg-red-600 text-red-400 hover:text-white transition-colors" title="Excluir Produto">
+                🗑️
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('') || '<tr><td colspan="6" class="p-8 text-center text-stone-400">Nenhum produto encontrado.</td></tr>';
+    }
+
+    function filterByAdminCat(catName) {
+      activeAdminCategoryFilter = catName;
+      renderAdminProducts();
+    }
+
+    function filterAdminProducts() {
+      renderAdminProducts();
+    }
+
+    function openProductEditModal(productId) {
+      const backdrop = document.getElementById('product-modal-backdrop');
+      const modal = document.getElementById('product-modal');
+      const catSelect = document.getElementById('edit-product-category');
+
+      // Preencher select de categorias
+      catSelect.innerHTML = STORE.categories.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+
+      if (productId) {
+        document.getElementById('modal-product-header').innerText = "EDITAR PRODUTO";
+        let found = null;
+        let foundCat = null;
+        STORE.categories.forEach(c => {
+          (c.items || []).forEach(i => {
+            if (i.id === productId) {
+              found = i;
+              foundCat = c.name;
+            }
+          });
+        });
+
+        if (found) {
+          document.getElementById('edit-product-id').value = found.id;
+          document.getElementById('edit-product-title').value = found.title;
+          document.getElementById('edit-product-price').value = found.price;
+          document.getElementById('edit-product-desc').value = found.description || '';
+          document.getElementById('edit-product-image').value = found.image || '';
+          document.getElementById('edit-product-category').value = foundCat;
+          document.getElementById('edit-product-bestseller').checked = !!found.isBestseller;
+          document.getElementById('edit-product-promo').checked = !!found.isPromo;
+        }
+      } else {
+        document.getElementById('modal-product-header').innerText = "NOVO PRODUTO";
+        document.getElementById('edit-product-id').value = "";
+        document.getElementById('edit-product-title').value = "";
+        document.getElementById('edit-product-price').value = "";
+        document.getElementById('edit-product-desc').value = "";
+        document.getElementById('edit-product-image').value = "assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.jpg";
+        document.getElementById('edit-product-bestseller').checked = false;
+        document.getElementById('edit-product-promo').checked = false;
+      }
+
+      backdrop.classList.remove('opacity-0', 'pointer-events-none');
+      backdrop.classList.add('opacity-100', 'pointer-events-auto');
+      modal.classList.remove('scale-95');
+      modal.classList.add('scale-100');
+    }
+
+    function closeProductEditModal() {
+      const backdrop = document.getElementById('product-modal-backdrop');
+      const modal = document.getElementById('product-modal');
+      modal.classList.remove('scale-100');
+      modal.classList.add('scale-95');
+      backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+      backdrop.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    function saveProduct(e) {
+      e.preventDefault();
+      const id = document.getElementById('edit-product-id').value.trim();
+      const title = document.getElementById('edit-product-title').value.trim();
+      const price = parseFloat(document.getElementById('edit-product-price').value);
+      const desc = document.getElementById('edit-product-desc').value.trim();
+      const image = document.getElementById('edit-product-image').value.trim() || 'assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.jpg';
+      const catName = document.getElementById('edit-product-category').value;
+      const isBestseller = document.getElementById('edit-product-bestseller').checked;
+      const isPromo = document.getElementById('edit-product-promo').checked;
+
+      const catObj = STORE.categories.find(c => c.name === catName);
+      if (!catObj) return;
+
+      if (id) {
+        // Remover de qualquer categoria existente primeiro
+        STORE.categories.forEach(c => {
+          c.items = (c.items || []).filter(i => i.id !== id);
+        });
+
+        // Adicionar na categoria selecionada
+        catObj.items.push({
+          id: id,
+          title: title,
+          price: price,
+          description: desc,
+          image: image,
+          isBestseller: isBestseller,
+          isPromo: isPromo
+        });
+        showAdminToast(`Produto "${title}" atualizado com sucesso!`);
+      } else {
+        const newId = "prod_" + Date.now();
+        catObj.items.unshift({
+          id: newId,
+          title: title,
+          price: price,
+          description: desc,
+          image: image,
+          isBestseller: isBestseller,
+          isPromo: isPromo
+        });
+        showAdminToast(`Novo produto "${title}" criado com sucesso!`);
+      }
+
+      saveStoreToStorage();
+      closeProductEditModal();
+      renderAdminProducts();
+      refreshDashboard();
+    }
+
+    function deleteProduct(productId) {
+      if (confirm("Tem certeza que deseja excluir este produto do cardápio?")) {
+        STORE.categories.forEach(c => {
+          c.items = (c.items || []).filter(i => i.id !== productId);
+        });
+        saveStoreToStorage();
+        renderAdminProducts();
+        refreshDashboard();
+        showAdminToast("Produto excluído com sucesso!");
+      }
+    }
+
+    // =========================================================================
+    // 4. CATEGORIAS & ADICIONAIS
+    // =========================================================================
+    function renderAdminCategoriesView() {
+      const catsList = document.getElementById('admin-categories-list');
+      const addsList = document.getElementById('admin-additionals-list');
+
+      catsList.innerHTML = STORE.categories.map((c, idx) => `
+        <div class="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-2xl">
+          <div class="flex items-center gap-3">
+            <span class="font-anton text-brand-orange text-base">${idx + 1}</span>
+            <div>
+              <strong class="text-white block">${c.name}</strong>
+              <span class="text-[11px] text-stone-400">${(c.items || []).length} produtos ativos</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      addsList.innerHTML = (STORE.adicionais || []).map((add, idx) => `
+        <div class="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-2xl">
+          <div class="flex items-center gap-3">
+            <img src="${add.image}" class="w-9 h-9 rounded-xl object-cover bg-black/40" onerror="this.src='assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.jpg'" />
+            <div>
+              <strong class="text-white block">${add.title}</strong>
+              <span class="text-brand-orange font-anton text-xs">+ R$ ${(add.price || 0).toFixed(2).replace('.', ',')}</span>
+            </div>
+          </div>
+          <button onclick="deleteAdditional('${add.title}')" class="p-1.5 text-red-400 hover:text-red-300">🗑️</button>
+        </div>
+      `).join('');
+    }
+
+    function openAddAdditionalModal() {
+      const title = prompt("Nome do Adicional (Ex: Bacon Crocante, Queijo Coalho):");
+      if (!title) return;
+      const priceStr = prompt("Valor do adicional (R$):", "4.50");
+      const price = parseFloat(priceStr) || 4.50;
+
+      if (!STORE.adicionais) STORE.adicionais = [];
+      STORE.adicionais.push({
+        id: "add_" + Date.now(),
+        title: title,
+        price: price,
+        image: "assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.jpg"
+      });
+
+      saveStoreToStorage();
+      renderAdminCategoriesView();
+      showAdminToast(`Adicional "${title}" cadastrado!`);
+    }
+
+    function deleteAdditional(title) {
+      if (confirm(`Excluir o adicional "${title}"?`)) {
+        STORE.adicionais = (STORE.adicionais || []).filter(a => a.title !== title);
+        saveStoreToStorage();
+        renderAdminCategoriesView();
+        showAdminToast("Adicional removido!");
+      }
+    }
+
+    // =========================================================================
+    // 5. CONFIGURAÇÕES DA LOJA
+    // =========================================================================
+    function loadSettingsForm() {
+      if (!STORE || !STORE.store) return;
+      document.getElementById('setting-store-name').value = STORE.store.name || "São José Burguer";
+      document.getElementById('setting-whatsapp').value = STORE.store.whatsapp || "5599991040222";
+      document.getElementById('setting-pix-key').value = STORE.store.pixKey || "99991040222";
+      document.getElementById('setting-min-order').value = STORE.store.minOrder || 6;
+      document.getElementById('setting-store-status').value = STORE.store.status || "auto";
+      document.getElementById('setting-address').value = STORE.store.address || "AVENIDA MARIANO LISBOA, 1370 - ENGENHO, Pedreiras - MA, 65725-000";
+    }
+
+    function saveStoreSettings(e) {
+      e.preventDefault();
+      STORE.store = STORE.store || {};
+      STORE.store.name = document.getElementById('setting-store-name').value.trim();
+      STORE.store.whatsapp = document.getElementById('setting-whatsapp').value.trim();
+      STORE.store.pixKey = document.getElementById('setting-pix-key').value.trim();
+      STORE.store.minOrder = parseFloat(document.getElementById('setting-min-order').value) || 6;
+      STORE.store.status = document.getElementById('setting-store-status').value;
+      STORE.store.address = document.getElementById('setting-address').value.trim();
+
+      saveStoreToStorage();
+      showAdminToast("Configurações da empresa salvas com sucesso! 🏢");
+    }
+
+    function exportBackupData() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(STORE, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `sao_jose_burguer_backup_${new Date().toISOString().slice(0, 10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showAdminToast("Backup baixado com sucesso!");
+    }
+
+    function importBackupData(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        try {
+          const parsed = JSON.parse(event.target.result);
+          if (parsed && parsed.categories) {
+            STORE = parsed;
+            saveStoreToStorage();
+            refreshAllAdminViews();
+            showAdminToast("Backup restaurado com sucesso! ✅");
+          } else {
+            alert("Arquivo de backup inválido.");
+          }
+        } catch (err) {
+          alert("Erro ao ler o arquivo JSON.");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function showAdminToast(msg) {
+      const toast = document.getElementById('admin-toast');
+      const text = document.getElementById('admin-toast-text');
+      text.innerText = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+      }, 2600);
+    }
+  </script>
+
+</body>
+</html>
