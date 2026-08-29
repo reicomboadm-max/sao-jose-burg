@@ -1149,13 +1149,13 @@
         <div id="saved-addresses-list" class="space-y-1.5 text-xs"></div>
       </div>
 
-      <!-- 4. CAMPOS DE ENDEREÇO & BAIRRO COM TAXA (DELIVERY) -->
+      <!-- 4. CAMPOS DE ENDEREÇO & CIDADE COM TAXA (DELIVERY) -->
       <div id="delivery-fields-container" class="bg-white/5 border border-white/10 rounded-2xl p-3.5 space-y-2.5">
         <label class="block text-[11px] font-anton text-white tracking-wider">ENDEREÇO DE ENTREGA:</label>
 
-        <!-- Seletor de Bairro com Taxa Automática -->
+        <!-- Seletor de Cidade / Região com Taxa Automática -->
         <div class="space-y-1">
-          <label class="text-[10px] text-stone-400 font-bold uppercase">Selecione seu Bairro / Região (Pedreiras):</label>
+          <label class="text-[10px] text-stone-400 font-bold uppercase">Selecione sua Cidade / Região:</label>
           <select 
             id="customer-neighborhood-select" 
             onchange="handleNeighborhoodChange(this.value)"
@@ -1163,6 +1163,17 @@
           >
             <!-- Injetado dinamicamente -->
           </select>
+        </div>
+
+        <!-- Bairro -->
+        <div>
+          <input 
+            type="text" 
+            id="customer-bairro-text" 
+            placeholder="Seu Bairro (Ex: Engenho, Centro, Goiabal, etc.) *" 
+            class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+            autocomplete="address-level2"
+          />
         </div>
         
         <!-- CEP e Rua -->
@@ -2034,22 +2045,16 @@
     }
 
     // =========================================================================
-    // BAIRROS E TAXAS DE ENTREGA (PEDREIRAS - MA)
+    // CIDADES E TAXAS DE ENTREGA (PEDREIRAS / TRIZIDELA DO VALE - MA)
     // =========================================================================
     const DEFAULT_NEIGHBORHOODS = [
-      { name: "Engenho (Próximo à loja)", fee: 3.00 },
-      { name: "Centro", fee: 4.00 },
-      { name: "Goiabal", fee: 5.00 },
-      { name: "Mutirão", fee: 5.00 },
-      { name: "Loteamento Passos", fee: 5.00 },
-      { name: "Parque Henrique", fee: 6.00 },
-      { name: "Vila das Flores", fee: 5.00 },
+      { name: "Pedreiras", fee: 5.00 },
       { name: "Trizidela do Vale", fee: 7.00 },
-      { name: "Outro Bairro / Região", fee: 5.00 }
+      { name: "Outro Local / Região", fee: 5.00 }
     ];
 
-    let currentDeliveryFee = 3.00;
-    let selectedNeighborhoodName = "Engenho (Próximo à loja)";
+    let currentDeliveryFee = 5.00;
+    let selectedNeighborhoodName = "Pedreiras";
 
     function getStoreNeighborhoods() {
       try {
@@ -2215,7 +2220,7 @@
           <div class="p-2.5 bg-black/40 border border-white/10 hover:border-brand-orange/40 rounded-xl flex items-center justify-between gap-2 transition-colors">
             <div class="flex-1 cursor-pointer" onclick="selectSavedAddress(${idx})">
               <strong class="text-white text-xs block">${addr.street}, Nº ${addr.number}</strong>
-              <span class="text-[10px] text-stone-400">Bairro: <span class="text-amber-400 font-semibold">${addr.neighborhood}</span> • Pedreiras</span>
+              <span class="text-[10px] text-stone-400">Local: <span class="text-amber-400 font-semibold">${addr.neighborhood}</span> ${addr.bairro ? `(${addr.bairro})` : ''}</span>
               ${addr.reference ? `<p class="text-[10px] text-stone-400">Ref: ${addr.reference}</p>` : ''}
             </div>
             <div class="flex items-center gap-1.5">
@@ -2252,6 +2257,10 @@
 
         if (addr.street) document.getElementById('customer-street').value = addr.street;
         if (addr.number) document.getElementById('customer-number').value = addr.number;
+        if (addr.bairro) {
+          const bInp = document.getElementById('customer-bairro-text');
+          if (bInp) bInp.value = addr.bairro;
+        }
         if (addr.complement) document.getElementById('customer-complement').value = addr.complement;
         if (addr.reference) document.getElementById('customer-reference').value = addr.reference;
         if (addr.cep) document.getElementById('customer-cep').value = addr.cep;
@@ -2506,6 +2515,7 @@
 
       const street = streetInput ? streetInput.value.trim() : '';
       const number = numberInput ? numberInput.value.trim() : '';
+      const bairroText = document.getElementById('customer-bairro-text') ? document.getElementById('customer-bairro-text').value.trim() : '';
       const neighborhood = selectedNeighborhoodName;
       const cep = document.getElementById('customer-cep') ? document.getElementById('customer-cep').value.trim() : '';
       const reference = document.getElementById('customer-reference') ? document.getElementById('customer-reference').value.trim() : '';
@@ -2537,7 +2547,7 @@
           const saved = JSON.parse(localStorage.getItem('SAO_JOSE_SAVED_ADDRESSES') || '[]');
           const exists = saved.some(s => s.street.toLowerCase() === street.toLowerCase() && s.number === number && s.neighborhood === neighborhood);
           if (!exists) {
-            saved.unshift({ street, number, neighborhood, complement, reference, cep });
+            saved.unshift({ street, number, neighborhood, bairro: bairroText, complement, reference, cep });
             if (saved.length > 5) saved.pop();
             localStorage.setItem('SAO_JOSE_SAVED_ADDRESSES', JSON.stringify(saved));
           }
@@ -2566,8 +2576,9 @@
 
       if (orderMode === 'delivery') {
         msg += `*📍 ENDEREÇO DE ENTREGA:*\n`;
+        msg += `• *Cidade / Região:* ${neighborhood}\n`;
+        if (bairroText) msg += `• *Bairro:* ${bairroText}\n`;
         msg += `• *Rua:* ${street}, Nº ${number}\n`;
-        msg += `• *Bairro:* ${neighborhood} (Pedreiras)\n`;
         if (cep) msg += `• *CEP:* ${cep}\n`;
         if (reference) msg += `• *Referência:* ${reference}\n`;
         if (complement) msg += `• *Complemento:* ${complement}\n\n`;
@@ -2606,7 +2617,7 @@
       try {
         let orderAddress = "Retirada no Balcão";
         if (orderMode === 'delivery') {
-          orderAddress = `${street}, Nº ${number} - ${neighborhood}`;
+          orderAddress = `${street}, Nº ${number}${bairroText ? ` - ${bairroText}` : ''} (${neighborhood})`;
         } else if (orderMode === 'dine_in') {
           orderAddress = `Consumo no Local ${tableNumber ? `(Mesa ${tableNumber})` : ''}`;
         }
@@ -2619,6 +2630,7 @@
           mode: orderMode,
           deliveryFee: deliveryFee,
           neighborhood: neighborhood,
+          bairro: bairroText,
           table: tableNumber,
           payment: selectedPayment.toUpperCase(),
           items: cart.map(c => ({ title: c.title, qty: c.quantity, price: c.price })),
