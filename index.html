@@ -258,29 +258,28 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
       
       <!-- LOGO & BRAND INFO -->
-      <a href="#" class="flex items-center gap-3.5 group">
-        <div class="w-12 h-12 rounded-2xl overflow-hidden border border-white/15 bg-black/50 shadow-md flex items-center justify-center p-0.5 group-hover:scale-105 transition-transform">
+      <a href="#" class="flex items-center gap-2.5 sm:gap-3.5 group">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl overflow-hidden border border-white/15 bg-black/50 shadow-md flex items-center justify-center p-0.5 group-hover:scale-105 transition-transform flex-shrink-0">
           <img src="assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.jpg" alt="Logo São José Burguer" class="w-full h-full object-cover rounded-xl" onerror="this.src='assets/e8392808a1c7659c_favicon.png'" />
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="text-xl sm:text-2xl font-anton text-white tracking-wider leading-none">
+            <h1 class="text-lg sm:text-2xl font-anton text-white tracking-wider leading-none">
               SÃO JOSÉ <span class="text-brand-orange">BURGUER</span>
             </h1>
-            <button onclick="openStoreInfoModal()" id="header-status-badge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-400 text-[10px] font-poppins font-bold transition-colors cursor-pointer" title="Ver Horários, PIX e Endereço">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span id="header-status-text">Verificando horário...</span>
-              <span class="text-xs">ℹ️</span>
-            </button>
           </div>
-          <p class="text-[11px] text-stone-400 font-poppins font-medium mt-0.5 hidden sm:block">
-            Grelhado no fogo • Os melhores hambúrgueres da cidade
-          </p>
+          <div class="mt-1 flex items-center gap-2">
+            <button onclick="openStoreInfoModal()" id="header-status-badge" class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-400 text-[10px] font-poppins font-bold transition-colors cursor-pointer shadow-sm" title="Ver Horários, PIX e Endereço">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="header-status-text">Aberto até 23h30</span>
+            </button>
+            <span class="text-[11px] text-stone-400 font-poppins font-medium hidden md:inline">• Pedreiras & Trizidela</span>
+          </div>
         </div>
       </a>
 
       <!-- SEARCH BAR (DESKTOP) -->
-      <div class="hidden md:flex flex-1 max-w-md mx-6 relative items-center">
+      <div class="hidden md:flex flex-1 max-w-sm mx-4 relative items-center">
         <span class="absolute left-3.5 pointer-events-none text-stone-400">
           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
         </span>
@@ -288,36 +287,36 @@
           type="text" 
           id="desktop-search-input"
           oninput="handleSearch(this.value)"
-          placeholder="Buscar hambúrguer, combo, batata frita..." 
-          class="w-full bg-white/5 dark:bg-white/5 border border-white/10 dark:border-white/10 rounded-2xl pl-10 pr-10 py-2.5 text-xs font-poppins text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange transition-colors"
+          placeholder="Buscar no cardápio..." 
+          class="w-full bg-white/5 border border-white/10 rounded-2xl pl-10 pr-10 py-2.5 text-xs font-poppins text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange transition-colors"
         />
         <button id="desktop-clear-search-btn" onclick="clearSearch()" class="hidden absolute right-3 text-stone-400 hover:text-white text-xs bg-white/10 rounded-full w-5 h-5 flex items-center justify-center">✕</button>
       </div>
 
       <!-- ACTIONS: TEMA, INFO, WHATSAPP & SACOLA -->
-      <div class="flex items-center gap-2 sm:gap-3">
+      <div class="flex items-center gap-1.5 sm:gap-2.5">
         
         <!-- Toggle Modo Claro / Escuro -->
-        <button onclick="toggleTheme()" class="w-11 h-11 rounded-2xl bg-white/5 border border-white/10 hover:border-brand-orange text-stone-300 flex items-center justify-center shadow-sm active:scale-95 transition-all" aria-label="Alternar Tema" title="Alternar Modo Claro/Escuro">
+        <button onclick="toggleTheme()" class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-white/5 border border-white/10 hover:border-brand-orange text-stone-300 flex items-center justify-center shadow-sm active:scale-95 transition-all" aria-label="Alternar Tema" title="Alternar Modo Claro/Escuro">
           <span id="theme-icon-container">
-            <svg class="w-5 h-5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
           </span>
         </button>
 
         <!-- Informações da Loja Modal Trigger -->
-        <button onclick="openStoreInfoModal()" class="flex items-center gap-1.5 px-3.5 py-2.5 rounded-2xl bg-white/5 hover:bg-white/10 text-stone-200 border border-white/10 hover:border-brand-orange transition-all font-poppins text-xs font-semibold shadow-sm active:scale-95" title="Ver Horários, PIX e Endereço">
+        <button onclick="openStoreInfoModal()" class="w-10 h-10 sm:w-auto sm:px-3.5 sm:py-2.5 rounded-2xl bg-white/5 hover:bg-white/10 text-stone-200 border border-white/10 hover:border-brand-orange transition-all font-poppins text-xs font-semibold shadow-sm active:scale-95 flex items-center justify-center gap-1.5" title="Ver Horários, PIX e Endereço">
           <span class="text-sm">ℹ️</span>
-          <span class="hidden sm:inline">Informações</span>
+          <span class="hidden lg:inline">Loja</span>
         </button>
 
         <!-- WhatsApp Direto -->
-        <button onclick="contactWhatsApp()" class="hidden md:flex items-center gap-2 px-3.5 py-2.5 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 transition-all font-poppins text-xs font-semibold">
+        <button onclick="contactWhatsApp()" class="hidden xl:flex items-center gap-2 px-3.5 py-2.5 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 transition-all font-poppins text-xs font-semibold">
           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"></path><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1"></path></svg>
-          <span>(99) 99104-0222</span>
+          <span>WhatsApp</span>
         </button>
 
         <!-- Botão Sacola -->
-        <button onclick="toggleCartDrawer()" class="relative flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:brightness-110 text-white px-4 py-2.5 rounded-2xl shadow-orange-glow active:scale-95 transition-all font-poppins text-xs font-bold" aria-label="Sacola de Pedidos">
+        <button onclick="toggleCartDrawer()" class="relative flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:brightness-110 text-white px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-2xl shadow-orange-glow active:scale-95 transition-all font-poppins text-xs font-bold" aria-label="Sacola de Pedidos">
           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
           <span class="hidden sm:inline">Sacola</span>
           <span id="nav-cart-badge" class="bg-black/30 text-white text-[11px] font-black px-2 py-0.5 rounded-full border border-white/20">0</span>
@@ -347,16 +346,51 @@
   <!-- ========================================================================= -->
   <!-- MAIN CONTENT CONTAINER -->
   <!-- ========================================================================= -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-10 relative z-10">
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-8 relative z-10">
 
     <!-- ========================================================================= -->
-    <!-- 2. HERO FEATURED BANNER (BURGUER SÃO JOSÉ) -->
+    <!-- 2. CATEGORIAS DE NAVEGAÇÃO / FILTROS (STICKY NO TOPO - ACESSO IMEDIATO) -->
     <!-- ========================================================================= -->
-    <section onclick="openProductById('6a8f2939efa864ebad3960cf')" class="star-border-container star-border-dark electric-card cursor-pointer group">
+    <section class="sticky top-20 z-40 bg-[#080504]/95 dark:bg-[#080504]/95 backdrop-blur-xl py-3 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 border-y border-white/10 shadow-lg">
+      <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+        
+        <!-- BOTÃO ROLAR ESQUERDA -->
+        <button 
+          onclick="scrollCategories(-250)" 
+          class="hidden sm:flex w-9 h-9 rounded-xl bg-white/5 hover:bg-brand-orange text-white border border-white/10 items-center justify-center shadow-md active:scale-90 transition-all flex-shrink-0"
+          aria-label="Rolar para esquerda"
+        >
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
+        </button>
+
+        <!-- CONTAINER DAS CATEGORIAS -->
+        <div 
+          id="categories-pills-bar" 
+          class="flex items-center gap-2.5 sm:gap-3 overflow-x-auto no-scrollbar py-1 scroll-smooth w-full select-none"
+        >
+          <!-- Injetado dinamicamente via Javascript -->
+        </div>
+
+        <!-- BOTÃO ROLAR DIREITA -->
+        <button 
+          onclick="scrollCategories(250)" 
+          class="hidden sm:flex w-9 h-9 rounded-xl bg-white/5 hover:bg-brand-orange text-white border border-white/10 items-center justify-center shadow-md active:scale-90 transition-all flex-shrink-0"
+          aria-label="Rolar para direita"
+        >
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- 3. HERO FEATURED BANNER (BURGUER SÃO JOSÉ) -->
+    <!-- ========================================================================= -->
+    <section onclick="openProductById('6a8f2939efa864ebad3960cf')" class="star-border-container star-border-dark electric-card cursor-pointer group rounded-3xl overflow-hidden shadow-2xl">
       <div class="border-gradient-bottom"></div>
       <div class="border-gradient-top"></div>
 
-      <div class="inner-content p-6 sm:p-10 relative overflow-hidden text-white min-h-[260px] sm:min-h-[320px] flex flex-col justify-between">
+      <div class="inner-content p-6 sm:p-10 relative overflow-hidden text-white min-h-[240px] sm:min-h-[300px] flex flex-col justify-between">
         <div class="absolute inset-0 bg-gradient-to-r from-red-950/70 via-[#140E0A]/90 to-amber-950/60 pointer-events-none"></div>
 
         <!-- FOTO DO HAMBÚRGUER COM DROP SHADOW & HOVER ZOOM -->
@@ -371,7 +405,7 @@
 
         <!-- TEXTOS DO HERO -->
         <div class="relative z-10 max-w-xl">
-          <div class="flex items-center gap-2 mb-3">
+          <div class="flex items-center gap-2 mb-2">
             <span class="inline-flex items-center gap-1.5 bg-brand-orange text-white text-[10px] sm:text-xs font-anton tracking-wider uppercase px-3 py-1 rounded-full shadow-md">
               🔥 CAMPEÃO DE VENDAS
             </span>
@@ -380,17 +414,17 @@
             </span>
           </div>
 
-          <h2 class="text-3xl sm:text-5xl md:text-6xl font-anton leading-none tracking-wide text-white mb-2 sm:mb-3 drop-shadow">
+          <h2 class="text-2xl sm:text-5xl md:text-6xl font-anton leading-none tracking-wide text-white mb-2 sm:mb-3 drop-shadow">
             BURGUER <br /><span class="text-brand-orange">SÃO JOSÉ</span>
           </h2>
 
-          <p class="text-xs sm:text-sm md:text-base text-stone-300 font-poppins font-normal leading-relaxed mb-6 max-w-md">
-            Pão Brioche selado, 3 suculentos blends de 100g grelhados no fogo, 2 camadas de cheddar derretido, cebola caramelizada, catupiry cremoso e bacon crocante.
+          <p class="text-xs sm:text-sm text-stone-300 font-poppins font-normal leading-relaxed mb-5 max-w-md">
+            Pão Brioche selado, 3 suculentos blends de 100g, 2 camadas de cheddar derretido, cebola caramelizada, catupiry e bacon crocante.
           </p>
 
           <div class="flex flex-wrap items-center gap-3">
             <button 
-              class="bg-gradient-to-r from-orange-500 to-orange-600 hover:brightness-110 text-white text-xs sm:text-sm font-poppins font-bold px-6 py-3.5 rounded-full inline-flex items-center gap-2 shadow-orange-glow active:scale-95 transition-all border-t border-white/20"
+              class="bg-gradient-to-r from-orange-500 to-orange-600 hover:brightness-110 text-white text-xs sm:text-sm font-poppins font-bold px-6 py-3 rounded-full inline-flex items-center gap-2 shadow-orange-glow active:scale-95 transition-all border-t border-white/20"
             >
               <span>Pedir Agora</span>
               <span class="font-anton text-base ml-1">(R$ 33,00)</span>
@@ -399,24 +433,24 @@
 
             <span class="text-[11px] sm:text-xs text-stone-400 font-poppins flex items-center gap-1">
               <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-              Entrega rápida & quentinho
+              Entrega rápida
             </span>
           </div>
         </div>
 
         <!-- BADGES INFERIORES -->
-        <div class="relative z-10 flex items-center gap-6 mt-6 pt-4 border-t border-white/10 text-stone-400 text-xs font-poppins">
+        <div class="relative z-10 flex items-center gap-6 mt-4 pt-3 border-t border-white/10 text-stone-400 text-xs font-poppins">
           <div class="flex items-center gap-2">
-            <span class="text-lg">🥩</span>
-            <span class="hidden sm:inline font-medium">Blend 100% Bovino Nobre</span>
+            <span class="text-base">🥩</span>
+            <span class="font-medium text-[11px]">Blend 100% Bovino Nobre</span>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-lg">🔥</span>
-            <span class="hidden sm:inline font-medium">Grelhado no Fogo</span>
+            <span class="text-base">🔥</span>
+            <span class="font-medium text-[11px]">Grelhado no Fogo</span>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-lg">🛵</span>
-            <span class="hidden sm:inline font-medium">Delivery em São José</span>
+            <span class="text-base">🛵</span>
+            <span class="font-medium text-[11px]">Pedreiras & Trizidela</span>
           </div>
         </div>
 
@@ -424,7 +458,7 @@
     </section>
 
     <!-- ========================================================================= -->
-    <!-- 3. MAIS PEDIDOS DA SEMANA (CARROSSEL / GRID DE DESTAQUES) -->
+    <!-- 4. MAIS PEDIDOS DA SEMANA (CARROSSEL / GRID DE DESTAQUES) -->
     <!-- ========================================================================= -->
     <section class="space-y-4">
       <div class="flex items-center justify-between">
@@ -534,41 +568,6 @@
             </div>
           </div>
         </div>
-
-      </div>
-    </section>
-
-    <!-- ========================================================================= -->
-    <!-- 4. CATEGORIAS DE NAVEGAÇÃO / FILTROS (STICKY EM DESKTOP & MOBILE) -->
-    <!-- ========================================================================= -->
-    <section class="sticky top-20 z-40 bg-[#080504]/95 dark:bg-[#080504]/95 backdrop-blur-xl py-4 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 border-y border-white/5">
-      <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
-        
-        <!-- BOTÃO ROLAR ESQUERDA -->
-        <button 
-          onclick="scrollCategories(-250)" 
-          class="hidden sm:flex w-10 h-10 rounded-2xl bg-white/5 hover:bg-brand-orange text-white border border-white/10 items-center justify-center shadow-md active:scale-90 transition-all flex-shrink-0"
-          aria-label="Rolar para esquerda"
-        >
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
-        </button>
-
-        <!-- CONTAINER DAS CATEGORIAS -->
-        <div 
-          id="categories-pills-bar" 
-          class="flex items-center gap-3 overflow-x-auto no-scrollbar py-1 scroll-smooth w-full select-none"
-        >
-          <!-- Injetado dinamicamente via Javascript -->
-        </div>
-
-        <!-- BOTÃO ROLAR DIREITA -->
-        <button 
-          onclick="scrollCategories(250)" 
-          class="hidden sm:flex w-10 h-10 rounded-2xl bg-white/5 hover:bg-brand-orange text-white border border-white/10 items-center justify-center shadow-md active:scale-90 transition-all flex-shrink-0"
-          aria-label="Rolar para direita"
-        >
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
-        </button>
 
       </div>
     </section>
@@ -2980,11 +2979,11 @@
       const headerBadge = document.getElementById('header-status-badge');
       if (headerBadge) {
         if (open) {
-          headerBadge.className = "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-400 text-[10px] font-poppins font-bold transition-colors cursor-pointer shadow-sm";
-          headerBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span><span>Aberto Agora • Fecha às 23h30</span><span class="text-xs">ℹ️</span>`;
+          headerBadge.className = "inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-400 text-[10px] font-poppins font-bold transition-colors cursor-pointer shadow-sm";
+          headerBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span><span>Aberto até 23h30</span>`;
         } else {
-          headerBadge.className = "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-red-400 text-[10px] font-poppins font-bold transition-colors cursor-pointer shadow-sm";
-          headerBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse"></span><span>Fechado Agora • Abre às 19h30</span><span class="text-xs">ℹ️</span>`;
+          headerBadge.className = "inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-red-400 text-[10px] font-poppins font-bold transition-colors cursor-pointer shadow-sm";
+          headerBadge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse"></span><span>Fechado • Abre 19h30</span>`;
         }
       }
 
