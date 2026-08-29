@@ -1190,6 +1190,7 @@
             type="text" 
             id="customer-street" 
             list="pedreiras-streets-datalist"
+            onchange="saveCustomStreetIfNotExists(this.value, selectedNeighborhoodName)"
             placeholder="Rua / Avenida *" 
             class="col-span-2 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
             autocomplete="address-line1"
@@ -2122,9 +2123,22 @@
         if (!data || !data.cidades) return;
         const key = (cityName && cityName.toLowerCase().includes('trizidela')) ? 'trizidela' : 'pedreiras';
         const cityObj = data.cidades[key];
-        if (cityObj && cityObj.ruas) {
-          datalist.innerHTML = cityObj.ruas.map(rua => `<option value="${rua}"></option>`).join('');
-        }
+        let list = cityObj && cityObj.ruas ? [...cityObj.ruas] : [];
+
+        // Integrar ruas adicionadas por clientes
+        try {
+          const custom = JSON.parse(localStorage.getItem('SAO_JOSE_CUSTOM_STREETS') || '{"pedreiras":[],"trizidela":[]}');
+          if (custom[key] && Array.isArray(custom[key])) {
+            custom[key].forEach(st => {
+              if (!list.some(existing => existing.toLowerCase() === st.toLowerCase())) {
+                list.push(st);
+              }
+            });
+          }
+        } catch(e) {}
+
+        list.sort();
+        datalist.innerHTML = list.map(rua => `<option value="${rua}"></option>`).join('');
       };
 
       if (cachedMapData) {
@@ -2138,6 +2152,29 @@
           })
           .catch(() => {});
       }
+    }
+
+    function saveCustomStreetIfNotExists(streetName, cityName) {
+      if (!streetName || streetName.trim().length < 3) return;
+      const clean = streetName.trim();
+      const key = (cityName && cityName.toLowerCase().includes('trizidela')) ? 'trizidela' : 'pedreiras';
+
+      try {
+        let custom = JSON.parse(localStorage.getItem('SAO_JOSE_CUSTOM_STREETS') || '{"pedreiras":[],"trizidela":[]}');
+        if (!custom[key]) custom[key] = [];
+
+        const alreadyInCustom = custom[key].some(s => s.toLowerCase() === clean.toLowerCase());
+        let alreadyInBase = false;
+        if (cachedMapData && cachedMapData.cidades && cachedMapData.cidades[key] && cachedMapData.cidades[key].ruas) {
+          alreadyInBase = cachedMapData.cidades[key].ruas.some(s => s.toLowerCase() === clean.toLowerCase());
+        }
+
+        if (!alreadyInCustom && !alreadyInBase) {
+          custom[key].push(clean);
+          localStorage.setItem('SAO_JOSE_CUSTOM_STREETS', JSON.stringify(custom));
+          updateStreetAutocompleteForCity(cityName);
+        }
+      } catch(e) {}
     }
 
     function initStreetAutocomplete() {
@@ -2591,6 +2628,8 @@
           showToast('⚠️ Informe o Número da sua residência!');
           return;
         }
+
+        saveCustomStreetIfNotExists(street, selectedNeighborhoodName);
 
         // Salvar endereço no histórico de endereços
         try {
