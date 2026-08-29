@@ -1079,26 +1079,37 @@
           </div>
         </div>
 
-        <!-- Campos Editáveis de Nome e Telefone -->
+        <!-- Campos Editáveis de Telefone e Nome (Padrão Anota AI) -->
         <div id="customer-edit-fields" class="space-y-2 pt-2 border-t border-white/5 hidden">
-          <input 
-            type="text" 
-            id="customer-name" 
-            placeholder="Seu Nome e Sobrenome *" 
-            oninput="updateClientDisplay()"
-            class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
-            required
-            autocomplete="name"
-          />
-          <input 
-            type="tel" 
-            id="customer-phone" 
-            placeholder="Telefone / WhatsApp *" 
-            oninput="updateClientDisplay()"
-            class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
-            required
-            autocomplete="tel"
-          />
+          <div>
+            <label class="block text-[10px] text-stone-400 font-bold uppercase mb-1">Seu número de WhatsApp é:</label>
+            <input 
+              type="tel" 
+              id="customer-phone" 
+              placeholder="(99) 9 9999-9999 *" 
+              oninput="handlePhoneInput(this.value)"
+              onblur="handlePhoneLookup(this.value)"
+              class="w-full bg-black/40 border border-brand-orange/40 text-amber-400 font-bold rounded-xl px-3 py-2.5 text-[16px] sm:text-xs placeholder-stone-500 focus:outline-none focus:border-brand-orange"
+              required
+              autocomplete="tel"
+            />
+          </div>
+          <div>
+            <label class="block text-[10px] text-stone-400 font-bold uppercase mb-1">Seu nome e sobrenome:</label>
+            <input 
+              type="text" 
+              id="customer-name" 
+              placeholder="Digite seu nome completo *" 
+              oninput="updateClientDisplay()"
+              class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+              required
+              autocomplete="name"
+            />
+          </div>
+          <div id="phone-autofill-hint" class="hidden text-[10px] text-emerald-400 flex items-center gap-1 font-semibold">
+            <span>✨</span>
+            <span>Cadastro localizado! Dados preenchidos automaticamente.</span>
+          </div>
         </div>
       </div>
 
@@ -2240,7 +2251,7 @@
     }
 
     // =========================================================================
-    // IDENTIFICAÇÃO E ENDEREÇOS SALVOS (MEMÓRIA NO NAVEGADOR)
+    // IDENTIFICAÇÃO E ENDEREÇOS SALVOS (MEMÓRIA NO NAVEGADOR & AUTOFILL POR TELEFONE)
     // =========================================================================
     let isEditingProfile = false;
 
@@ -2253,14 +2264,140 @@
       if (isEditingProfile) {
         if (editFields) editFields.classList.remove('hidden');
         if (btn) btn.innerText = "Salvar";
-        const nameInp = document.getElementById('customer-name');
-        if (nameInp) nameInp.focus();
+        const phoneInp = document.getElementById('customer-phone');
+        if (phoneInp) phoneInp.focus();
       } else {
         if (editFields) editFields.classList.add('hidden');
         if (btn) btn.innerText = "Trocar";
         saveCustomerProfile();
       }
       updateClientDisplay();
+    }
+
+    function formatPhoneMask(v) {
+      if (!v) return '';
+      v = v.replace(/\D/g, '');
+      if (v.length > 11) v = v.substring(0, 11);
+      if (v.length > 10) {
+        return v.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+      } else if (v.length > 6) {
+        return v.replace(/^(\d{2})(\d{4})(\d{0,4})$/, '($1) $2-$3');
+      } else if (v.length > 2) {
+        return v.replace(/^(\d{2})(\d{0,5})$/, '($1) $2');
+      }
+      return v;
+    }
+
+    function handlePhoneInput(val) {
+      const phoneInput = document.getElementById('customer-phone');
+      if (phoneInput) {
+        const masked = formatPhoneMask(val);
+        phoneInput.value = masked;
+      }
+      updateClientDisplay();
+      
+      const digits = (val || '').replace(/\D/g, '');
+      if (digits.length >= 10) {
+        lookupCustomerByPhone(digits);
+      }
+    }
+
+    function handlePhoneLookup(val) {
+      const digits = (val || '').replace(/\D/g, '');
+      if (digits.length >= 10) {
+        lookupCustomerByPhone(digits, true);
+      }
+    }
+
+    function lookupCustomerByPhone(phoneDigits, notifyOnFound = false) {
+      try {
+        let foundData = null;
+
+        // 1. Procurar no banco de clientes
+        const db = JSON.parse(localStorage.getItem('SAO_JOSE_CUSTOMERS_DB') || '{}');
+        if (db[phoneDigits]) {
+          foundData = db[phoneDigits];
+        }
+
+        // 2. Procurar em pedidos anteriores caso não esteja no DB
+        if (!foundData) {
+          const orders = JSON.parse(localStorage.getItem('SAO_JOSE_ORDERS') || '[]');
+          const pastOrder = orders.find(o => o.customer && o.customer.phone && o.customer.phone.replace(/\D/g, '') === phoneDigits);
+          if (pastOrder) {
+            foundData = {
+              name: pastOrder.customer.name,
+              phone: pastOrder.customer.phone,
+              city: pastOrder.neighborhood || 'Pedreiras',
+              bairro: pastOrder.bairro || '',
+              street: pastOrder.street || '',
+              number: pastOrder.number || '',
+              complement: pastOrder.complement || '',
+              reference: pastOrder.reference || '',
+              cep: pastOrder.cep || ''
+            };
+          }
+        }
+
+        if (foundData) {
+          if (foundData.name) {
+            const nameInput = document.getElementById('customer-name');
+            if (nameInput && (!nameInput.value || nameInput.value.trim() === '')) {
+              nameInput.value = foundData.name;
+            }
+          }
+          if (foundData.street) {
+            const streetInp = document.getElementById('customer-street');
+            if (streetInp && (!streetInp.value || streetInp.value.trim() === '')) {
+              streetInp.value = foundData.street;
+            }
+          }
+          if (foundData.number) {
+            const numInp = document.getElementById('customer-number');
+            if (numInp && (!numInp.value || numInp.value.trim() === '')) {
+              numInp.value = foundData.number;
+            }
+          }
+          if (foundData.bairro) {
+            const bInp = document.getElementById('customer-bairro-text');
+            if (bInp && (!bInp.value || bInp.value.trim() === '')) {
+              bInp.value = foundData.bairro;
+            }
+          }
+          if (foundData.complement) {
+            const compInp = document.getElementById('customer-complement');
+            if (compInp && (!compInp.value || compInp.value.trim() === '')) {
+              compInp.value = foundData.complement;
+            }
+          }
+          if (foundData.reference) {
+            const refInp = document.getElementById('customer-reference');
+            if (refInp && (!refInp.value || refInp.value.trim() === '')) {
+              refInp.value = foundData.reference;
+            }
+          }
+          if (foundData.cep) {
+            const cepInp = document.getElementById('customer-cep');
+            if (cepInp && (!cepInp.value || cepInp.value.trim() === '')) {
+              cepInp.value = foundData.cep;
+            }
+          }
+          if (foundData.city) {
+            const citySel = document.getElementById('customer-neighborhood-select');
+            if (citySel) {
+              citySel.value = foundData.city;
+              handleNeighborhoodChange(foundData.city);
+            }
+          }
+
+          const hint = document.getElementById('phone-autofill-hint');
+          if (hint) hint.classList.remove('hidden');
+
+          updateClientDisplay();
+          renderSavedAddresses();
+
+          showToast(`✨ Olá, ${foundData.name}! Seus dados e endereço foram preenchidos automaticamente!`);
+        }
+      } catch (e) {}
     }
 
     function updateClientDisplay() {
@@ -2276,13 +2413,15 @@
     function loadCustomerProfile() {
       try {
         const savedProfile = JSON.parse(localStorage.getItem('SAO_JOSE_CUSTOMER_PROFILE') || '{}');
+        if (savedProfile.phone) {
+          const phoneInp = document.getElementById('customer-phone');
+          if (phoneInp) phoneInp.value = formatPhoneMask(savedProfile.phone);
+          const digits = savedProfile.phone.replace(/\D/g, '');
+          if (digits.length >= 10) lookupCustomerByPhone(digits, false);
+        }
         if (savedProfile.name) {
           const nameInp = document.getElementById('customer-name');
           if (nameInp) nameInp.value = savedProfile.name;
-        }
-        if (savedProfile.phone) {
-          const phoneInp = document.getElementById('customer-phone');
-          if (phoneInp) phoneInp.value = savedProfile.phone;
         }
         updateClientDisplay();
         renderSavedAddresses();
@@ -2643,8 +2782,24 @@
 
         saveCustomStreetIfNotExists(street, selectedNeighborhoodName);
 
-        // Salvar endereço no histórico de endereços
+        // Salvar endereço e dados do cliente mapeados por telefone
         try {
+          const cleanPhone = phone.replace(/\D/g, '');
+          let customersDb = JSON.parse(localStorage.getItem('SAO_JOSE_CUSTOMERS_DB') || '{}');
+          customersDb[cleanPhone] = {
+            name,
+            phone,
+            city: selectedNeighborhoodName,
+            bairro: bairroText,
+            street,
+            number,
+            complement,
+            reference,
+            cep,
+            lastUpdated: new Date().toISOString()
+          };
+          localStorage.setItem('SAO_JOSE_CUSTOMERS_DB', JSON.stringify(customersDb));
+
           const saved = JSON.parse(localStorage.getItem('SAO_JOSE_SAVED_ADDRESSES') || '[]');
           const exists = saved.some(s => s.street.toLowerCase() === street.toLowerCase() && s.number === number && s.neighborhood === neighborhood);
           if (!exists) {
