@@ -9,6 +9,14 @@
   <title>São José Burguer • Cardápio & Pedidos Online</title>
   <meta name="description" content="Peça os melhores hambúrgueres artesanais, combos e batatas crocantes do São José Burguer direto pelo WhatsApp!">
 
+  <!-- PWA & Web App Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="São José Burguer">
+  <link rel="apple-touch-icon" href="assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.webp">
+
   <!-- Favicon Oficial -->
   <link rel="icon" type="image/png" href="assets/e8392808a1c7659c_favicon.png">
 
@@ -231,6 +239,28 @@
       100% { transform: translate(100%, 0%); opacity: 0.3; }
     }
 
+    /* PERSISTENT HEADER & SMOOTH SPA TRANSITIONS */
+    [transition\:persist], [data-transition="persist"], #main-header, #categories-sticky-section {
+      view-transition-name: persistent-header;
+      contain: layout style;
+      will-change: transform;
+    }
+
+    @keyframes menuFadeSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-menu-enter {
+      animation: menuFadeSlideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
     /* Modal Animation */
     .modal-enter {
       opacity: 0;
@@ -256,9 +286,9 @@
   </div>
 
   <!-- ========================================================================= -->
-  <!-- 1. TOP HEADER / NAVBAR (DESKTOP & MOBILE RESPONSIVO) -->
+  <!-- 1. TOP HEADER / NAVBAR PERSISTENTE (NÃO PISCA NA NAVEGAÇÃO) -->
   <!-- ========================================================================= -->
-  <header class="sticky top-0 z-50 w-full backdrop-blur-xl bg-[#080504]/90 dark:bg-[#080504]/90 border-b border-white/10 dark:border-white/10 transition-colors">
+  <header id="main-header" transition:persist data-transition="persist" class="sticky top-0 z-50 w-full backdrop-blur-xl bg-[#080504]/90 dark:bg-[#080504]/90 border-b border-white/10 dark:border-white/10 transition-colors">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
       
       <!-- LOGO & BRAND INFO -->
@@ -353,9 +383,9 @@
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-8 relative z-10">
 
     <!-- ========================================================================= -->
-    <!-- 2. CATEGORIAS DE NAVEGAÇÃO / FILTROS (STICKY NO TOPO - ACESSO IMEDIATO) -->
+    <!-- 2. CATEGORIAS DE NAVEGAÇÃO / FILTROS (PERSISTENTE NO TOPO - ACESSO IMEDIATO) -->
     <!-- ========================================================================= -->
-    <section class="sticky top-20 z-40 bg-[#080504]/95 dark:bg-[#080504]/95 backdrop-blur-xl py-3 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 border-y border-white/10 shadow-lg">
+    <section id="categories-sticky-section" transition:persist data-transition="persist" class="sticky top-20 z-40 bg-[#080504]/95 dark:bg-[#080504]/95 backdrop-blur-xl py-3 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 border-y border-white/10 shadow-lg">
       <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
         
         <!-- BOTÃO ROLAR ESQUERDA -->
@@ -1817,9 +1847,15 @@
       `;
     }
 
-    // RENDERIZAÇÃO DOS PRODUTOS
+    // RENDERIZAÇÃO DOS PRODUTOS COM TRANSIÇÃO SUAVE (TOP PERSISTENTE)
     function renderProducts(category) {
       const container = document.getElementById('products-container');
+      if (!container) return;
+
+      // Animação suave no grid central (fade-in + slide) enquanto o topo permanece imóvel
+      container.classList.remove('animate-menu-enter');
+      void container.offsetWidth; // Força repaint apenas do container central
+      container.classList.add('animate-menu-enter');
 
       if (!category || !category.items || category.items.length === 0) {
         container.innerHTML = `<div class="col-span-full text-center py-16 text-stone-400 font-poppins text-sm">Nenhum produto cadastrado nesta categoria.</div>`;
@@ -3090,6 +3126,23 @@
     loadCustomerProfile();
     updateStoreLiveStatus();
     setInterval(updateStoreLiveStatus, 15000); // Atualiza a cada 15 segundos
+
+    // REGISTRO DO SERVICE WORKER (PWA & SUPORTE OFFLINE)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('📱 PWA Service Worker registrado com sucesso!', reg.scope))
+          .catch(err => console.log('PWA Service Worker offline fallback:', err));
+      });
+    }
+
+    // Detector de Conexão Online/Offline
+    window.addEventListener('offline', () => {
+      showToast('⚠️ Modo Offline ativado! Seu cardápio continua funcionando normalmente.');
+    });
+    window.addEventListener('online', () => {
+      showToast('🟢 Conexão restabelecida!');
+    });
   </script>
 
 </body>

@@ -1,0 +1,47 @@
+{
+  "name": "São José Burguer • Pedidos Online",
+  "short_name": "São José Burguer",
+  "description": "Peça os melhores hambúrgueres artesanais, combos e batatas crocantes do São José Burguer direto pelo WhatsApp e online.",
+  "start_url": "/?source=pwa",
+  "display": "standalone",
+  "background_color": "#080504",
+  "theme_color": "#080504",
+  "orientation": "portrait",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.webp",
+      "sizes": "192x192",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/e8392808a1c7659c_favicon.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["food", "shopping", "lifestyle"],
+  "shortcuts": [
+    {
+      "name": "Fazer Pedido",
+      "short_name": "Cardápio",
+      "description": "Ver lanches e fazer pedido",
+      "url": "/#cardapio",
+      "icons": [{ "src": "assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.webp", "sizes": "192x192" }]
+    },
+    {
+      "name": "Painel Admin",
+      "short_name": "Admin",
+      "description": "Acessar pedidos e métricas",
+      "url": "/admin.html",
+      "icons": [{ "src": "assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.webp", "sizes": "192x192" }]
+    }
+  ]
+}
