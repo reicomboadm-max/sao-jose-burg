@@ -1176,7 +1176,7 @@
           />
         </div>
         
-        <!-- CEP e Rua -->
+        <!-- CEP e Rua com Autocomplete de Ruas Mapeadas -->
         <div class="grid grid-cols-3 gap-2">
           <input 
             type="text" 
@@ -1189,10 +1189,12 @@
           <input 
             type="text" 
             id="customer-street" 
+            list="pedreiras-streets-datalist"
             placeholder="Rua / Avenida *" 
             class="col-span-2 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
             autocomplete="address-line1"
           />
+          <datalist id="pedreiras-streets-datalist"></datalist>
         </div>
 
         <!-- Número da Casa e Complemento -->
@@ -2094,6 +2096,19 @@
       renderCart();
     }
 
+    function initStreetAutocomplete() {
+      const datalist = document.getElementById('pedreiras-streets-datalist');
+      if (!datalist) return;
+      fetch('assets/pedreiras_trizidela_map_data.json')
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.ruas_principais) {
+            datalist.innerHTML = data.ruas_principais.map(rua => `<option value="${rua}"></option>`).join('');
+          }
+        })
+        .catch(() => {});
+    }
+
     // =========================================================================
     // MODALIDADES DE PEDIDO (DELIVERY / BALCÃO / CONSUMO LOCAL - ANOTA AI)
     // =========================================================================
@@ -2776,8 +2791,9 @@
       });
     }
 
-    // Inicialização do status em tempo real, bairros e perfil do cliente
+    // Inicialização do status em tempo real, bairros, ruas e perfil do cliente
     initNeighborhoodSelect();
+    initStreetAutocomplete();
     loadCustomerProfile();
     updateStoreLiveStatus();
     setInterval(updateStoreLiveStatus, 15000); // Atualiza a cada 15 segundos
