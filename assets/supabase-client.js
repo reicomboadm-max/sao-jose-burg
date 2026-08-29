@@ -7,7 +7,7 @@
  */
 
 const DEFAULT_SUPABASE_CONFIG = {
-  url: "https://encdcavjjtjihyoonpcz.supabase.co",
+  url: "https://encdcavjjtjihyooopcz.supabase.co",
   key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVuY2RjYXZqanRqaWh5b29vcGN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc5NTQ0MjIsImV4cCI6MjEwMzUzMDQyMn0.E-x6vacMWg38mk8xegmHqDhsEOfwSbq-Y9jiV8Ck1rE"
 };
 
