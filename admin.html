@@ -1227,10 +1227,19 @@
 
       ORDERS.unshift(sampleOrder);
       saveOrdersToStorage();
+      if (window.SAO_JOSE_SUPABASE) {
+        window.SAO_JOSE_SUPABASE.saveOrder(sampleOrder);
+        window.SAO_JOSE_SUPABASE.saveCustomer({
+          name: sampleOrder.customer.name,
+          phone: sampleOrder.customer.phone,
+          address: sampleOrder.address,
+          city: "Pedreiras"
+        });
+      }
       renderOrdersKanban();
       refreshDashboard();
       playNewOrderSound();
-      showAdminToast("Pedido de teste criado e sincronizado com sucesso! 🍔");
+      showAdminToast("Pedido de teste criado e salvo no Supabase! 🍔");
     }
 
     function renderCharts() {
