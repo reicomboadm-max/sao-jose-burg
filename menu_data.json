@@ -3,8 +3,8 @@
     "name": "São José Burguer",
     "whatsapp": "5599991040222",
     "minOrder": 6,
-    "logo": "assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.jpg",
-    "favicon": "assets/e8392808a1c7659c_favicon.png"
+    "logo": "assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.webp",
+    "favicon": "assets/e8392808a1c7659c_favicon.webp"
   },
   "categories": [
     {
@@ -15,7 +15,7 @@
           "title": "Brioche Prime",
           "price": 17,
           "description": "Pão brioche, Blend Bovino De 100 Gramas - Cream chesse, cebola caramelizada, queijo coalho, Maionese Caseira e molho barbecue",
-          "image": "assets/3218ef457e3140d1_-1781817483869blob.jpg",
+          "image": "assets/3218ef457e3140d1_-1781817483869blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -24,7 +24,7 @@
           "title": "SUPREMO DUPLO",
           "price": 22,
           "description": "Pão brioche, 2 blends de 100gramas cada, queijo coalho duplo, cebola caramelizada,  Maionese Caseira e barbecue",
-          "image": "assets/d01c24cc0387395c_-1782242426840blob.jpg",
+          "image": "assets/d01c24cc0387395c_-1782242426840blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -33,7 +33,7 @@
           "title": "Burguer Cheddar Duplo",
           "price": 22,
           "description": "Pão De Brioche Selado - 2 Blend´s De 100 Gramas Cada - 2 Camadas De Cheddar - Alface Americana E Tomate - Molho Da Casa E Maionese Caseira",
-          "image": "assets/a72f39878e035cf9_-1732476623587blob.png",
+          "image": "assets/a72f39878e035cf9_-1732476623587blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -42,7 +42,7 @@
           "title": "Burguer Da Laika",
           "price": 16.5,
           "description": "Pão De Brioche Selado - Blend De 100 Gramas - Queijo Coalho - Salsicha E Ovo - Alface Americano  e  Tomate - Molho Da Casa E Maionese Caseira",
-          "image": "assets/5abe8f6bd98e273e_-1771044026200blob.jpg",
+          "image": "assets/5abe8f6bd98e273e_-1771044026200blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -51,7 +51,7 @@
           "title": "Burguer Do Lucca",
           "price": 16,
           "description": "Pão De Brioche Selado - Blend De 100 Gramas - Salsicha - Queijo Coalho - Cebola Caramelizada - Alface Americano E Tomate - Molho Da Casa E Maionese Caseira",
-          "image": "assets/233ca9f421828a95_-1765087473053blob.jpg",
+          "image": "assets/233ca9f421828a95_-1765087473053blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -60,7 +60,7 @@
           "title": "Burguer Caramelo",
           "price": 14.5,
           "description": "Pão brioche - Blend De 100 Gramas - Cebola Caramelizada - Queijo Coalho - Alface Americano E Tomate - Molho Da Casa E Maionese Caseira",
-          "image": "assets/915cb7ef803d7c03_-1765088067003blob.jpg",
+          "image": "assets/915cb7ef803d7c03_-1765088067003blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -69,7 +69,7 @@
           "title": "Burguer Picante",
           "price": 19,
           "description": "Pão De Brioche Selado - Blend De 100 Gramas - Calabresa - Ovo - Molho Picante - Queijo Coalho - Maionese Caseira",
-          "image": "assets/49ca683ae2d34fbc_-1752185473373blob.jpg",
+          "image": "assets/49ca683ae2d34fbc_-1752185473373blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -78,7 +78,7 @@
           "title": "Burguer Bacon",
           "price": 19,
           "description": "Pão De Brioche Selado - Blend De 100 Gramas - Queijo Coalho - Bacon - Alface Americana E Tomate - Molho Da Casa - Maionese Caseira",
-          "image": "assets/b3f61889cbea07fc_-1732477229543blob.png",
+          "image": "assets/b3f61889cbea07fc_-1732477229543blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -87,7 +87,7 @@
           "title": "Duplo Calabresa",
           "price": 23.5,
           "description": "Pão De Brioche Selado - 2 Blend's De 100 Gramas - Queijo Coalho - Calabresa - Cebola Refogada - Molho Barbecue - Maionese Caseira",
-          "image": "assets/3ef7a49c5004399a_-1771044129110blob.jpg",
+          "image": "assets/3ef7a49c5004399a_-1771044129110blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -96,7 +96,7 @@
           "title": "Burguer Carne Seca",
           "price": 18.5,
           "description": "Pão brioche - Blend 100 Gramas - Queijo Coalho - Carne Seca Desfiada - Cebola Refogada - Catupiry - Molho Barbecue - Maionese Caseira",
-          "image": "assets/burguer_carne_seca.jpg",
+          "image": "assets/burguer_carne_seca.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -105,7 +105,7 @@
           "title": "Burguer Cheddar Melt",
           "price": 16.5,
           "description": "Pão De Brioche Selado - Blend De 100 Gramas - Cheddar - Cebola Caramelizada -  Molho Barbecue - Maionese Caseira",
-          "image": "assets/635f2e88437415a3_-1765087501175blob.jpg",
+          "image": "assets/635f2e88437415a3_-1765087501175blob.webp",
           "isPromo": false,
           "isBestseller": true
         },
@@ -114,7 +114,7 @@
           "title": "Burguer Cheddar Bacon",
           "price": 20,
           "description": "Pão De Brioche Selado - Blend De 100 Gramas - Cheddar - Bacon - Queijo Coalho - Alface Americana E Tomate - Molho Da Casa E Maionese Caseira",
-          "image": "assets/9b25e54b4c3d6ee0_-1767120154154blob.jpg",
+          "image": "assets/9b25e54b4c3d6ee0_-1767120154154blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -123,7 +123,7 @@
           "title": "Burguer Cheddar",
           "price": 14,
           "description": "Pão brioche - Blend De 100 Gramas - Cheddar - Queijo Coalho - Alface Americana E Tomate - Molho Da Casa E Maionese Caseira",
-          "image": "assets/79fc064c5a104258_-1771044439577blob.jpg",
+          "image": "assets/79fc064c5a104258_-1771044439577blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -132,7 +132,7 @@
           "title": "Burguer Tradicional",
           "price": 12.5,
           "description": "Pão brioche ,blend 100gr, queijo coalho,molho barbecue e maionese caseira.",
-          "image": "assets/39f2d8b06ff4196d_-1771044509714blob.jpg",
+          "image": "assets/39f2d8b06ff4196d_-1771044509714blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -141,7 +141,7 @@
           "title": "Burguer Ovo",
           "price": 15.5,
           "description": "Pão brioche ,Blend De 100 Gramas - Queijo Coalho - Ovo - Alface Americana E Tomate - Molho Da Casa - Maionese Caseira",
-          "image": "assets/a36ced0bf8f9e2bb_-1765088093946blob.jpg",
+          "image": "assets/a36ced0bf8f9e2bb_-1765088093946blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -150,7 +150,7 @@
           "title": "Burguer Blend Duplo",
           "price": 19,
           "description": "Pão De Brioche Selado - 2 Blend´s De 100 Gramas Cada - 2 Queijo Coalho - MOLHO ESPECIAL SÃO JOSÉ - Molho Barbecue",
-          "image": "assets/01d4d5c874352f98_-1771045033619blob.jpg",
+          "image": "assets/01d4d5c874352f98_-1771045033619blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -159,7 +159,7 @@
           "title": "Burguer Calabresa",
           "price": 18,
           "description": "Pão brioche - Blend 100 Gramas - Queijo Coalho - Calabresa  - Alface Americano E Tomate - Molho Da Casa E Maionese Caseira",
-          "image": "assets/af610b7a642fe2b9_-1755517549671blob.jpg",
+          "image": "assets/af610b7a642fe2b9_-1755517549671blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -168,7 +168,7 @@
           "title": "Burguer 195",
           "price": 21,
           "description": "Pão De Brioche Selado - 2 Blend´s De 100 Gramas Cada - 2 Queijo Coalho - Cebola Caramelizada - Alface Americana E Tomate - Molho Da Casa E Maionese Caseira",
-          "image": "assets/1414dcc3ffbe6af7_-1771045409109blob.jpg",
+          "image": "assets/1414dcc3ffbe6af7_-1771045409109blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -177,7 +177,7 @@
           "title": "Burguer Tudo",
           "price": 22,
           "description": "Pão De Brioche Selado - Blend De 100 Gramas - Ovo - Bacon - Calabresa  Salsicha - Alface Americana E Tomate - Molho Da Casa - Maionese Caseira",
-          "image": "assets/1fae780699df9a71_-1771045514950blob.jpg",
+          "image": "assets/1fae780699df9a71_-1771045514950blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -186,7 +186,7 @@
           "title": "Burgão",
           "price": 27,
           "description": "Pão De Brioche Selado - Blend De 100 Gramas - Queijo Coalho - Ovo, Salsicha, Calabresa, Bacon - Frango Desfiado, Cheddar - Alface Americana E Tomate - Molho Da Casa E Maionese Caseira",
-          "image": "assets/a411eb4f8bc509f5_-1771045598469blob.jpg",
+          "image": "assets/a411eb4f8bc509f5_-1771045598469blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -195,7 +195,7 @@
           "title": "Burguer Duplo Bacon",
           "price": 24.5,
           "description": "Pão De Brioche Selado - 2 Blend´s De 100 Gramas Cada - 2 Queijo Coalho - 2 Camadas De Bacon - Maionese Caseira - Molho Barbecue",
-          "image": "assets/1927b4e760b3a7bf_-1771045553837blob.jpg",
+          "image": "assets/1927b4e760b3a7bf_-1771045553837blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -204,7 +204,7 @@
           "title": "Burguer São José",
           "price": 33,
           "description": "Pão Brioche,3 blends de 100gramas cada, 2 camadas de cheddar,cebola caramelizada,1 camada de catupiry,bacon,maionese caseira e molho especial são josé",
-          "image": "assets/e982e903924b9f51_-1751323111578blob.jpg",
+          "image": "assets/e982e903924b9f51_-1751323111578blob.webp",
           "isPromo": false,
           "isBestseller": true
         },
@@ -213,7 +213,7 @@
           "title": "Burguer Do Cheff",
           "price": 29,
           "description": "Pão De Brioche Selado - 2 Blend´s De 100 Gramas Cada - Ovo, Calabresa, Bacon, Cheddar - Queijo Coalho - Molho Picante - Alface Americana E Tomate - Molho Da Casa E Maionese Caseira",
-          "image": "assets/94eea273eb6be8b9_-1752185597804blob.jpg",
+          "image": "assets/94eea273eb6be8b9_-1752185597804blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -222,7 +222,7 @@
           "title": "melt Duplo",
           "price": 23,
           "description": "PÃO DE BRIOCHE , 2 blends de 100 gramas cada,2 camadas de cheddar,cebola caramelizada, molho especial sao jose e molho barbecue",
-          "image": "assets/38c207f4af7e56ee_-1751323152050blob.png",
+          "image": "assets/38c207f4af7e56ee_-1751323152050blob.webp",
           "isPromo": false,
           "isBestseller": true
         },
@@ -231,7 +231,7 @@
           "title": "Clássico",
           "price": 13,
           "description": "Pão brioche, blend de 100gramas,  queijo coalho, Alface americano, tomate, molho da casa e maionese caseira",
-          "image": "assets/b8072f3ea6a53e19_-1770009534471blob.jpg",
+          "image": "assets/b8072f3ea6a53e19_-1770009534471blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -240,7 +240,7 @@
           "title": "Burguer Frango",
           "price": 18,
           "description": "Pao brioche , blend bovino de 100gramas, queijo coalho, frango desfiado, catupiry, Alface americano,  tomate , molho da casa e maionese caseira",
-          "image": "assets/burguer_frango_catupiry.jpg",
+          "image": "assets/burguer_frango_catupiry.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -249,7 +249,7 @@
           "title": "Simples",
           "price": 13.5,
           "description": "Pão brioche,  blend de 100gramas , cebola refogada , queijo coalho , Alface Americana, tomate ,Maionese caseira e molho da casa",
-          "image": "assets/b8072f3ea6a53e19_-1770009534471blob.jpg",
+          "image": "assets/b8072f3ea6a53e19_-1770009534471blob.webp",
           "isPromo": false,
           "isBestseller": false
         }
@@ -263,7 +263,7 @@
           "title": "Combo Kids",
           "price": 19,
           "description": "1 burguer tradicional + 1 Porção de fritas tradicional",
-          "image": "assets/15dfa4dcc6ebc4c5_-1780090896913blob.jpg",
+          "image": "assets/15dfa4dcc6ebc4c5_-1780090896913blob.webp",
           "isPromo": false,
           "isBestseller": true
         },
@@ -272,7 +272,7 @@
           "title": "Combo Lucca",
           "price": 24.5,
           "description": "1 Burger Do Lucca - 1 Porção De Batata Frita Tradicional",
-          "image": "assets/9c2b8a8b4c07438a_-1732476706087blob.png",
+          "image": "assets/9c2b8a8b4c07438a_-1732476706087blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -281,7 +281,7 @@
           "title": "Combo Laika",
           "price": 25.5,
           "description": "1 Burger Da Laika - 1 Porção De Batata Frita Tradicional",
-          "image": "assets/6d002fb23256ab05_-1780090878920blob.jpg",
+          "image": "assets/6d002fb23256ab05_-1780090878920blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -290,7 +290,7 @@
           "title": "Combo Caramelo",
           "price": 38,
           "description": "2 Burger Caramelo - Fritas Com Cheddar e calabresa",
-          "image": "assets/824cd1524acdd50a_-1771042863284blob.jpg",
+          "image": "assets/824cd1524acdd50a_-1771042863284blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -299,7 +299,7 @@
           "title": "Triplo Caramelo",
           "price": 52,
           "description": "3 burguer caramelo + batata com cheddar e Calabresa",
-          "image": "assets/18b66bd23edd7f6d_-1785167022808blob.jpg",
+          "image": "assets/18b66bd23edd7f6d_-1785167022808blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -308,7 +308,7 @@
           "title": "COMBO CASAL",
           "price": 44,
           "description": "2 BURGUERES OVO + FRITAS COM Cheddar, calabresa e bacon",
-          "image": "assets/4bc7ec367b8dcea8_-1742006872169blob.jpg",
+          "image": "assets/4bc7ec367b8dcea8_-1742006872169blob.webp",
           "isPromo": false,
           "isBestseller": true
         },
@@ -317,7 +317,7 @@
           "title": "Combo MELT",
           "price": 47,
           "description": "2 burgueres cheddar melt + Fritas Com cheddar e calabresa",
-          "image": "assets/724bdd606dbcd75d_-1771045858794blob.jpg",
+          "image": "assets/724bdd606dbcd75d_-1771045858794blob.webp",
           "isPromo": false,
           "isBestseller": true
         },
@@ -326,7 +326,7 @@
           "title": "Combo Triplo",
           "price": 54,
           "description": "3 Burger Ovo - + Fritas Com Cheddar, bacon e calabresa",
-          "image": "assets/9dd9d6134e601915_-1771042111612blob.jpg",
+          "image": "assets/9dd9d6134e601915_-1771042111612blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -335,7 +335,7 @@
           "title": "Combo Família",
           "price": 65,
           "description": "4 Burger Ovo - + Fritas Com Cheddar, calabresa e bacon",
-          "image": "assets/cee13c8498cae824_-1771042738763blob.jpg",
+          "image": "assets/cee13c8498cae824_-1771042738763blob.webp",
           "isPromo": false,
           "isBestseller": true
         },
@@ -344,7 +344,7 @@
           "title": "Combo Calabresa + 1 Lata",
           "price": 29.5,
           "description": "1 Burger Calabresa - 1 Porção De Batata Frita Tradicional - 1 Lata De 350ml \n\nCOLOQUE O SABOR DA LATA NA OBSERVAÇÃO DO PEDIDO",
-          "image": "assets/99cf23ecf004b75e_-1780090922380blob.jpg",
+          "image": "assets/99cf23ecf004b75e_-1780090922380blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -353,7 +353,7 @@
           "title": "Combo Bacon + 1 Lata",
           "price": 31.5,
           "description": "1 Burger Bacon - 1 Porção De Batata Frita Tradicional - 1 Lata De 350ml\n\nCOLOQUE O SABOR DA LATA NA OBSERVAÇÃO DO PEDIDO",
-          "image": "assets/bbcc77f0724db47b_-1780090943821blob.jpg",
+          "image": "assets/bbcc77f0724db47b_-1780090943821blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -362,7 +362,7 @@
           "title": "Combo Barca",
           "price": 33,
           "description": "1 Burger Cheddar Melt - 1 Porção De Batata Frita Com Cheddar E bacon(montado Na Barca)",
-          "image": "assets/01b72e55d2e8a412_-1732476782445blob.png",
+          "image": "assets/01b72e55d2e8a412_-1732476782445blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -371,7 +371,7 @@
           "title": "Combo CHEDDAR MELT + Fritas + 1 lata refri",
           "price": 34,
           "description": "1 burguer cheddar melt\n+ 1 Porção de Fritas tradicional \n+ 1 refri de 350ml lata\n\n\nOBS: COLOQUE O SABOR DA LATA NA OBSERVAÇÃO",
-          "image": "assets/98ce72e64126881f_-1780090969176blob.jpg",
+          "image": "assets/98ce72e64126881f_-1780090969176blob.webp",
           "isPromo": false,
           "isBestseller": true
         },
@@ -380,7 +380,7 @@
           "title": "Combo Calabresa PROMOÇÃO",
           "price": 36,
           "description": "2 burguer calabresa",
-          "image": "assets/99cf23ecf004b75e_-1780090922380blob.jpg",
+          "image": "assets/99cf23ecf004b75e_-1780090922380blob.webp",
           "isPromo": true,
           "isBestseller": false
         },
@@ -389,7 +389,7 @@
           "title": "COMBO MELT PROMO",
           "price": 19.99,
           "description": "2 burguer Cheddar melt",
-          "image": "assets/724bdd606dbcd75d_-1771045858794blob.jpg",
+          "image": "assets/724bdd606dbcd75d_-1771045858794blob.webp",
           "isPromo": true,
           "isBestseller": true
         },
@@ -398,7 +398,7 @@
           "title": "Combo Duplo PROMO",
           "price": 19.99,
           "description": "1 burguer calabresa. + 1 burguer cheddar melt",
-          "image": "assets/4bc7ec367b8dcea8_-1742006872169blob.jpg",
+          "image": "assets/4bc7ec367b8dcea8_-1742006872169blob.webp",
           "isPromo": true,
           "isBestseller": false
         }
@@ -412,7 +412,7 @@
           "title": "Batata Frita Tradicional - M",
           "price": 13.5,
           "description": "",
-          "image": "assets/2c0ca85cf38ed0ca_-1734884797247blob.png",
+          "image": "assets/2c0ca85cf38ed0ca_-1734884797247blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -421,7 +421,7 @@
           "title": "Batata Frita Simples - G",
           "price": 16.5,
           "description": "",
-          "image": "assets/2c0ca85cf38ed0ca_-1734884797247blob.png",
+          "image": "assets/2c0ca85cf38ed0ca_-1734884797247blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -430,7 +430,7 @@
           "title": "Batata Frita Com Cheddar e Bacon - M",
           "price": 16.5,
           "description": "",
-          "image": "assets/b88df38abb6b247b_-1734884825155blob.png",
+          "image": "assets/b88df38abb6b247b_-1734884825155blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -439,7 +439,7 @@
           "title": "Batata Frita com Cheddar e  Calabresa - M",
           "price": 16,
           "description": "",
-          "image": "assets/940e32e8d66a6723_-1734884936446blob.png",
+          "image": "assets/940e32e8d66a6723_-1734884936446blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -448,7 +448,7 @@
           "title": "Batata Frita com Cheddar e Calabresa - G",
           "price": 20.5,
           "description": "",
-          "image": "assets/940e32e8d66a6723_-1734884936446blob.png",
+          "image": "assets/940e32e8d66a6723_-1734884936446blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -457,7 +457,7 @@
           "title": "Batata Frita Com Queijo coalho (M)",
           "price": 15,
           "description": "Batata com queijo coalho ralado (Média)",
-          "image": "assets/3019e21821302b16_-1780091500287blob.jpg",
+          "image": "assets/3019e21821302b16_-1780091500287blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -466,7 +466,7 @@
           "title": "Batata Frita Mista - M",
           "price": 20,
           "description": "Com Cheddar ,calabresa e bacon",
-          "image": "assets/f2bb32092b5388c5_-1734884961544blob.png",
+          "image": "assets/f2bb32092b5388c5_-1734884961544blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -475,7 +475,7 @@
           "title": "Batata Frita Com cheddar e Bacon - G",
           "price": 21,
           "description": "",
-          "image": "assets/355739a59cbafe94_-1734884840284blob.png",
+          "image": "assets/355739a59cbafe94_-1734884840284blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -484,7 +484,7 @@
           "title": "Batata Frita Mista - G",
           "price": 23,
           "description": "Batata com Calabresa bacon e Cheddar",
-          "image": "assets/60cde6395454a13d_-1734885011825blob.png",
+          "image": "assets/60cde6395454a13d_-1734885011825blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -493,7 +493,7 @@
           "title": "Batata Frita Com Queijo Coalho ( G)",
           "price": 18,
           "description": "Batata Frita Com Queijo ralado (Grande)",
-          "image": "assets/3019e21821302b16_-1780091500287blob.jpg",
+          "image": "assets/3019e21821302b16_-1780091500287blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -502,7 +502,7 @@
           "title": "Batata Frita Suprema GG",
           "price": 29,
           "description": "Com  catupiry cheddar e bacon e calabresa",
-          "image": "assets/7a46c49dc2198538_-1774548907089blob.jpg",
+          "image": "assets/7a46c49dc2198538_-1774548907089blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -511,7 +511,7 @@
           "title": "Batata Frita Especial - Montada na Caixa de Pizza P",
           "price": 39,
           "description": "Com bacon,calabresa e catupiry",
-          "image": "assets/aa6cbdfa5fe96e50_-1771045816305blob.jpg",
+          "image": "assets/aa6cbdfa5fe96e50_-1771045816305blob.webp",
           "isPromo": false,
           "isBestseller": false
         }
@@ -525,7 +525,7 @@
           "title": "lata 350ml coca cola",
           "price": 6,
           "description": "",
-          "image": "assets/coca_cola_lata.jpg",
+          "image": "assets/coca_cola_lata.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -534,7 +534,7 @@
           "title": "Suco de Maracujá 300ml",
           "price": 7,
           "description": "",
-          "image": "assets/suco_natural_gelado.jpg",
+          "image": "assets/suco_natural_gelado.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -543,7 +543,7 @@
           "title": "Água sem Gás 500ml",
           "price": 3,
           "description": "",
-          "image": "assets/agua mineral.png",
+          "image": "assets/agua mineral.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -552,7 +552,7 @@
           "title": "Lata 350ml COCA ZERO",
           "price": 6,
           "description": "",
-          "image": "assets/coca_zero_lata.jpg",
+          "image": "assets/coca_zero_lata.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -561,7 +561,7 @@
           "title": "lata refrigerante 350ml LARANJA",
           "price": 6,
           "description": "",
-          "image": "assets/fanta_laranja_lata.jpg",
+          "image": "assets/fanta_laranja_lata.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -570,7 +570,7 @@
           "title": "COCA ZERO 1 LITRO",
           "price": 12,
           "description": "1 litro coca ZERO",
-          "image": "assets/coca zero 1 litro.png",
+          "image": "assets/coca zero 1 litro.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -579,7 +579,7 @@
           "title": "Lata 350ml kuat",
           "price": 6,
           "description": "",
-          "image": "assets/guarana_lata_gelada.jpg",
+          "image": "assets/guarana_lata_gelada.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -588,7 +588,7 @@
           "title": "LATA JESUS 350ML",
           "price": 6,
           "description": "",
-          "image": "assets/guarana_jesus_lata.jpg",
+          "image": "assets/guarana_jesus_lata.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -597,7 +597,7 @@
           "title": "Guaraná lata 350ml Zero",
           "price": 6,
           "description": "Lata350ml",
-          "image": "assets/guarana_lata_gelada.jpg",
+          "image": "assets/guarana_lata_gelada.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -606,7 +606,7 @@
           "title": "1 litro GUARANÁ",
           "price": 11,
           "description": "1litro",
-          "image": "assets/guarana 1 litro.png",
+          "image": "assets/guarana 1 litro.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -615,7 +615,7 @@
           "title": "Coca cola 1litro",
           "price": 12,
           "description": "Coca cola 1litro",
-          "image": "assets/coca zero 1 litro.png",
+          "image": "assets/coca zero 1 litro.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -624,7 +624,7 @@
           "title": "1 litro GUARANÁ ZERO",
           "price": 11,
           "description": "1 litro guaraná zero",
-          "image": "assets/guarana 1 litro.png",
+          "image": "assets/guarana 1 litro.webp",
           "isPromo": false,
           "isBestseller": false
         }
@@ -638,7 +638,7 @@
           "title": "Molho Maionese Caseira",
           "price": 2,
           "description": "",
-          "image": "assets/1b9f6212cbd9d7cf_-1772816597312blob.jpg",
+          "image": "assets/1b9f6212cbd9d7cf_-1772816597312blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -647,7 +647,7 @@
           "title": "Molho Barbecue",
           "price": 3,
           "description": "",
-          "image": "assets/b41b477d3c9f1dbd_-1733343492281blob.png",
+          "image": "assets/b41b477d3c9f1dbd_-1733343492281blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -656,7 +656,7 @@
           "title": "Molho Picante",
           "price": 2.5,
           "description": "",
-          "image": "assets/6e1b5fa15565548f_-1733344420241blob.png",
+          "image": "assets/6e1b5fa15565548f_-1733344420241blob.webp",
           "isPromo": false,
           "isBestseller": false
         },
@@ -665,7 +665,7 @@
           "title": "Baconese",
           "price": 3,
           "description": "Maionese de bacon 🥓",
-          "image": "assets/molho_baconese.jpg",
+          "image": "assets/molho_baconese.webp",
           "isPromo": false,
           "isBestseller": false
         }

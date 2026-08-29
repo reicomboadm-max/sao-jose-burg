@@ -17,6 +17,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
 
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/supabase-client.js"></script>
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -2931,9 +2935,22 @@
           isPaid: false
         };
 
-        const existingOrders = JSON.parse(localStorage.getItem('SAO_JOSE_ORDERS') || '[]');
-        existingOrders.unshift(orderObj);
-        localStorage.setItem('SAO_JOSE_ORDERS', JSON.stringify(existingOrders));
+        // Salvar pedido e cliente no Supabase (Nuvem) com fallback seguro
+        if (window.SAO_JOSE_SUPABASE) {
+          window.SAO_JOSE_SUPABASE.saveOrder(orderObj);
+          window.SAO_JOSE_SUPABASE.saveCustomer({
+            name: name,
+            phone: phone,
+            address: orderAddress,
+            neighborhood: neighborhood,
+            city: selectedNeighborhoodName
+          });
+        } else {
+          const existingOrders = JSON.parse(localStorage.getItem('SAO_JOSE_ORDERS') || '[]');
+          existingOrders.unshift(orderObj);
+          if (existingOrders.length > 200) existingOrders.length = 200;
+          localStorage.setItem('SAO_JOSE_ORDERS', JSON.stringify(existingOrders));
+        }
 
         // Disparar evento para o painel Admin aberto em outra aba
         try {

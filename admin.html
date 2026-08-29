@@ -17,6 +17,10 @@
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/supabase-client.js"></script>
+
   <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -618,6 +622,47 @@
               <div class="max-h-60 overflow-y-auto space-y-1.5 text-xs no-scrollbar pt-1" id="admin-neighborhoods-list"></div>
             </div>
 
+            <!-- Configuração Supabase (Banco de Dados na Nuvem) -->
+            <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="font-anton text-lg text-white tracking-wide flex items-center gap-2">
+                    <span>☁️ BANCO DE DADOS NA NUVEM</span>
+                    <span id="supabase-status-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold font-poppins bg-stone-700 text-stone-300">Local / Offline</span>
+                  </h3>
+                  <p class="text-xs text-stone-400 mt-1">Conecte o Supabase (PostgreSQL gratuito) para salvar milhares de clientes e pedidos com segurança.</p>
+                </div>
+              </div>
+
+              <form onsubmit="saveSupabaseSettings(event)" class="space-y-3 font-poppins text-xs">
+                <div>
+                  <label class="block text-stone-300 font-semibold mb-1">Project URL (Supabase):</label>
+                  <input type="text" id="setting-supabase-url" placeholder="https://seu-projeto.supabase.co" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white placeholder-stone-600 focus:border-brand-orange" />
+                </div>
+                <div>
+                  <label class="block text-stone-300 font-semibold mb-1">Anon Public Key (Supabase):</label>
+                  <input type="password" id="setting-supabase-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white placeholder-stone-600 focus:border-brand-orange" />
+                </div>
+                <div class="flex flex-col sm:flex-row gap-2 pt-1">
+                  <button type="submit" class="flex-1 bg-brand-orange hover:bg-orange-600 text-white font-bold py-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5">
+                    <span>💾 Salvar Conexão</span>
+                  </button>
+                  <button type="button" onclick="testSupabaseConnection()" class="flex-1 bg-white/10 hover:bg-white/20 text-stone-200 font-bold py-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5">
+                    <span>⚡ Testar Conexão</span>
+                  </button>
+                </div>
+              </form>
+
+              <div class="p-3.5 bg-white/5 border border-white/10 rounded-2xl text-[11px] text-stone-400 space-y-1.5">
+                <p class="font-bold text-white flex items-center gap-1.5"><span>💡</span><span>Como ativar o banco em 2 minutos (Grátis):</span></p>
+                <ol class="list-decimal pl-4 space-y-1 text-stone-300">
+                  <li>Acesse <a href="https://supabase.com" target="_blank" class="text-brand-orange font-bold underline">supabase.com</a> e crie seu projeto.</li>
+                  <li>No menu esquerdo, vá em <strong>SQL Editor</strong> e cole o conteúdo do script <code class="text-amber-400 bg-black/50 px-1.5 py-0.5 rounded border border-white/10">schema_supabase.sql</code>.</li>
+                  <li>Copie a <strong>Project URL</strong> e a <strong>Anon Key</strong> em <em>Settings → API</em> e cole nos campos acima.</li>
+                </ol>
+              </div>
+            </div>
+
             <!-- Alteração de Senha -->
             <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
               <h3 class="font-anton text-lg text-white tracking-wide">SEGURANÇA & SENHA DO ADMIN</h3>
@@ -822,6 +867,8 @@
     }
 
     function saveOrdersToStorage() {
+      // Limite seguro de 200 pedidos para não pesar o navegador
+      if (ORDERS.length > 200) ORDERS = ORDERS.slice(0, 200);
       localStorage.setItem('SAO_JOSE_ORDERS', JSON.stringify(ORDERS));
     }
 
@@ -846,10 +893,40 @@
       } catch (e) {}
     }
 
-    // SINCRONIZAÇÃO EM TEMPO REAL GLOBAL (NUVEM + SSE + POLLING + LOCAL)
+    // SINCRONIZAÇÃO EM TEMPO REAL GLOBAL (SUPABASE + NUVEM + SSE + LOCAL)
     const CLOUD_SYNC_TOPIC = 'https://ntfy.sh/sao_jose_burguer_pedidos';
 
     function setupRealTimeOrderListener() {
+      // 0. Sincronização direta com Supabase Realtime (se configurado)
+      if (window.SAO_JOSE_SUPABASE) {
+        window.SAO_JOSE_SUPABASE.init();
+        loadCloudOrdersFromSupabase();
+        window.SAO_JOSE_SUPABASE.subscribeToOrders(
+          (newOrder) => {
+            if (newOrder && newOrder.id && !ORDERS.some(o => o.id === newOrder.id)) {
+              ORDERS.unshift(newOrder);
+              saveOrdersToStorage();
+              renderOrdersKanban();
+              refreshDashboard();
+              playNewOrderSound();
+              showAdminToast(`🔔 NOVO PEDIDO (SUPABASE)! #${newOrder.id} - ${newOrder.customer?.name || 'Cliente'}`);
+            }
+          },
+          (updatedRow) => {
+            if (updatedRow && updatedRow.id) {
+              const target = ORDERS.find(o => o.id === updatedRow.id);
+              if (target) {
+                if (updatedRow.status) target.status = updatedRow.status;
+                if (updatedRow.is_paid !== undefined) target.isPaid = updatedRow.is_paid;
+                saveOrdersToStorage();
+                renderOrdersKanban();
+                refreshDashboard();
+              }
+            }
+          }
+        );
+      }
+
       // 1. Carregar histórico recente de pedidos da nuvem (últimas 24 horas)
       fetch(`${CLOUD_SYNC_TOPIC}/json?poll=1&since=24h`)
         .then(res => res.text())
@@ -969,6 +1046,14 @@
         mainLayout.classList.remove('hidden');
         setupRealTimeOrderListener();
         refreshAllAdminViews();
+
+        // Checar se veio com link direto para alguma aba (ex: #settings ou ?tab=settings)
+        const hash = window.location.hash.replace('#', '');
+        const params = new URLSearchParams(window.location.search);
+        const tab = params.get('tab') || hash;
+        if (['dashboard', 'orders', 'products', 'categories', 'settings'].includes(tab)) {
+          switchTab(tab);
+        }
       } else {
         loginScreen.classList.remove('hidden');
         mainLayout.classList.add('hidden');
@@ -1356,6 +1441,9 @@
       if (!order) return;
       order.isPaid = !order.isPaid;
       saveOrdersToStorage();
+      if (window.SAO_JOSE_SUPABASE) {
+        window.SAO_JOSE_SUPABASE.updateOrderStatus(orderId, order.status, order.isPaid);
+      }
       renderOrdersKanban();
       refreshDashboard();
       showAdminToast(order.isPaid ? `Pagamento do pedido #${orderId} marcado como PAGO! 🟢` : `Pagamento do pedido #${orderId} marcado como PENDENTE! ⏳`);
@@ -1367,6 +1455,9 @@
 
       order.status = newStatus;
       saveOrdersToStorage();
+      if (window.SAO_JOSE_SUPABASE) {
+        window.SAO_JOSE_SUPABASE.updateOrderStatus(orderId, order.status, order.isPaid);
+      }
       renderOrdersKanban();
       refreshDashboard();
       showAdminToast(`Status do pedido #${orderId} alterado! ⚡`);
@@ -1683,7 +1774,7 @@
     }
 
     // =========================================================================
-    // 5. CONFIGURAÇÕES DA LOJA
+    // 5. CONFIGURAÇÕES DA LOJA & SUPABASE
     // =========================================================================
     function loadSettingsForm() {
       if (!STORE || !STORE.store) return;
@@ -1693,7 +1784,97 @@
       document.getElementById('setting-min-order').value = STORE.store.minOrder || 6;
       document.getElementById('setting-store-status').value = STORE.store.status || "auto";
       document.getElementById('setting-address').value = STORE.store.address || "AVENIDA MARIANO LISBOA, 1370 - ENGENHO, Pedreiras - MA, 65725-000";
+      
+      // Carregar credenciais do Supabase
+      if (window.SAO_JOSE_SUPABASE) {
+        const config = window.SAO_JOSE_SUPABASE.getConfig();
+        const urlInput = document.getElementById('setting-supabase-url');
+        const keyInput = document.getElementById('setting-supabase-key');
+        if (urlInput) urlInput.value = config.url;
+        if (keyInput) keyInput.value = config.key;
+        updateSupabaseStatusUI();
+      }
+
       renderNeighborhoodsAdmin();
+    }
+
+    function updateSupabaseStatusUI() {
+      const badge = document.getElementById('supabase-status-badge');
+      if (!badge) return;
+      if (window.SAO_JOSE_SUPABASE && window.SAO_JOSE_SUPABASE.isReady) {
+        badge.className = "px-2.5 py-0.5 rounded-full text-[10px] font-bold font-poppins bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+        badge.innerHTML = "🟢 Supabase Conectado";
+      } else {
+        badge.className = "px-2.5 py-0.5 rounded-full text-[10px] font-bold font-poppins bg-amber-500/20 text-amber-400 border border-amber-500/30";
+        badge.innerHTML = "🟡 Modo Local / Aguardando Chaves";
+      }
+    }
+
+    function saveSupabaseSettings(e) {
+      e.preventDefault();
+      const url = document.getElementById('setting-supabase-url').value.trim();
+      const key = document.getElementById('setting-supabase-key').value.trim();
+
+      if (window.SAO_JOSE_SUPABASE) {
+        window.SAO_JOSE_SUPABASE.setConfig(url, key);
+        updateSupabaseStatusUI();
+        if (window.SAO_JOSE_SUPABASE.isReady) {
+          showAdminToast("Credenciais do Supabase salvas e conectadas com sucesso! ☁️");
+          // Atualizar pedidos do banco na nuvem
+          loadCloudOrdersFromSupabase();
+        } else {
+          showAdminToast("Credenciais salvas, mas verifique se a URL e a Chave estão corretas.");
+        }
+      }
+    }
+
+    async function testSupabaseConnection() {
+      if (!window.SAO_JOSE_SUPABASE) {
+        showAdminToast("Módulo Supabase não carregado.");
+        return;
+      }
+      const url = document.getElementById('setting-supabase-url').value.trim();
+      const key = document.getElementById('setting-supabase-key').value.trim();
+
+      if (!url || !key) {
+        showAdminToast("Preencha a URL e a Chave Anon antes de testar!");
+        return;
+      }
+
+      window.SAO_JOSE_SUPABASE.setConfig(url, key);
+      try {
+        const { orders, error } = await window.SAO_JOSE_SUPABASE.fetchOrders(1, 5);
+        if (error) throw error;
+        updateSupabaseStatusUI();
+        showAdminToast("✅ Conexão com Supabase testada com Sucesso!");
+      } catch (err) {
+        showAdminToast("❌ Erro ao conectar ao Supabase: " + (err.message || 'Verifique as chaves e a tabela orders'));
+      }
+    }
+
+    async function loadCloudOrdersFromSupabase() {
+      if (window.SAO_JOSE_SUPABASE && window.SAO_JOSE_SUPABASE.isReady) {
+        try {
+          const res = await window.SAO_JOSE_SUPABASE.fetchOrders(1, 100);
+          if (res && res.orders && res.orders.length > 0) {
+            // Mesclar pedidos sem duplicar
+            res.orders.forEach(co => {
+              const idx = ORDERS.findIndex(o => o.id === co.id);
+              if (idx >= 0) {
+                ORDERS[idx] = { ...ORDERS[idx], ...co };
+              } else {
+                ORDERS.push(co);
+              }
+            });
+            // Ordenar decrescente por data
+            ORDERS.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+            if (ORDERS.length > 200) ORDERS = ORDERS.slice(0, 200);
+            saveOrdersToStorage();
+            renderOrdersKanban();
+            refreshDashboard();
+          }
+        } catch (e) {}
+      }
     }
 
     // =========================================================================
