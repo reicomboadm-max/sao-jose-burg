@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="pt-BR" class="dark scroll-smooth">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#080504">
   <title>Painel Administrativo • São José Burguer</title>
-  
+
   <!-- Favicon Oficial -->
   <link rel="icon" type="image/png" href="assets/e8392808a1c7659c_favicon.png">
 
   <!-- Google Fonts: Anton & Poppins -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap"
+    rel="stylesheet">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -55,12 +59,19 @@
       color: #F3F4F6;
       font-family: 'Poppins', sans-serif;
     }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
     .grid-bg-dark {
       background-size: 32px 32px;
-      background-image: 
+      background-image:
         linear-gradient(to right, rgba(255, 94, 30, 0.05) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(255, 94, 30, 0.05) 1px, transparent 1px);
     }
@@ -80,12 +91,15 @@
   <!-- 1. TELA DE LOGIN / AUTENTICAÇÃO DO ADMIN -->
   <!-- ========================================================================= -->
   <div id="admin-login-screen" class="fixed inset-0 z-[200] bg-[#080504] flex items-center justify-center p-4">
-    <div class="w-full max-w-md bg-[#120D0A] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 relative overflow-hidden">
-      
-      <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-orange/20 blur-3xl rounded-full pointer-events-none"></div>
+    <div
+      class="w-full max-w-md bg-[#120D0A] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 relative overflow-hidden">
+
+      <div class="absolute -top-24 -right-24 w-48 h-48 bg-brand-orange/20 blur-3xl rounded-full pointer-events-none">
+      </div>
 
       <div class="text-center space-y-2">
-        <img src="assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.jpg" alt="Logo" class="w-16 h-16 rounded-2xl mx-auto object-cover border border-white/15 shadow-lg" />
+        <img src="assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.jpg" alt="Logo"
+          class="w-16 h-16 rounded-2xl mx-auto object-cover border border-white/15 shadow-lg" />
         <h2 class="text-2xl font-anton tracking-wider text-white">PAINEL ADMINISTRATIVO</h2>
         <p class="text-xs text-stone-400">São José Burguer • Acesso Restrito</p>
       </div>
@@ -93,22 +107,18 @@
       <form id="admin-login-form" onsubmit="handleAdminLogin(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-anton text-white tracking-wide mb-1.5">SENHA DE ACESSO:</label>
-          <input 
-            type="password" 
-            id="admin-password-input" 
-            placeholder="Digite sua senha de administrador" 
+          <input type="password" id="admin-password-input" placeholder="Digite sua senha de administrador"
             class="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange transition-colors"
-            required
-            autofocus
-          />
+            required autofocus />
         </div>
 
-        <button 
-          type="submit" 
-          class="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:brightness-110 text-white font-anton tracking-wide py-3.5 rounded-2xl shadow-lg active:scale-95 transition-all text-sm flex items-center justify-center gap-2"
-        >
+        <button type="submit"
+          class="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:brightness-110 text-white font-anton tracking-wide py-3.5 rounded-2xl shadow-lg active:scale-95 transition-all text-sm flex items-center justify-center gap-2">
           <span>ENTRAR NO PAINEL</span>
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14"></path>
+            <path d="m12 5 7 7-7 7"></path>
+          </svg>
         </button>
       </form>
 
@@ -124,16 +134,18 @@
   <!-- 2. LAYOUT PRINCIPAL DO ADMIN (SIDEBAR + CONTEÚDO) -->
   <!-- ========================================================================= -->
   <div id="admin-main-layout" class="hidden flex-1 flex flex-col md:flex-row relative z-10 min-h-screen">
-    
+
     <!-- SIDEBAR PERSISTENTE (DESKTOP) / HEADER (MOBILE) -->
-    <aside transition:persist data-transition="persist" class="w-full md:w-64 bg-[#0E0A08]/95 backdrop-blur-xl border-b md:border-b-0 md:border-r border-white/10 flex md:flex-col justify-between p-4 md:p-6 sticky top-0 z-40 md:h-screen">
-      
+    <aside transition:persist data-transition="persist"
+      class="w-full md:w-64 bg-[#0E0A08]/95 backdrop-blur-xl border-b md:border-b-0 md:border-r border-white/10 flex md:flex-col justify-between p-4 md:p-6 sticky top-0 z-40 md:h-screen">
+
       <!-- Brand & Navigation -->
       <div class="space-y-6 w-full flex md:block items-center justify-between">
-        
+
         <!-- Logo & Titulo -->
         <div class="flex items-center gap-3">
-          <img src="assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.jpg" alt="Logo" class="w-10 h-10 rounded-xl object-cover border border-white/10" />
+          <img src="assets/906da31e40b234ed_s_C3_A3o_20jose_20burguer17365.jpg" alt="Logo"
+            class="w-10 h-10 rounded-xl object-cover border border-white/10" />
           <div class="hidden sm:block">
             <h1 class="font-anton text-base text-white tracking-wider leading-none">SÃO JOSÉ BURGUER</h1>
             <span class="text-[10px] text-amber-400 font-bold uppercase tracking-wider">Painel de Controle</span>
@@ -142,30 +154,36 @@
 
         <!-- Menu Links -->
         <nav class="hidden md:flex flex-col space-y-1.5 pt-4">
-          <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="sidebar-btn active flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-semibold text-white bg-brand-orange transition-all">
+          <button onclick="switchTab('dashboard')" id="tab-btn-dashboard"
+            class="sidebar-btn active flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-semibold text-white bg-brand-orange transition-all">
             <span class="text-base">📊</span>
             <span>Dashboard & Gráficos</span>
           </button>
-          
-          <button onclick="switchTab('orders')" id="tab-btn-orders" class="sidebar-btn flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-semibold text-stone-400 hover:text-white hover:bg-white/5 transition-all">
+
+          <button onclick="switchTab('orders')" id="tab-btn-orders"
+            class="sidebar-btn flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-semibold text-stone-400 hover:text-white hover:bg-white/5 transition-all">
             <div class="flex items-center gap-3">
               <span class="text-base">📋</span>
               <span>Gestor de Pedidos</span>
             </div>
-            <span id="sidebar-orders-badge" class="px-2 py-0.5 rounded-full bg-amber-500 text-black font-anton text-[10px]">0</span>
+            <span id="sidebar-orders-badge"
+              class="px-2 py-0.5 rounded-full bg-amber-500 text-black font-anton text-[10px]">0</span>
           </button>
 
-          <button onclick="switchTab('products')" id="tab-btn-products" class="sidebar-btn flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-semibold text-stone-400 hover:text-white hover:bg-white/5 transition-all">
+          <button onclick="switchTab('products')" id="tab-btn-products"
+            class="sidebar-btn flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-semibold text-stone-400 hover:text-white hover:bg-white/5 transition-all">
             <span class="text-base">🍔</span>
             <span>Cardápio & Produtos</span>
           </button>
 
-          <button onclick="switchTab('categories')" id="tab-btn-categories" class="sidebar-btn flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-semibold text-stone-400 hover:text-white hover:bg-white/5 transition-all">
+          <button onclick="switchTab('categories')" id="tab-btn-categories"
+            class="sidebar-btn flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-semibold text-stone-400 hover:text-white hover:bg-white/5 transition-all">
             <span class="text-base">🏷️</span>
             <span>Categorias & Adicionais</span>
           </button>
 
-          <button onclick="switchTab('settings')" id="tab-btn-settings" class="sidebar-btn flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-semibold text-stone-400 hover:text-white hover:bg-white/5 transition-all">
+          <button onclick="switchTab('settings')" id="tab-btn-settings"
+            class="sidebar-btn flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-semibold text-stone-400 hover:text-white hover:bg-white/5 transition-all">
             <span class="text-base">⚙️</span>
             <span>Configurações da Loja</span>
           </button>
@@ -175,11 +193,13 @@
 
       <!-- Quick Actions / Logout -->
       <div class="hidden md:flex flex-col space-y-2 pt-6 border-t border-white/10">
-        <a href="index.html" target="_blank" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-stone-300 hover:text-white bg-white/5 hover:bg-white/10 transition-colors">
+        <a href="index.html" target="_blank"
+          class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-stone-300 hover:text-white bg-white/5 hover:bg-white/10 transition-colors">
           <span>🌐</span>
           <span>Abrir Site do Cliente</span>
         </a>
-        <button onclick="handleAdminLogout()" class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors">
+        <button onclick="handleAdminLogout()"
+          class="flex items-center gap-2 px-3 py-2 rounded-xl text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors">
           <span>🚪</span>
           <span>Sair da Sessão</span>
         </button>
@@ -190,7 +210,8 @@
         <button onclick="switchTab('dashboard')" class="p-2 rounded-xl bg-white/5 text-white">📊</button>
         <button onclick="switchTab('orders')" class="p-2 rounded-xl bg-white/5 text-white relative">
           📋
-          <span id="mobile-orders-badge" class="absolute -top-1 -right-1 bg-amber-500 text-black text-[9px] font-anton w-4 h-4 rounded-full flex items-center justify-center">0</span>
+          <span id="mobile-orders-badge"
+            class="absolute -top-1 -right-1 bg-amber-500 text-black text-[9px] font-anton w-4 h-4 rounded-full flex items-center justify-center">0</span>
         </button>
         <button onclick="switchTab('products')" class="p-2 rounded-xl bg-white/5 text-white">🍔</button>
         <button onclick="switchTab('settings')" class="p-2 rounded-xl bg-white/5 text-white">⚙️</button>
@@ -201,12 +222,12 @@
 
     <!-- MAIN CONTENT AREA -->
     <main class="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-8">
-      
+
       <!-- ========================================================================= -->
       <!-- TAB 1: DASHBOARD & GRÁFICOS ANALÍTICOS -->
       <!-- ========================================================================= -->
       <div id="view-dashboard" class="space-y-6">
-        
+
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -214,10 +235,12 @@
               <span class="w-3 h-6 bg-brand-orange rounded-full"></span>
               DASHBOARD DE VENDAS & MÉTRICAS
             </h2>
-            <p class="text-xs text-stone-400 mt-1">Acompanhe faturamento, pedidos e desempenho do São José Burguer em tempo real</p>
+            <p class="text-xs text-stone-400 mt-1">Acompanhe faturamento, pedidos e desempenho do São José Burguer em
+              tempo real</p>
           </div>
           <div class="flex items-center gap-3">
-            <button onclick="refreshDashboard()" class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-stone-200 border border-white/10 text-xs font-semibold flex items-center gap-1.5 transition-colors">
+            <button onclick="refreshDashboard()"
+              class="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-stone-200 border border-white/10 text-xs font-semibold flex items-center gap-1.5 transition-colors">
               <span>🔄</span>
               <span>Atualizar Métricas</span>
             </button>
@@ -226,11 +249,12 @@
 
         <!-- 4 CARDS KPIS -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          
+
           <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-5 shadow-card-dark space-y-2">
             <div class="flex items-center justify-between text-stone-400 text-xs">
               <span>Faturamento Total</span>
-              <span class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-sm">💰</span>
+              <span
+                class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-sm">💰</span>
             </div>
             <div id="kpi-revenue" class="text-2xl font-anton text-white tracking-wide">R$ 0,00</div>
             <p class="text-[11px] text-emerald-400 flex items-center gap-1 font-medium">
@@ -241,7 +265,8 @@
           <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-5 shadow-card-dark space-y-2">
             <div class="flex items-center justify-between text-stone-400 text-xs">
               <span>Total de Pedidos</span>
-              <span class="w-8 h-8 rounded-xl bg-brand-orange/10 text-brand-orange flex items-center justify-center text-sm">🛍️</span>
+              <span
+                class="w-8 h-8 rounded-xl bg-brand-orange/10 text-brand-orange flex items-center justify-center text-sm">🛍️</span>
             </div>
             <div id="kpi-orders-count" class="text-2xl font-anton text-white tracking-wide">0 pedidos</div>
             <p class="text-[11px] text-stone-400">Desde o início do sistema</p>
@@ -250,7 +275,8 @@
           <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-5 shadow-card-dark space-y-2">
             <div class="flex items-center justify-between text-stone-400 text-xs">
               <span>Ticket Médio</span>
-              <span class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-sm">📊</span>
+              <span
+                class="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-sm">📊</span>
             </div>
             <div id="kpi-ticket" class="text-2xl font-anton text-white tracking-wide">R$ 0,00</div>
             <p class="text-[11px] text-amber-400">Média por cliente</p>
@@ -259,7 +285,8 @@
           <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-5 shadow-card-dark space-y-2">
             <div class="flex items-center justify-between text-stone-400 text-xs">
               <span>Produtos no Cardápio</span>
-              <span class="w-8 h-8 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-sm">🍔</span>
+              <span
+                class="w-8 h-8 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-sm">🍔</span>
             </div>
             <div id="kpi-products-count" class="text-2xl font-anton text-white tracking-wide">0 itens</div>
             <p class="text-[11px] text-cyan-400" id="kpi-categories-info">Em 5 categorias ativas</p>
@@ -275,10 +302,12 @@
               <h3 class="font-anton text-lg text-white tracking-wide">ÚLTIMOS PEDIDOS RECEBIDOS (AO VIVO)</h3>
             </div>
             <div class="flex items-center gap-2">
-              <button onclick="createSampleTestOrder()" class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 text-xs font-bold transition-colors">
+              <button onclick="createSampleTestOrder()"
+                class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 text-xs font-bold transition-colors">
                 🧪 Criar Pedido de Teste
               </button>
-              <button onclick="switchTab('orders')" class="px-3 py-1.5 rounded-xl bg-brand-orange hover:bg-orange-600 text-white text-xs font-bold transition-colors">
+              <button onclick="switchTab('orders')"
+                class="px-3 py-1.5 rounded-xl bg-brand-orange hover:bg-orange-600 text-white text-xs font-bold transition-colors">
                 Abrir Kanban Completo →
               </button>
             </div>
@@ -289,7 +318,7 @@
 
         <!-- GRÁFICOS (LINHA 1) -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
+
           <!-- Gráfico 1: Vendas por Período (2 Colunas) -->
           <div class="lg:col-span-2 bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
             <div class="flex items-center justify-between">
@@ -297,7 +326,9 @@
                 <h3 class="font-anton text-lg text-white tracking-wide">FATURAMENTO SEMANAL ESTIMADO</h3>
                 <p class="text-xs text-stone-400">Valores em Reais (R$) por dia da semana</p>
               </div>
-              <span class="px-2.5 py-1 rounded-full bg-brand-orange/15 text-brand-orange text-[10px] font-bold">Histórico Dinâmico</span>
+              <span
+                class="px-2.5 py-1 rounded-full bg-brand-orange/15 text-brand-orange text-[10px] font-bold">Histórico
+                Dinâmico</span>
             </div>
             <div class="h-64 relative">
               <canvas id="chart-sales-timeline"></canvas>
@@ -317,7 +348,7 @@
 
         <!-- GRÁFICOS (LINHA 2) -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          
+
           <!-- Gráfico 3: Itens Mais Populares -->
           <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
             <h3 class="font-anton text-lg text-white tracking-wide">ITENS MAIS PEDIDOS NO CARDÁPIO</h3>
@@ -344,21 +375,24 @@
       <!-- TAB 2: GESTÃO DE PEDIDOS (LIVE KANBAN) -->
       <!-- ========================================================================= -->
       <div id="view-orders" class="hidden space-y-6">
-        
+
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h2 class="text-2xl sm:text-3xl font-anton text-white tracking-wider flex items-center gap-2">
               <span class="w-3 h-6 bg-brand-orange rounded-full"></span>
               GESTOR DE PEDIDOS EM TEMPO REAL
             </h2>
-            <p class="text-xs text-stone-400 mt-1">Gerencie os pedidos recebidos, altere status e notifique clientes no WhatsApp</p>
+            <p class="text-xs text-stone-400 mt-1">Gerencie os pedidos recebidos, altere status e notifique clientes no
+              WhatsApp</p>
           </div>
 
           <div class="flex items-center gap-2">
-            <button onclick="openCreateOrderModal()" class="px-4 py-2 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-md active:scale-95 transition-all">
+            <button onclick="openCreateOrderModal()"
+              class="px-4 py-2 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-md active:scale-95 transition-all">
               <span>+ Novo Pedido Manual</span>
             </button>
-            <button onclick="clearCompletedOrders()" class="px-3 py-2 rounded-2xl bg-white/5 hover:bg-white/10 text-stone-300 text-xs transition-colors">
+            <button onclick="clearCompletedOrders()"
+              class="px-3 py-2 rounded-2xl bg-white/5 hover:bg-white/10 text-stone-300 text-xs transition-colors">
               Limpar Concluídos
             </button>
           </div>
@@ -366,7 +400,7 @@
 
         <!-- 4 COLUNAS KANBAN -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-          
+
           <!-- Coluna 1: Pendente / Novo -->
           <div class="bg-[#120D0A] border border-amber-500/20 rounded-3xl p-4 space-y-3 flex flex-col min-h-[500px]">
             <div class="flex items-center justify-between pb-2 border-b border-white/10">
@@ -374,7 +408,8 @@
                 <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
                 NOVOS PEDIDOS
               </span>
-              <span id="count-col-pending" class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold">0</span>
+              <span id="count-col-pending"
+                class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold">0</span>
             </div>
             <div id="col-pending" class="space-y-3 flex-1 overflow-y-auto no-scrollbar"></div>
           </div>
@@ -386,7 +421,8 @@
                 <span class="w-2 h-2 rounded-full bg-brand-orange animate-pulse"></span>
                 NO FOGO / PREPARO
               </span>
-              <span id="count-col-preparing" class="px-2 py-0.5 rounded-full bg-brand-orange/20 text-brand-orange text-xs font-bold">0</span>
+              <span id="count-col-preparing"
+                class="px-2 py-0.5 rounded-full bg-brand-orange/20 text-brand-orange text-xs font-bold">0</span>
             </div>
             <div id="col-preparing" class="space-y-3 flex-1 overflow-y-auto no-scrollbar"></div>
           </div>
@@ -398,7 +434,8 @@
                 <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
                 EM ENTREGA
               </span>
-              <span id="count-col-delivery" class="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold">0</span>
+              <span id="count-col-delivery"
+                class="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold">0</span>
             </div>
             <div id="col-delivery" class="space-y-3 flex-1 overflow-y-auto no-scrollbar"></div>
           </div>
@@ -410,7 +447,8 @@
                 <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
                 FINALIZADOS
               </span>
-              <span id="count-col-completed" class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold">0</span>
+              <span id="count-col-completed"
+                class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold">0</span>
             </div>
             <div id="col-completed" class="space-y-3 flex-1 overflow-y-auto no-scrollbar"></div>
           </div>
@@ -423,17 +461,19 @@
       <!-- TAB 3: GESTÃO DE PRODUTOS & CARDÁPIO (CRUD) -->
       <!-- ========================================================================= -->
       <div id="view-products" class="hidden space-y-6">
-        
+
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h2 class="text-2xl sm:text-3xl font-anton text-white tracking-wider flex items-center gap-2">
               <span class="w-3 h-6 bg-brand-orange rounded-full"></span>
               GESTÃO DE PRODUTOS DO CARDÁPIO
             </h2>
-            <p class="text-xs text-stone-400 mt-1">Adicione, edite preços, altere fotos e ative ou pause qualquer item</p>
+            <p class="text-xs text-stone-400 mt-1">Adicione, edite preços, altere fotos e ative ou pause qualquer item
+            </p>
           </div>
 
-          <button onclick="openProductEditModal(null)" class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 hover:brightness-110 text-white font-anton tracking-wide text-xs flex items-center gap-2 shadow-lg active:scale-95 transition-all">
+          <button onclick="openProductEditModal(null)"
+            class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 hover:brightness-110 text-white font-anton tracking-wide text-xs flex items-center gap-2 shadow-lg active:scale-95 transition-all">
             <span class="text-base">+</span>
             <span>NOVO PRODUTO</span>
           </button>
@@ -442,13 +482,9 @@
         <!-- Filtros & Busca -->
         <div class="flex flex-col sm:flex-row gap-3">
           <div class="flex-1 relative">
-            <input 
-              type="text" 
-              id="admin-product-search" 
-              oninput="filterAdminProducts(this.value)"
-              placeholder="Buscar por nome do produto..." 
-              class="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-2.5 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
-            />
+            <input type="text" id="admin-product-search" oninput="filterAdminProducts(this.value)"
+              placeholder="Buscar por nome do produto..."
+              class="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-2.5 text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange" />
           </div>
           <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" id="admin-category-filters"></div>
         </div>
@@ -457,7 +493,8 @@
         <div class="bg-[#120D0A] border border-white/10 rounded-3xl overflow-hidden shadow-card-dark">
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs text-stone-300">
-              <thead class="bg-black/40 text-stone-400 uppercase font-anton tracking-wider text-[11px] border-b border-white/10">
+              <thead
+                class="bg-black/40 text-stone-400 uppercase font-anton tracking-wider text-[11px] border-b border-white/10">
                 <tr>
                   <th class="p-4">Foto</th>
                   <th class="p-4">Título & Descrição</th>
@@ -478,7 +515,7 @@
       <!-- TAB 4: CATEGORIAS & ADICIONAIS -->
       <!-- ========================================================================= -->
       <div id="view-categories" class="hidden space-y-6">
-        
+
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h2 class="text-2xl sm:text-3xl font-anton text-white tracking-wider flex items-center gap-2">
@@ -487,13 +524,14 @@
             </h2>
             <p class="text-xs text-stone-400 mt-1">Gerencie categorias do menu e a lista de adicionais extras</p>
           </div>
-          <button onclick="openAddAdditionalModal()" class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-anton text-xs tracking-wide">
+          <button onclick="openAddAdditionalModal()"
+            class="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-anton text-xs tracking-wide">
             + NOVO ADICIONAL
           </button>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          
+
           <!-- Lista de Categorias -->
           <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
             <h3 class="font-anton text-lg text-white tracking-wide">CATEGORIAS ATIVAS</h3>
@@ -503,7 +541,8 @@
           <!-- Lista de Adicionais Extras -->
           <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
             <h3 class="font-anton text-lg text-white tracking-wide">ADICIONAIS ESPECIAIS (EXTRAS)</h3>
-            <div id="admin-additionals-list" class="space-y-2 font-poppins text-xs max-h-[500px] overflow-y-auto no-scrollbar"></div>
+            <div id="admin-additionals-list"
+              class="space-y-2 font-poppins text-xs max-h-[500px] overflow-y-auto no-scrollbar"></div>
           </div>
 
         </div>
@@ -514,45 +553,51 @@
       <!-- TAB 5: CONFIGURAÇÕES DA LOJA -->
       <!-- ========================================================================= -->
       <div id="view-settings" class="hidden space-y-6">
-        
+
         <div>
           <h2 class="text-2xl sm:text-3xl font-anton text-white tracking-wider flex items-center gap-2">
             <span class="w-3 h-6 bg-brand-orange rounded-full"></span>
             CONFIGURAÇÕES GERAIS DA EMPRESA
           </h2>
-          <p class="text-xs text-stone-400 mt-1">Ajuste WhatsApp de pedidos, chave PIX, horários de atendimento e backups</p>
+          <p class="text-xs text-stone-400 mt-1">Ajuste WhatsApp de pedidos, chave PIX, horários de atendimento e
+            backups</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          
+
           <!-- Card de Dados Principais -->
           <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
             <h3 class="font-anton text-lg text-white tracking-wide">DADOS DE CONTATO & PAGAMENTO</h3>
-            
+
             <form onsubmit="saveStoreSettings(event)" class="space-y-3 font-poppins text-xs">
               <div>
                 <label class="block text-stone-300 font-semibold mb-1">Nome da Empresa:</label>
-                <input type="text" id="setting-store-name" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" />
+                <input type="text" id="setting-store-name"
+                  class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" />
               </div>
 
               <div>
                 <label class="block text-stone-300 font-semibold mb-1">WhatsApp para Receber Pedidos (com DDI):</label>
-                <input type="text" id="setting-whatsapp" placeholder="Ex: 5599991040222" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" />
+                <input type="text" id="setting-whatsapp" placeholder="Ex: 5599991040222"
+                  class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" />
               </div>
 
               <div>
                 <label class="block text-stone-300 font-semibold mb-1">Chave PIX Oficial:</label>
-                <input type="text" id="setting-pix-key" placeholder="Ex: 99991040222" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" />
+                <input type="text" id="setting-pix-key" placeholder="Ex: 99991040222"
+                  class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" />
               </div>
 
               <div class="grid grid-cols-2 gap-3">
                 <div>
                   <label class="block text-stone-300 font-semibold mb-1">Pedido Mínimo (R$):</label>
-                  <input type="number" step="0.5" id="setting-min-order" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" />
+                  <input type="number" step="0.5" id="setting-min-order"
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" />
                 </div>
                 <div>
                   <label class="block text-stone-300 font-semibold mb-1">Status da Loja:</label>
-                  <select id="setting-store-status" class="w-full bg-[#1A130F] border border-white/10 rounded-xl px-3 py-2.5 text-white">
+                  <select id="setting-store-status"
+                    class="w-full bg-[#1A130F] border border-white/10 rounded-xl px-3 py-2.5 text-white">
                     <option value="auto">Automático (19:30 às 23:30)</option>
                     <option value="open">Forçar Aberto 🟢</option>
                     <option value="closed">Forçar Fechado 🔴</option>
@@ -562,10 +607,12 @@
 
               <div>
                 <label class="block text-stone-300 font-semibold mb-1">Endereço Completo:</label>
-                <input type="text" id="setting-address" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" />
+                <input type="text" id="setting-address"
+                  class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" />
               </div>
 
-              <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-anton tracking-wide py-3 rounded-2xl shadow-md active:scale-95 transition-all text-xs mt-2">
+              <button type="submit"
+                class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-anton tracking-wide py-3 rounded-2xl shadow-md active:scale-95 transition-all text-xs mt-2">
                 SALVAR CONFIGURAÇÕES
               </button>
             </form>
@@ -573,7 +620,7 @@
 
           <!-- Card de Backup, Taxas de Entrega & Senha -->
           <div class="space-y-6">
-            
+
             <!-- Gestão de Cidades & Taxas de Entrega Separadas -->
             <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
               <div class="flex items-center justify-between">
@@ -582,44 +629,42 @@
                   <span>TAXAS DE ENTREGA POR CIDADE</span>
                 </h3>
               </div>
-              <p class="text-xs text-stone-400">Configure as taxas de entrega separadas para Pedreiras (65725-000) e Trizidela do Vale (65727-000).</p>
+              <p class="text-xs text-stone-400">Configure as taxas de entrega separadas para Pedreiras (65725-000) e
+                Trizidela do Vale (65727-000).</p>
 
               <!-- Abas de Cidades -->
-              <div class="flex items-center gap-2 p-1 bg-white/5 border border-white/10 rounded-2xl text-xs font-semibold">
-                <button type="button" id="tab-city-pedreiras" onclick="switchAdminCityTab('pedreiras')" class="flex-1 py-2 rounded-xl bg-brand-orange text-white font-bold transition-all flex items-center justify-center gap-1.5">
+              <div
+                class="flex items-center gap-2 p-1 bg-white/5 border border-white/10 rounded-2xl text-xs font-semibold">
+                <button type="button" id="tab-city-pedreiras" onclick="switchAdminCityTab('pedreiras')"
+                  class="flex-1 py-2 rounded-xl bg-brand-orange text-white font-bold transition-all flex items-center justify-center gap-1.5">
                   <span>📍 Pedreiras</span>
                 </button>
-                <button type="button" id="tab-city-trizidela" onclick="switchAdminCityTab('trizidela')" class="flex-1 py-2 rounded-xl text-stone-400 hover:text-white transition-all flex items-center justify-center gap-1.5">
+                <button type="button" id="tab-city-trizidela" onclick="switchAdminCityTab('trizidela')"
+                  class="flex-1 py-2 rounded-xl text-stone-400 hover:text-white transition-all flex items-center justify-center gap-1.5">
                   <span>📍 Trizidela do Vale</span>
                 </button>
               </div>
 
               <!-- Formulário Adicionar Bairro/Região para a Cidade Selecionada -->
               <form onsubmit="addNeighborhoodAdmin(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-                <input 
-                  type="text" 
-                  id="new-neigh-name" 
-                  placeholder="Nome do Bairro (Ex: Engenho, Aeroporto)" 
-                  class="sm:col-span-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange" 
-                  required 
-                />
+                <input type="text" id="new-neigh-name" placeholder="Nome do Bairro (Ex: Engenho, Aeroporto)"
+                  class="sm:col-span-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+                  required />
                 <div class="flex gap-2">
-                  <input 
-                    type="number" 
-                    step="0.50" 
-                    id="new-neigh-fee" 
-                    placeholder="Taxa R$" 
-                    class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange font-bold text-amber-400" 
-                    required 
-                  />
-                  <button type="submit" class="px-3 py-2 bg-brand-orange hover:bg-orange-600 text-white font-bold rounded-xl active:scale-95 transition-all text-xs" title="Adicionar">
+                  <input type="number" step="0.50" id="new-neigh-fee" placeholder="Taxa R$"
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange font-bold text-amber-400"
+                    required />
+                  <button type="submit"
+                    class="px-3 py-2 bg-brand-orange hover:bg-orange-600 text-white font-bold rounded-xl active:scale-95 transition-all text-xs"
+                    title="Adicionar">
                     +
                   </button>
                 </div>
               </form>
 
               <!-- Lista de Bairros da Cidade Ativa -->
-              <div class="max-h-60 overflow-y-auto space-y-1.5 text-xs no-scrollbar pt-1" id="admin-neighborhoods-list"></div>
+              <div class="max-h-60 overflow-y-auto space-y-1.5 text-xs no-scrollbar pt-1" id="admin-neighborhoods-list">
+              </div>
             </div>
 
             <!-- Alteração de Senha -->
@@ -628,9 +673,11 @@
               <form onsubmit="changeAdminPassword(event)" class="space-y-3 font-poppins text-xs">
                 <div>
                   <label class="block text-stone-300 font-semibold mb-1">Nova Senha do Administrador:</label>
-                  <input type="password" id="setting-new-password" placeholder="Digite a nova senha" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" required />
+                  <input type="password" id="setting-new-password" placeholder="Digite a nova senha"
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" required />
                 </div>
-                <button type="submit" class="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-2.5 rounded-xl transition-all">
+                <button type="submit"
+                  class="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-2.5 rounded-xl transition-all">
                   Atualizar Senha
                 </button>
               </form>
@@ -639,13 +686,16 @@
             <!-- Backup & Restauração JSON -->
             <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
               <h3 class="font-anton text-lg text-white tracking-wide">BACKUP & RESTAURAÇÃO</h3>
-              <p class="text-xs text-stone-400">Faça o download do banco de dados completo ou importe um arquivo JSON salvo.</p>
+              <p class="text-xs text-stone-400">Faça o download do banco de dados completo ou importe um arquivo JSON
+                salvo.</p>
 
               <div class="flex flex-col sm:flex-row gap-2">
-                <button onclick="exportBackupData()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors">
+                <button onclick="exportBackupData()"
+                  class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors">
                   <span>📥 Baixar Backup JSON</span>
                 </button>
-                <label class="flex-1 bg-white/10 hover:bg-white/20 text-stone-200 font-bold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-colors text-center">
+                <label
+                  class="flex-1 bg-white/10 hover:bg-white/20 text-stone-200 font-bold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-colors text-center">
                   <span>📤 Carregar Backup</span>
                   <input type="file" accept=".json" onchange="importBackupData(event)" class="hidden" />
                 </label>
@@ -665,11 +715,14 @@
   <!-- ========================================================================= -->
   <!-- MODAL: CRIAR / EDITAR PRODUTO -->
   <!-- ========================================================================= -->
-  <div id="product-modal-backdrop" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
-    <div id="product-modal" class="bg-[#120D0A] border border-white/10 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col font-poppins transform scale-95 transition-all">
+  <div id="product-modal-backdrop"
+    class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center p-4">
+    <div id="product-modal"
+      class="bg-[#120D0A] border border-white/10 rounded-3xl max-w-lg w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col font-poppins transform scale-95 transition-all">
       <div class="p-5 border-b border-white/10 flex items-center justify-between bg-black/40">
         <h3 id="modal-product-header" class="font-anton text-lg text-white tracking-wide">NOVO PRODUTO</h3>
-        <button onclick="closeProductEditModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-brand-orange text-stone-300 hover:text-white flex items-center justify-center">✕</button>
+        <button onclick="closeProductEditModal()"
+          class="w-8 h-8 rounded-full bg-white/10 hover:bg-brand-orange text-stone-300 hover:text-white flex items-center justify-center">✕</button>
       </div>
 
       <form onsubmit="saveProduct(event)" class="p-5 overflow-y-auto flex-1 space-y-3.5 text-xs no-scrollbar">
@@ -677,43 +730,51 @@
 
         <div>
           <label class="block text-stone-300 font-semibold mb-1">Título do Produto *</label>
-          <input type="text" id="edit-product-title" placeholder="Ex: Burguer Especial" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" required />
+          <input type="text" id="edit-product-title" placeholder="Ex: Burguer Especial"
+            class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" required />
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-stone-300 font-semibold mb-1">Categoria *</label>
-            <select id="edit-product-category" class="w-full bg-[#1A130F] border border-white/10 rounded-xl px-3 py-2.5 text-white" required></select>
+            <select id="edit-product-category"
+              class="w-full bg-[#1A130F] border border-white/10 rounded-xl px-3 py-2.5 text-white" required></select>
           </div>
           <div>
             <label class="block text-stone-300 font-semibold mb-1">Preço (R$) *</label>
-            <input type="number" step="0.5" id="edit-product-price" placeholder="25.00" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" required />
+            <input type="number" step="0.5" id="edit-product-price" placeholder="25.00"
+              class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" required />
           </div>
         </div>
 
         <div>
           <label class="block text-stone-300 font-semibold mb-1">Descrição / Ingredientes</label>
-          <textarea id="edit-product-desc" rows="2" placeholder="Descreva os ingredientes do item..." class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white resize-none"></textarea>
+          <textarea id="edit-product-desc" rows="2" placeholder="Descreva os ingredientes do item..."
+            class="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white resize-none"></textarea>
         </div>
 
         <div>
           <label class="block text-stone-300 font-semibold mb-1">Caminho da Imagem / URL</label>
-          <input type="text" id="edit-product-image" placeholder="assets/nome_da_foto.jpg" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" />
+          <input type="text" id="edit-product-image" placeholder="assets/nome_da_foto.jpg"
+            class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white" />
         </div>
 
         <div class="flex items-center gap-4 pt-1">
           <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" id="edit-product-bestseller" class="rounded bg-white/10 border-white/20 text-brand-orange focus:ring-0" />
+            <input type="checkbox" id="edit-product-bestseller"
+              class="rounded bg-white/10 border-white/20 text-brand-orange focus:ring-0" />
             <span>⭐ Destaque / Mais Pedido</span>
           </label>
 
           <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" id="edit-product-promo" class="rounded bg-white/10 border-white/20 text-brand-orange focus:ring-0" />
+            <input type="checkbox" id="edit-product-promo"
+              class="rounded bg-white/10 border-white/20 text-brand-orange focus:ring-0" />
             <span>🔥 Em Promoção</span>
           </label>
         </div>
 
-        <button type="submit" class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-anton tracking-wide py-3 rounded-2xl shadow-lg active:scale-95 transition-all text-xs mt-3">
+        <button type="submit"
+          class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-anton tracking-wide py-3 rounded-2xl shadow-lg active:scale-95 transition-all text-xs mt-3">
           SALVAR PRODUTO
         </button>
       </form>
@@ -721,8 +782,10 @@
   </div>
 
   <!-- TOAST -->
-  <div id="admin-toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[300] bg-black/90 text-white text-xs font-poppins font-semibold px-5 py-3 rounded-2xl shadow-2xl border border-white/10 flex items-center gap-2.5 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-    <span class="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold">✓</span>
+  <div id="admin-toast"
+    class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[300] bg-black/90 text-white text-xs font-poppins font-semibold px-5 py-3 rounded-2xl shadow-2xl border border-white/10 flex items-center gap-2.5 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <span
+      class="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold">✓</span>
     <span id="admin-toast-text">Alterações salvas!</span>
   </div>
 
@@ -746,7 +809,7 @@
       if (savedStore) {
         try {
           STORE = JSON.parse(savedStore);
-        } catch (e) {}
+        } catch (e) { }
       }
 
       if (!STORE) {
@@ -782,7 +845,7 @@
               refreshAllAdminViews();
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
 
       // Carregar Pedidos
@@ -790,7 +853,7 @@
       if (savedOrders) {
         try {
           ORDERS = JSON.parse(savedOrders);
-        } catch (e) {}
+        } catch (e) { }
       } else {
         // Mock inicial de demonstração
         ORDERS = [
@@ -839,17 +902,17 @@
         const gain = audioCtx.createGain();
         osc.connect(gain);
         gain.connect(audioCtx.destination);
-        
+
         osc.type = 'sine';
         osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
         osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.15); // A5
-        
+
         gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-        
+
         osc.start(audioCtx.currentTime);
         osc.stop(audioCtx.currentTime + 0.5);
-      } catch (e) {}
+      } catch (e) { }
     }
 
     // SINCRONIZAÇÃO EM TEMPO REAL GLOBAL (SUPABASE + NUVEM + SSE + LOCAL)
@@ -903,7 +966,7 @@
                   addedCount++;
                 }
               }
-            } catch (err) {}
+            } catch (err) { }
           });
           if (addedCount > 0) {
             saveOrdersToStorage();
@@ -911,7 +974,7 @@
             refreshDashboard();
           }
         })
-        .catch(() => {});
+        .catch(() => { });
 
       // 2. Conexão SSE em Tempo Real Direta (Disparo instantâneo em < 200ms de qualquer celular)
       try {
@@ -930,9 +993,9 @@
                 showAdminToast(`🔔 NOVO PEDIDO RECEBIDO! #${orderData.id} - ${orderData.customer?.name || 'Cliente'}`);
               }
             }
-          } catch (e) {}
+          } catch (e) { }
         };
-      } catch (e) {}
+      } catch (e) { }
 
       // 3. BroadcastChannel (para testes na mesma máquina/abas)
       try {
@@ -950,7 +1013,7 @@
             }
           }
         };
-      } catch (e) {}
+      } catch (e) { }
 
       // 4. Polling periódico na nuvem e no storage a cada 3 segundos
       setInterval(() => {
@@ -971,7 +1034,7 @@
                     hasNew = true;
                   }
                 }
-              } catch (err) {}
+              } catch (err) { }
             });
             if (hasNew) {
               saveOrdersToStorage();
@@ -981,7 +1044,7 @@
               showAdminToast('🔔 Novo pedido sincronizado da nuvem!');
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }, 3000);
     }
 
@@ -990,7 +1053,7 @@
       if (saved) {
         try {
           ORDERS = JSON.parse(saved);
-        } catch (e) {}
+        } catch (e) { }
       }
     }
 
@@ -1342,11 +1405,11 @@
           </button>
         `;
 
-            let kanbanMode = `🛵 Entrega (${order.neighborhood || 'Pedreiras'})`;
-            if (order.mode === 'pickup') kanbanMode = '🏪 Balcão';
-            if (order.mode === 'dine_in') kanbanMode = `🍽️ No Local ${order.table ? `(Mesa ${order.table})` : ''}`;
+        let kanbanMode = `🛵 Entrega (${order.neighborhood || 'Pedreiras'})`;
+        if (order.mode === 'pickup') kanbanMode = '🏪 Balcão';
+        if (order.mode === 'dine_in') kanbanMode = `🍽️ No Local ${order.table ? `(Mesa ${order.table})` : ''}`;
 
-            return `
+        return `
           <div class="bg-black/50 border border-white/10 rounded-2xl p-3.5 space-y-2.5 shadow-sm text-xs font-poppins hover:border-brand-orange/40 transition-colors">
             <div class="flex items-center justify-between">
               <span class="font-anton text-white tracking-wide">${order.id}</span>
@@ -1752,7 +1815,7 @@
       document.getElementById('setting-min-order').value = STORE.store.minOrder || 6;
       document.getElementById('setting-store-status').value = STORE.store.status || "auto";
       document.getElementById('setting-address').value = STORE.store.address || "AVENIDA MARIANO LISBOA, 1370 - ENGENHO, Pedreiras - MA, 65725-000";
-      
+
       // Carregar credenciais do Supabase
       if (window.SAO_JOSE_SUPABASE) {
         const config = window.SAO_JOSE_SUPABASE.getConfig();
@@ -1841,7 +1904,7 @@
             renderOrdersKanban();
             refreshDashboard();
           }
-        } catch (e) {}
+        } catch (e) { }
       }
     }
 
@@ -1883,7 +1946,7 @@
       try {
         const saved = localStorage.getItem('SAO_JOSE_CITY_RATES');
         if (saved) return JSON.parse(saved);
-      } catch (e) {}
+      } catch (e) { }
       return DEFAULT_CITY_CONFIGS;
     }
 
@@ -2025,7 +2088,7 @@
       const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = function(event) {
+      reader.onload = function (event) {
         try {
           const parsed = JSON.parse(event.target.result);
           if (parsed && parsed.categories) {
@@ -2058,10 +2121,11 @@
     // REGISTRO DO SERVICE WORKER NO ADMIN
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(() => {});
+        navigator.serviceWorker.register('/sw.js').catch(() => { });
       });
     }
   </script>
 
 </body>
+
 </html>
