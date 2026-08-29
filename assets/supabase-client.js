@@ -6,22 +6,21 @@
  * =========================================================================
  */
 
+const DEFAULT_SUPABASE_CONFIG = {
+  url: "https://encdcavjjtjihyoonpcz.supabase.co",
+  key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVuY2RjYXZqanRqaWh5b29vcGN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc5NTQ0MjIsImV4cCI6MjEwMzUzMDQyMn0.E-x6vacMWg38mk8xegmHqDhsEOfwSbq-Y9jiV8Ck1rE"
+};
+
 const SAO_JOSE_SUPABASE = {
   client: null,
   isReady: false,
 
-  // Chaves salvas no navegador pelo painel de configurações ou padrão
+  // Chaves salvas no código para segurança
   getConfig() {
     return {
-      url: localStorage.getItem('SAO_JOSE_SUPABASE_URL') || '',
-      key: localStorage.getItem('SAO_JOSE_SUPABASE_KEY') || ''
+      url: localStorage.getItem('SAO_JOSE_SUPABASE_URL') || DEFAULT_SUPABASE_CONFIG.url,
+      key: localStorage.getItem('SAO_JOSE_SUPABASE_KEY') || DEFAULT_SUPABASE_CONFIG.key
     };
-  },
-
-  setConfig(url, key) {
-    localStorage.setItem('SAO_JOSE_SUPABASE_URL', url.trim());
-    localStorage.setItem('SAO_JOSE_SUPABASE_KEY', key.trim());
-    this.init();
   },
 
   init() {

@@ -622,47 +622,6 @@
               <div class="max-h-60 overflow-y-auto space-y-1.5 text-xs no-scrollbar pt-1" id="admin-neighborhoods-list"></div>
             </div>
 
-            <!-- Configuração Supabase (Banco de Dados na Nuvem) -->
-            <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
-              <div class="flex items-center justify-between">
-                <div>
-                  <h3 class="font-anton text-lg text-white tracking-wide flex items-center gap-2">
-                    <span>☁️ BANCO DE DADOS NA NUVEM</span>
-                    <span id="supabase-status-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold font-poppins bg-stone-700 text-stone-300">Local / Offline</span>
-                  </h3>
-                  <p class="text-xs text-stone-400 mt-1">Conecte o Supabase (PostgreSQL gratuito) para salvar milhares de clientes e pedidos com segurança.</p>
-                </div>
-              </div>
-
-              <form onsubmit="saveSupabaseSettings(event)" class="space-y-3 font-poppins text-xs">
-                <div>
-                  <label class="block text-stone-300 font-semibold mb-1">Project URL (Supabase):</label>
-                  <input type="text" id="setting-supabase-url" placeholder="https://seu-projeto.supabase.co" class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white placeholder-stone-600 focus:border-brand-orange" />
-                </div>
-                <div>
-                  <label class="block text-stone-300 font-semibold mb-1">Anon Public Key (Supabase):</label>
-                  <input type="password" id="setting-supabase-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." class="w-full bg-white/5 border border-white/10 rounded-xl px-3.5 py-2.5 text-white placeholder-stone-600 focus:border-brand-orange" />
-                </div>
-                <div class="flex flex-col sm:flex-row gap-2 pt-1">
-                  <button type="submit" class="flex-1 bg-brand-orange hover:bg-orange-600 text-white font-bold py-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5">
-                    <span>💾 Salvar Conexão</span>
-                  </button>
-                  <button type="button" onclick="testSupabaseConnection()" class="flex-1 bg-white/10 hover:bg-white/20 text-stone-200 font-bold py-2.5 rounded-xl transition-all flex items-center justify-center gap-1.5">
-                    <span>⚡ Testar Conexão</span>
-                  </button>
-                </div>
-              </form>
-
-              <div class="p-3.5 bg-white/5 border border-white/10 rounded-2xl text-[11px] text-stone-400 space-y-1.5">
-                <p class="font-bold text-white flex items-center gap-1.5"><span>💡</span><span>Como ativar o banco em 2 minutos (Grátis):</span></p>
-                <ol class="list-decimal pl-4 space-y-1 text-stone-300">
-                  <li>Acesse <a href="https://supabase.com" target="_blank" class="text-brand-orange font-bold underline">supabase.com</a> e crie seu projeto.</li>
-                  <li>No menu esquerdo, vá em <strong>SQL Editor</strong> e cole o conteúdo do script <code class="text-amber-400 bg-black/50 px-1.5 py-0.5 rounded border border-white/10">schema_supabase.sql</code>.</li>
-                  <li>Copie a <strong>Project URL</strong> e a <strong>Anon Key</strong> em <em>Settings → API</em> e cole nos campos acima.</li>
-                </ol>
-              </div>
-            </div>
-
             <!-- Alteração de Senha -->
             <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
               <h3 class="font-anton text-lg text-white tracking-wide">SEGURANÇA & SENHA DO ADMIN</h3>
