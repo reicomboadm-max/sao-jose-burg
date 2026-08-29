@@ -1,0 +1,1 @@
+import{D as e,g as t,m as n,s as r,u as i}from"./vendor-payments-BkPv9nS1.js";import{n as a,t as o}from"./BaseIcon-xcxvkVRn.js";var s={class:`badge`},c=a(t({__name:`BadgeCopa`,setup(t){return(t,a)=>(e(),i(`div`,s,[n(o,{"icon-name":`bol`,"icon-size":`15`,"icon-color":`#006C2F`}),a[0]||=r(`span`,null,`Torcendo com você!`,-1)]))}}),[[`__scopeId`,`data-v-0445d30e`]]);export{c as t};

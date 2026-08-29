@@ -1,0 +1,1 @@
+function e(e){let t=Math.floor(e/6e4),n=Math.floor(e%6e4/1e3);return t+`:`+(n<10?`0`:``)+n}export{e as t};

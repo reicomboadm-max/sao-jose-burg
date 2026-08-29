@@ -1,0 +1,1 @@
+import{g as e,o as t,t as n}from"./vendor-utils-D9xoPAC5.js";function r(r){if(r.dateString){let i=t(r.dateString),a=`dd/MM/yyyy`;return r.showTime&&(a+=` 'às' HH:mm`),e(i,a,{locale:n})}}export{r as t};

@@ -567,9 +567,47 @@
             </form>
           </div>
 
-          <!-- Card de Backup & Senha -->
+          <!-- Card de Backup, Taxas de Entrega & Senha -->
           <div class="space-y-6">
             
+            <!-- Gestão de Bairros & Taxas de Entrega -->
+            <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="font-anton text-lg text-white tracking-wide flex items-center gap-2">
+                  <span>🛵</span>
+                  <span>TAXAS DE ENTREGA POR BAIRRO</span>
+                </h3>
+              </div>
+              <p class="text-xs text-stone-400">Configure os valores cobrados para entrega em cada bairro de Pedreiras - MA.</p>
+
+              <!-- Formulário Adicionar Bairro -->
+              <form onsubmit="addNeighborhoodAdmin(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                <input 
+                  type="text" 
+                  id="new-neigh-name" 
+                  placeholder="Nome do Bairro (Ex: Goiabal)" 
+                  class="sm:col-span-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange" 
+                  required 
+                />
+                <div class="flex gap-2">
+                  <input 
+                    type="number" 
+                    step="0.50" 
+                    id="new-neigh-fee" 
+                    placeholder="Taxa R$" 
+                    class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange font-bold text-amber-400" 
+                    required 
+                  />
+                  <button type="submit" class="px-3 py-2 bg-brand-orange hover:bg-orange-600 text-white font-bold rounded-xl active:scale-95 transition-all text-xs">
+                    +
+                  </button>
+                </div>
+              </form>
+
+              <!-- Lista de Bairros -->
+              <div class="max-h-60 overflow-y-auto space-y-1.5 text-xs no-scrollbar pt-1" id="admin-neighborhoods-list"></div>
+            </div>
+
             <!-- Alteração de Senha -->
             <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
               <h3 class="font-anton text-lg text-white tracking-wide">SEGURANÇA & SENHA DO ADMIN</h3>
@@ -1048,6 +1086,10 @@
           </button>
         `;
 
+        let modeBadge = `<span class="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 text-[10px] font-semibold">🛵 Entrega (${o.neighborhood || 'Pedreiras'})</span>`;
+        if (o.mode === 'pickup') modeBadge = `<span class="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-semibold">🏪 Retirada Balcão</span>`;
+        if (o.mode === 'dine_in') modeBadge = `<span class="px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-400 text-[10px] font-semibold">🍽️ No Local ${o.table ? `(Mesa ${o.table})` : ''}</span>`;
+
         return `
           <div class="p-3.5 bg-white/5 border border-white/10 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-brand-orange/40 transition-colors">
             <div class="space-y-1 flex-1">
@@ -1055,11 +1097,12 @@
                 <span class="font-anton text-white text-sm tracking-wide">${o.id}</span>
                 ${statusBadge}
                 ${payStatusBtn}
+                ${modeBadge}
                 <span class="text-stone-400 text-[11px]">• ${new Date(o.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
               </div>
               <p class="text-white font-bold text-xs">${o.customer?.name || 'Cliente'} <span class="text-stone-400 font-normal font-mono">(${o.customer?.phone || 'Sem telefone'})</span></p>
               <p class="text-stone-300 text-[11px]">${(o.items || []).map(i => `${i.qty}x ${i.title}`).join(', ')}</p>
-              <p class="text-stone-400 text-[10px]">📍 ${o.address || 'Retirada no Balcão'} • <strong class="text-emerald-400">${o.payment || 'PIX'}</strong></p>
+              <p class="text-stone-400 text-[10px]">📍 ${o.address || 'Balcão'} • <strong class="text-emerald-400">${o.payment || 'PIX'}</strong></p>
             </div>
 
             <div class="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-white/5">
@@ -1236,7 +1279,11 @@
           </button>
         `;
 
-        return `
+            let kanbanMode = `🛵 Entrega (${order.neighborhood || 'Pedreiras'})`;
+            if (order.mode === 'pickup') kanbanMode = '🏪 Balcão';
+            if (order.mode === 'dine_in') kanbanMode = `🍽️ No Local ${order.table ? `(Mesa ${order.table})` : ''}`;
+
+            return `
           <div class="bg-black/50 border border-white/10 rounded-2xl p-3.5 space-y-2.5 shadow-sm text-xs font-poppins hover:border-brand-orange/40 transition-colors">
             <div class="flex items-center justify-between">
               <span class="font-anton text-white tracking-wide">${order.id}</span>
@@ -1256,7 +1303,7 @@
             </div>
 
             <div class="flex items-center justify-between text-xs pt-1 border-t border-white/5">
-              <span class="text-stone-400">${order.mode === 'delivery' ? '🛵 Entrega' : '🏪 Balcão'} • <strong class="text-emerald-400">${order.payment}</strong></span>
+              <span class="text-stone-400">${kanbanMode} • <strong class="text-emerald-400">${order.payment}</strong></span>
               <span class="font-anton text-brand-orange text-sm">R$ ${(order.total || 0).toFixed(2).replace('.', ',')}</span>
             </div>
 
@@ -1636,6 +1683,97 @@
       document.getElementById('setting-min-order').value = STORE.store.minOrder || 6;
       document.getElementById('setting-store-status').value = STORE.store.status || "auto";
       document.getElementById('setting-address').value = STORE.store.address || "AVENIDA MARIANO LISBOA, 1370 - ENGENHO, Pedreiras - MA, 65725-000";
+      renderNeighborhoodsAdmin();
+    }
+
+    // =========================================================================
+    // GESTÃO DE BAIRROS E TAXAS DE ENTREGA (PEDREIRAS - MA)
+    // =========================================================================
+    const DEFAULT_ADMIN_NEIGHBORHOODS = [
+      { name: "Engenho (Próximo à loja)", fee: 3.00 },
+      { name: "Centro", fee: 4.00 },
+      { name: "Goiabal", fee: 5.00 },
+      { name: "Mutirão", fee: 5.00 },
+      { name: "Loteamento Passos", fee: 5.00 },
+      { name: "Parque Henrique", fee: 6.00 },
+      { name: "Vila das Flores", fee: 5.00 },
+      { name: "Trizidela do Vale", fee: 7.00 },
+      { name: "Outro Bairro / Região", fee: 5.00 }
+    ];
+
+    function getAdminNeighborhoods() {
+      try {
+        const saved = localStorage.getItem('SAO_JOSE_NEIGHBORHOODS');
+        if (saved) return JSON.parse(saved);
+      } catch (e) {}
+      return DEFAULT_ADMIN_NEIGHBORHOODS;
+    }
+
+    function renderNeighborhoodsAdmin() {
+      const container = document.getElementById('admin-neighborhoods-list');
+      if (!container) return;
+
+      const list = getAdminNeighborhoods();
+      container.innerHTML = list.map((n, idx) => `
+        <div class="flex items-center justify-between p-2.5 bg-black/40 border border-white/10 rounded-xl">
+          <div class="flex-1 pr-2">
+            <strong class="text-white text-xs block">${n.name}</strong>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="flex items-center bg-white/5 px-2 py-1 rounded-lg border border-white/10">
+              <span class="text-stone-400 text-[10px] mr-1">R$</span>
+              <input 
+                type="number" 
+                step="0.50" 
+                value="${n.fee.toFixed(2)}" 
+                onchange="saveNeighborhoodFeeAdmin(${idx}, this.value)"
+                class="w-14 bg-transparent text-amber-400 font-bold text-xs focus:outline-none text-right"
+              />
+            </div>
+            <button onclick="deleteNeighborhoodAdmin(${idx})" class="p-1 text-red-400 hover:text-red-300 font-bold text-xs" title="Excluir bairro">
+              ✕
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function addNeighborhoodAdmin(e) {
+      e.preventDefault();
+      const name = document.getElementById('new-neigh-name').value.trim();
+      const fee = parseFloat(document.getElementById('new-neigh-fee').value) || 5.00;
+
+      if (!name) return;
+
+      const list = getAdminNeighborhoods();
+      list.push({ name, fee });
+      localStorage.setItem('SAO_JOSE_NEIGHBORHOODS', JSON.stringify(list));
+
+      document.getElementById('new-neigh-name').value = '';
+      document.getElementById('new-neigh-fee').value = '';
+
+      renderNeighborhoodsAdmin();
+      showAdminToast(`Bairro "${name}" adicionado com taxa de R$ ${fee.toFixed(2)}! 🛵`);
+    }
+
+    function saveNeighborhoodFeeAdmin(idx, val) {
+      const list = getAdminNeighborhoods();
+      const fee = parseFloat(val);
+      if (!isNaN(fee) && list[idx]) {
+        list[idx].fee = fee;
+        localStorage.setItem('SAO_JOSE_NEIGHBORHOODS', JSON.stringify(list));
+        showAdminToast(`Taxa do bairro "${list[idx].name}" atualizada para R$ ${fee.toFixed(2)}! ✅`);
+      }
+    }
+
+    function deleteNeighborhoodAdmin(idx) {
+      const list = getAdminNeighborhoods();
+      if (list[idx] && confirm(`Excluir o bairro "${list[idx].name}"?`)) {
+        list.splice(idx, 1);
+        localStorage.setItem('SAO_JOSE_NEIGHBORHOODS', JSON.stringify(list));
+        renderNeighborhoodsAdmin();
+        showAdminToast("Bairro removido com sucesso!");
+      }
     }
 
     function saveStoreSettings(e) {

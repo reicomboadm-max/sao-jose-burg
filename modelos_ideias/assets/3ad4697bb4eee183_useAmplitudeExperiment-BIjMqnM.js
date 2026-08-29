@@ -1,0 +1,1 @@
+import{C as e,K as t}from"./vendor-payments-BkPv9nS1.js";import{Ft as n}from"./EventManager-Bs_SQ4Im.js";function r(r,i=`control`){let a=t(i),o=()=>{let e=n.getVariantByExperimentKey(r)?.key;e&&e!==`off`&&(a.value=e)};return o(),e(()=>{o()}),a}export{r as t};

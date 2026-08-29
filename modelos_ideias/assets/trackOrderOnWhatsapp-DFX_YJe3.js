@@ -1,0 +1,1 @@
+import{s as e}from"./EventManager-Bs_SQ4Im.js";var t=t=>{let n=e().getEstablishment.whatsapp;window.open(`https://api.whatsapp.com/send?phone=${n}&text=Quero%20acompanhar%20meu%20pedido!`)};export{t};

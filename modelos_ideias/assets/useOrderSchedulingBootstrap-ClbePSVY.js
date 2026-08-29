@@ -1,0 +1,1 @@
+import{s as e}from"./EventManager-Bs_SQ4Im.js";import{t}from"./orderScheduling-17q3ThbC.js";function n(){let n=t(),r=e();function i(){r.acceptsScheduledOrders&&n.hydrateFromEstablishment()}return{bootstrap:i}}export{n as t};

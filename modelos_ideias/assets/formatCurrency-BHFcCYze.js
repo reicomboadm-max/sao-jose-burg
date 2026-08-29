@@ -1,0 +1,1 @@
+import{Jt as e}from"./EventManager-Bs_SQ4Im.js";var t=t=>t===void 0?`0`:(typeof t==`string`&&(t=Number(t.replace(`R$`,``))),e(t).toLocaleString(`pt-BR`,{style:`currency`,currency:`BRL`,currencyDisplay:`symbol`,minimumFractionDigits:2,maximumFractionDigits:2}));export{t};

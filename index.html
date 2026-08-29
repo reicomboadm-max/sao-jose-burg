@@ -1043,34 +1043,198 @@
     </div>
 
     <!-- Drawer Items List -->
-    <div id="cart-items-container" class="p-5 overflow-y-auto flex-1 space-y-3 font-poppins no-scrollbar"></div>
+    <div id="cart-items-container" class="p-4 sm:p-5 overflow-y-auto flex-1 space-y-3 font-poppins no-scrollbar"></div>
 
     <!-- Drawer Footer / Checkout -->
-    <div class="p-5 bg-black/60 border-t border-white/10 space-y-3">
+    <div class="p-4 sm:p-5 bg-[#0C0806] border-t border-white/10 space-y-3.5 max-h-[62vh] overflow-y-auto no-scrollbar font-poppins">
       
-      <!-- Seletor Delivery / Retirada -->
-      <div class="flex items-center gap-2 p-1 bg-white/5 border border-white/10 rounded-2xl text-xs font-semibold">
-        <button id="mode-delivery-btn" onclick="setDeliveryMode('delivery')" class="flex-1 py-2 rounded-xl bg-brand-orange text-white font-bold transition-all">
-          🛵 Delivery
-        </button>
-        <button id="mode-pickup-btn" onclick="setDeliveryMode('pickup')" class="flex-1 py-2 rounded-xl text-stone-400 hover:text-white transition-all">
-          🏪 Retirada no Balcão
-        </button>
+      <!-- 1. IDENTIFICAÇÃO DO CLIENTE (PADRÃO ANOTA AI) -->
+      <div class="bg-white/5 border border-white/10 rounded-2xl p-3.5 space-y-2">
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-stone-400">Este pedido será entregue a:</span>
+          <button type="button" onclick="toggleCustomerEditMode()" id="btn-toggle-client-edit" class="px-2.5 py-1 rounded-xl bg-brand-orange/20 hover:bg-brand-orange/30 text-brand-orange text-[11px] font-bold transition-all">
+            Trocar
+          </button>
+        </div>
+
+        <div id="customer-view-badge" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-full bg-brand-orange/20 text-brand-orange flex items-center justify-center font-bold text-xs">
+            👤
+          </div>
+          <div>
+            <div id="display-client-name" class="font-bold text-white text-xs">Cliente (Preencher Dados)</div>
+            <div id="display-client-phone" class="text-[11px] text-stone-400">Toque em "Trocar" para alterar</div>
+          </div>
+        </div>
+
+        <!-- Campos Editáveis de Nome e Telefone -->
+        <div id="customer-edit-fields" class="space-y-2 pt-2 border-t border-white/5 hidden">
+          <input 
+            type="text" 
+            id="customer-name" 
+            placeholder="Seu Nome e Sobrenome *" 
+            oninput="updateClientDisplay()"
+            class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+            required
+            autocomplete="name"
+          />
+          <input 
+            type="tel" 
+            id="customer-phone" 
+            placeholder="Telefone / WhatsApp *" 
+            oninput="updateClientDisplay()"
+            class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+            required
+            autocomplete="tel"
+          />
+        </div>
       </div>
 
-      <!-- Seletor de Forma de Pagamento -->
+      <!-- 2. ESCOLHA COMO RECEBER O PEDIDO (3 MODALIDADES ANOTA AI) -->
+      <div class="rounded-2xl overflow-hidden border border-brand-orange/30 shadow-md">
+        <div class="bg-gradient-to-r from-orange-600 to-amber-600 px-3.5 py-2 text-white font-anton text-xs tracking-wider flex items-center gap-1.5">
+          <span>🛵</span>
+          <span>ESCOLHA COMO RECEBER O PEDIDO</span>
+        </div>
+
+        <div class="bg-black/60 p-2 space-y-1.5 text-xs">
+          
+          <!-- Opção 1: Entrega Delivery -->
+          <label onclick="setDeliveryMode('delivery')" class="flex items-center justify-between p-2.5 rounded-xl border border-white/10 hover:border-brand-orange/40 cursor-pointer transition-all bg-white/5" id="card-mode-delivery">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">🏠</span>
+              <div>
+                <strong class="text-white block text-xs">Cadastrar novo endereço / Entrega</strong>
+                <span class="text-[10px] text-amber-400">⚡ Entrega mais rápida • 45 - 60 min</span>
+              </div>
+            </div>
+            <input type="radio" name="order-mode-radio" id="radio-mode-delivery" checked class="accent-brand-orange w-4 h-4 cursor-pointer" />
+          </label>
+
+          <!-- Opção 2: Retirada no Balcão -->
+          <label onclick="setDeliveryMode('pickup')" class="flex items-center justify-between p-2.5 rounded-xl border border-white/10 hover:border-brand-orange/40 cursor-pointer transition-all bg-white/5" id="card-mode-pickup">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">🛍️</span>
+              <div>
+                <strong class="text-white block text-xs">Buscar o pedido (Retirada no Balcão)</strong>
+                <span class="text-[10px] text-emerald-400">Grátis • Pronto em 20 - 30 min</span>
+              </div>
+            </div>
+            <input type="radio" name="order-mode-radio" id="radio-mode-pickup" class="accent-brand-orange w-4 h-4 cursor-pointer" />
+          </label>
+
+          <!-- Opção 3: Consumir no Local -->
+          <label onclick="setDeliveryMode('dine_in')" class="flex items-center justify-between p-2.5 rounded-xl border border-white/10 hover:border-brand-orange/40 cursor-pointer transition-all bg-white/5" id="card-mode-dinein">
+            <div class="flex items-center gap-2.5">
+              <span class="text-base">🍽️</span>
+              <div>
+                <strong class="text-white block text-xs">Consumir no local (Mesa / Salão)</strong>
+                <span class="text-[10px] text-blue-400">Grátis • Servido na mesa</span>
+              </div>
+            </div>
+            <input type="radio" name="order-mode-radio" id="radio-mode-dinein" class="accent-brand-orange w-4 h-4 cursor-pointer" />
+          </label>
+
+        </div>
+      </div>
+
+      <!-- 3. MEUS ENDEREÇOS SALVOS (HISTÓRICO NO APARELHO) -->
+      <div id="saved-addresses-wrapper" class="bg-white/5 border border-white/10 rounded-2xl p-3.5 space-y-2 hidden">
+        <div class="flex items-center justify-between text-xs">
+          <label class="font-anton text-stone-300 tracking-wider flex items-center gap-1.5">
+            <span>📍</span>
+            <span>MEUS ENDEREÇOS SALVOS:</span>
+          </label>
+        </div>
+        <div id="saved-addresses-list" class="space-y-1.5 text-xs"></div>
+      </div>
+
+      <!-- 4. CAMPOS DE ENDEREÇO & BAIRRO COM TAXA (DELIVERY) -->
+      <div id="delivery-fields-container" class="bg-white/5 border border-white/10 rounded-2xl p-3.5 space-y-2.5">
+        <label class="block text-[11px] font-anton text-white tracking-wider">ENDEREÇO DE ENTREGA:</label>
+
+        <!-- Seletor de Bairro com Taxa Automática -->
+        <div class="space-y-1">
+          <label class="text-[10px] text-stone-400 font-bold uppercase">Selecione seu Bairro / Região (Pedreiras):</label>
+          <select 
+            id="customer-neighborhood-select" 
+            onchange="handleNeighborhoodChange(this.value)"
+            class="w-full bg-[#1A120D] border border-brand-orange/40 text-amber-400 font-bold rounded-xl px-3 py-2.5 text-[16px] sm:text-xs focus:outline-none focus:border-brand-orange cursor-pointer"
+          >
+            <!-- Injetado dinamicamente -->
+          </select>
+        </div>
+        
+        <!-- CEP e Rua -->
+        <div class="grid grid-cols-3 gap-2">
+          <input 
+            type="text" 
+            id="customer-cep" 
+            oninput="handleCepAutofill(this.value)"
+            placeholder="CEP (Opcional)" 
+            class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+            autocomplete="postal-code"
+          />
+          <input 
+            type="text" 
+            id="customer-street" 
+            placeholder="Rua / Avenida *" 
+            class="col-span-2 w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+            autocomplete="address-line1"
+          />
+        </div>
+
+        <!-- Número da Casa e Complemento -->
+        <div class="grid grid-cols-2 gap-2">
+          <input 
+            type="text" 
+            id="customer-number" 
+            placeholder="Nº da Casa *" 
+            class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+          />
+          <input 
+            type="text" 
+            id="customer-complement" 
+            placeholder="Complemento (Apto, etc.)" 
+            class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+          />
+        </div>
+
+        <!-- Ponto de Referência -->
+        <div>
+          <input 
+            type="text" 
+            id="customer-reference" 
+            placeholder="Ponto de Referência (Próximo a...)" 
+            class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+          />
+        </div>
+      </div>
+
+      <!-- 5. CAMPO DE MESA (CONSUMO NO LOCAL) -->
+      <div id="dinein-fields-container" class="bg-white/5 border border-white/10 rounded-2xl p-3.5 space-y-2 hidden">
+        <label class="block text-[11px] font-anton text-white tracking-wider">CONSUMIR NO LOCAL:</label>
+        <input 
+          type="text" 
+          id="customer-table" 
+          placeholder="Número da sua Mesa (Opcional)" 
+          class="w-full bg-black/40 border border-blue-500/40 rounded-xl px-3.5 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+        />
+      </div>
+
+      <!-- 6. FORMA DE PAGAMENTO -->
       <div class="space-y-1.5 pt-1">
-        <label class="block text-[11px] font-anton text-white tracking-wider">FORMA DE PAGAMENTO:</label>
+        <label class="block text-[11px] font-anton text-white tracking-wider">ESCOLHA A FORMA DE PAGAMENTO:</label>
         <div class="grid grid-cols-3 gap-1.5 text-xs font-semibold">
-          <button type="button" id="pay-pix-btn" onclick="setPaymentMethod('pix')" class="py-2 px-1 rounded-xl bg-emerald-600 text-white font-bold border border-emerald-400/40 transition-all flex flex-col items-center justify-center gap-0.5">
+          <button type="button" id="pay-pix-btn" onclick="setPaymentMethod('pix')" class="py-2.5 px-1 rounded-xl bg-emerald-600 text-white font-bold border border-emerald-400/40 transition-all flex flex-col items-center justify-center gap-0.5">
             <span class="text-sm">💠</span>
             <span class="text-[10px]">PIX</span>
           </button>
-          <button type="button" id="pay-card-btn" onclick="setPaymentMethod('cartao')" class="py-2 px-1 rounded-xl bg-white/5 text-stone-300 hover:text-white border border-white/10 transition-all flex flex-col items-center justify-center gap-0.5">
+          <button type="button" id="pay-card-btn" onclick="setPaymentMethod('cartao')" class="py-2.5 px-1 rounded-xl bg-white/5 text-stone-300 hover:text-white border border-white/10 transition-all flex flex-col items-center justify-center gap-0.5">
             <span class="text-sm">💳</span>
             <span class="text-[10px]">Cartão</span>
           </button>
-          <button type="button" id="pay-cash-btn" onclick="setPaymentMethod('dinheiro')" class="py-2 px-1 rounded-xl bg-white/5 text-stone-300 hover:text-white border border-white/10 transition-all flex flex-col items-center justify-center gap-0.5">
+          <button type="button" id="pay-cash-btn" onclick="setPaymentMethod('dinheiro')" class="py-2.5 px-1 rounded-xl bg-white/5 text-stone-300 hover:text-white border border-white/10 transition-all flex flex-col items-center justify-center gap-0.5">
             <span class="text-sm">💵</span>
             <span class="text-[10px]">Dinheiro</span>
           </button>
@@ -1083,121 +1247,38 @@
           type="text" 
           id="customer-change" 
           placeholder="Precisa de troco para quanto? (Ex: R$ 50,00)" 
-          class="w-full bg-white/5 border border-amber-500/40 rounded-xl px-3.5 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+          class="w-full bg-black/40 border border-amber-500/40 rounded-xl px-3.5 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
         />
       </div>
 
-      <!-- DADOS DO CLIENTE & ENTREGA -->
-      <div class="space-y-2 pt-1 border-t border-white/10">
-        <label class="block text-[11px] font-anton text-white tracking-wider">SEUS DADOS PARA O PEDIDO:</label>
-        
-        <!-- Nome e Telefone -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <input 
-            type="text" 
-            id="customer-name" 
-            placeholder="Seu Nome Completo *" 
-            class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
-            required
-            autocomplete="name"
-          />
-          <input 
-            type="tel" 
-            id="customer-phone" 
-            placeholder="Telefone / WhatsApp *" 
-            class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
-            required
-            autocomplete="tel"
-          />
-        </div>
-
-        <!-- Campos de Endereço (Delivery) -->
-        <div id="delivery-fields-container" class="space-y-2">
-          
-          <!-- CEP e Bairro -->
-          <div class="grid grid-cols-3 gap-2">
-            <input 
-              type="text" 
-              id="customer-cep" 
-              oninput="handleCepAutofill(this.value)"
-              placeholder="CEP (Opcional)" 
-              class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
-              autocomplete="postal-code"
-            />
-            <input 
-              type="text" 
-              id="customer-neighborhood" 
-              placeholder="Bairro *" 
-              class="col-span-2 w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
-              autocomplete="address-level2"
-            />
-          </div>
-
-          <!-- Rua e Número -->
-          <div class="grid grid-cols-3 gap-2">
-            <input 
-              type="text" 
-              id="customer-street" 
-              placeholder="Rua / Avenida *" 
-              class="col-span-2 w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
-              autocomplete="address-line1"
-            />
-            <input 
-              type="text" 
-              id="customer-number" 
-              placeholder="Nº da Casa *" 
-              class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
-            />
-          </div>
-
-          <!-- Referência e Complemento -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <input 
-              type="text" 
-              id="customer-reference" 
-              placeholder="Ponto de Referência *" 
-              class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
-            />
-            <input 
-              type="text" 
-              id="customer-complement" 
-              placeholder="Complemento (Apto, etc.)" 
-              class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
-            />
-          </div>
-
-        </div>
-
-        <!-- Observações do Pedido -->
-        <div>
-          <input 
-            type="text" 
-            id="customer-notes" 
-            placeholder="Observações do pedido (ponto da carne, molho à parte, etc.)" 
-            class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
-          />
-        </div>
-
+      <!-- Observações Gerais -->
+      <div>
+        <input 
+          type="text" 
+          id="customer-notes" 
+          placeholder="Observações do pedido (ponto da carne, talher, etc.)" 
+          class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-[16px] sm:text-xs text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange"
+        />
       </div>
 
-      <!-- Totais -->
-      <div class="space-y-1 text-xs text-stone-400 pt-1">
+      <!-- 7. TOTAIS COM TAXA DE ENTREGA CALCULADA -->
+      <div class="bg-white/5 border border-white/10 rounded-2xl p-3.5 space-y-1.5 text-xs text-stone-400">
         <div class="flex justify-between items-center">
-          <span>Subtotal:</span>
+          <span>Subtotal dos Itens:</span>
           <span id="cart-subtotal-val" class="font-anton text-sm text-white tracking-wide">R$ 0,00</span>
         </div>
         <div class="flex justify-between items-center">
-          <span>Taxa de Entrega:</span>
-          <span id="cart-delivery-fee" class="text-emerald-400 font-medium">A combinar</span>
+          <span id="cart-delivery-label">Taxa de Entrega:</span>
+          <span id="cart-delivery-fee" class="text-emerald-400 font-anton text-xs font-bold">R$ 3,00</span>
         </div>
-        <div class="flex justify-between items-center text-sm font-bold text-white pt-1.5 border-t border-white/10">
-          <span class="font-anton tracking-wide">TOTAL:</span>
+        <div class="flex justify-between items-center text-sm font-bold text-white pt-2 border-t border-white/10">
+          <span class="font-anton tracking-wide">TOTAL DO PEDIDO:</span>
           <span id="cart-total-val" class="text-brand-orange font-anton text-xl tracking-wide">R$ 0,00</span>
         </div>
       </div>
 
-      <!-- Botões Checkout & Voltar a Comprar -->
-      <div class="space-y-2 pt-1">
+      <!-- 8. BOTÕES DE AÇÃO -->
+      <div class="space-y-2 pt-1 pb-4">
         <button 
           id="btn-checkout-whatsapp"
           onclick="initiateCheckout()" 
@@ -1952,21 +2033,249 @@
       renderCart();
     }
 
+    // =========================================================================
+    // BAIRROS E TAXAS DE ENTREGA (PEDREIRAS - MA)
+    // =========================================================================
+    const DEFAULT_NEIGHBORHOODS = [
+      { name: "Engenho (Próximo à loja)", fee: 3.00 },
+      { name: "Centro", fee: 4.00 },
+      { name: "Goiabal", fee: 5.00 },
+      { name: "Mutirão", fee: 5.00 },
+      { name: "Loteamento Passos", fee: 5.00 },
+      { name: "Parque Henrique", fee: 6.00 },
+      { name: "Vila das Flores", fee: 5.00 },
+      { name: "Trizidela do Vale", fee: 7.00 },
+      { name: "Outro Bairro / Região", fee: 5.00 }
+    ];
+
+    let currentDeliveryFee = 3.00;
+    let selectedNeighborhoodName = "Engenho (Próximo à loja)";
+
+    function getStoreNeighborhoods() {
+      try {
+        const saved = localStorage.getItem('SAO_JOSE_NEIGHBORHOODS');
+        if (saved) return JSON.parse(saved);
+      } catch (e) {}
+      return DEFAULT_NEIGHBORHOODS;
+    }
+
+    function initNeighborhoodSelect() {
+      const select = document.getElementById('customer-neighborhood-select');
+      if (!select) return;
+
+      const list = getStoreNeighborhoods();
+      select.innerHTML = list.map(item => `
+        <option value="${item.name}" data-fee="${item.fee}">
+          ${item.name} • Taxa: R$ ${item.fee.toFixed(2).replace('.', ',')}
+        </option>
+      `).join('');
+
+      if (list.length > 0) {
+        selectedNeighborhoodName = list[0].name;
+        currentDeliveryFee = list[0].fee;
+      }
+    }
+
+    function handleNeighborhoodChange(name) {
+      const list = getStoreNeighborhoods();
+      const found = list.find(n => n.name === name);
+      if (found) {
+        selectedNeighborhoodName = found.name;
+        currentDeliveryFee = found.fee;
+      } else {
+        selectedNeighborhoodName = name;
+        currentDeliveryFee = 5.00;
+      }
+      renderCart();
+    }
+
+    // =========================================================================
+    // MODALIDADES DE PEDIDO (DELIVERY / BALCÃO / CONSUMO LOCAL - ANOTA AI)
+    // =========================================================================
     function setDeliveryMode(mode) {
       orderMode = mode;
-      const delBtn = document.getElementById('mode-delivery-btn');
-      const pickBtn = document.getElementById('mode-pickup-btn');
-      const deliveryContainer = document.getElementById('delivery-fields-container');
+      
+      const cardDel = document.getElementById('card-mode-delivery');
+      const cardPick = document.getElementById('card-mode-pickup');
+      const cardDine = document.getElementById('card-mode-dinein');
+      
+      const radioDel = document.getElementById('radio-mode-delivery');
+      const radioPick = document.getElementById('radio-mode-pickup');
+      const radioDine = document.getElementById('radio-mode-dinein');
+
+      const delContainer = document.getElementById('delivery-fields-container');
+      const dineContainer = document.getElementById('dinein-fields-container');
+      const savedWrapper = document.getElementById('saved-addresses-wrapper');
+
+      // Reset card styles
+      [cardDel, cardPick, cardDine].forEach(c => {
+        if (c) c.className = "flex items-center justify-between p-2.5 rounded-xl border border-white/10 hover:border-brand-orange/40 cursor-pointer transition-all bg-white/5";
+      });
 
       if (mode === 'delivery') {
-        delBtn.className = "flex-1 py-2 rounded-xl bg-brand-orange text-white font-bold transition-all";
-        pickBtn.className = "flex-1 py-2 rounded-xl text-stone-400 hover:text-white transition-all";
-        if (deliveryContainer) deliveryContainer.classList.remove('hidden');
-      } else {
-        pickBtn.className = "flex-1 py-2 rounded-xl bg-brand-orange text-white font-bold transition-all";
-        delBtn.className = "flex-1 py-2 rounded-xl text-stone-400 hover:text-white transition-all";
-        if (deliveryContainer) deliveryContainer.classList.add('hidden');
+        if (radioDel) radioDel.checked = true;
+        if (cardDel) cardDel.className = "flex items-center justify-between p-2.5 rounded-xl border border-brand-orange bg-brand-orange/10 cursor-pointer transition-all";
+        if (delContainer) delContainer.classList.remove('hidden');
+        if (dineContainer) dineContainer.classList.add('hidden');
+        if (savedWrapper) checkSavedAddressesVisibility();
+      } else if (mode === 'pickup') {
+        if (radioPick) radioPick.checked = true;
+        if (cardPick) cardPick.className = "flex items-center justify-between p-2.5 rounded-xl border border-emerald-500 bg-emerald-500/10 cursor-pointer transition-all";
+        if (delContainer) delContainer.classList.add('hidden');
+        if (dineContainer) dineContainer.classList.add('hidden');
+        if (savedWrapper) savedWrapper.classList.add('hidden');
+      } else if (mode === 'dine_in') {
+        if (radioDine) radioDine.checked = true;
+        if (cardDine) cardDine.className = "flex items-center justify-between p-2.5 rounded-xl border border-blue-500 bg-blue-500/10 cursor-pointer transition-all";
+        if (delContainer) delContainer.classList.add('hidden');
+        if (dineContainer) dineContainer.classList.remove('hidden');
+        if (savedWrapper) savedWrapper.classList.add('hidden');
       }
+
+      renderCart();
+    }
+
+    // =========================================================================
+    // IDENTIFICAÇÃO E ENDEREÇOS SALVOS (MEMÓRIA NO NAVEGADOR)
+    // =========================================================================
+    let isEditingProfile = false;
+
+    function toggleCustomerEditMode() {
+      const editFields = document.getElementById('customer-edit-fields');
+      const viewBadge = document.getElementById('customer-view-badge');
+      const btn = document.getElementById('btn-toggle-client-edit');
+
+      isEditingProfile = !isEditingProfile;
+      if (isEditingProfile) {
+        if (editFields) editFields.classList.remove('hidden');
+        if (btn) btn.innerText = "Salvar";
+        const nameInp = document.getElementById('customer-name');
+        if (nameInp) nameInp.focus();
+      } else {
+        if (editFields) editFields.classList.add('hidden');
+        if (btn) btn.innerText = "Trocar";
+        saveCustomerProfile();
+      }
+      updateClientDisplay();
+    }
+
+    function updateClientDisplay() {
+      const name = document.getElementById('customer-name')?.value.trim();
+      const phone = document.getElementById('customer-phone')?.value.trim();
+      const nameDisplay = document.getElementById('display-client-name');
+      const phoneDisplay = document.getElementById('display-client-phone');
+
+      if (nameDisplay) nameDisplay.innerText = name || "Cliente (Toque em Trocar)";
+      if (phoneDisplay) phoneDisplay.innerText = phone || "Telefone / WhatsApp não informado";
+    }
+
+    function loadCustomerProfile() {
+      try {
+        const savedProfile = JSON.parse(localStorage.getItem('SAO_JOSE_CUSTOMER_PROFILE') || '{}');
+        if (savedProfile.name) {
+          const nameInp = document.getElementById('customer-name');
+          if (nameInp) nameInp.value = savedProfile.name;
+        }
+        if (savedProfile.phone) {
+          const phoneInp = document.getElementById('customer-phone');
+          if (phoneInp) phoneInp.value = savedProfile.phone;
+        }
+        updateClientDisplay();
+        renderSavedAddresses();
+      } catch (e) {}
+    }
+
+    function saveCustomerProfile() {
+      const name = document.getElementById('customer-name')?.value.trim() || '';
+      const phone = document.getElementById('customer-phone')?.value.trim() || '';
+      if (name || phone) {
+        try {
+          localStorage.setItem('SAO_JOSE_CUSTOMER_PROFILE', JSON.stringify({ name, phone }));
+        } catch (e) {}
+      }
+    }
+
+    function renderSavedAddresses() {
+      const wrapper = document.getElementById('saved-addresses-wrapper');
+      const list = document.getElementById('saved-addresses-list');
+      if (!wrapper || !list) return;
+
+      try {
+        const saved = JSON.parse(localStorage.getItem('SAO_JOSE_SAVED_ADDRESSES') || '[]');
+        if (!saved || saved.length === 0) {
+          wrapper.classList.add('hidden');
+          return;
+        }
+
+        if (orderMode === 'delivery') {
+          wrapper.classList.remove('hidden');
+        }
+
+        list.innerHTML = saved.map((addr, idx) => `
+          <div class="p-2.5 bg-black/40 border border-white/10 hover:border-brand-orange/40 rounded-xl flex items-center justify-between gap-2 transition-colors">
+            <div class="flex-1 cursor-pointer" onclick="selectSavedAddress(${idx})">
+              <strong class="text-white text-xs block">${addr.street}, Nº ${addr.number}</strong>
+              <span class="text-[10px] text-stone-400">Bairro: <span class="text-amber-400 font-semibold">${addr.neighborhood}</span> • Pedreiras</span>
+              ${addr.reference ? `<p class="text-[10px] text-stone-400">Ref: ${addr.reference}</p>` : ''}
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button type="button" onclick="selectSavedAddress(${idx})" class="px-2.5 py-1 rounded-lg bg-brand-orange/20 text-brand-orange hover:bg-brand-orange hover:text-white font-bold text-[10px] transition-all">
+                Usar
+              </button>
+              <button type="button" onclick="deleteSavedAddress(${idx})" class="px-2 py-1 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white font-bold text-[10px] transition-all" title="Excluir endereço">
+                ✕
+              </button>
+            </div>
+          </div>
+        `).join('');
+      } catch (e) {}
+    }
+
+    function checkSavedAddressesVisibility() {
+      const wrapper = document.getElementById('saved-addresses-wrapper');
+      if (!wrapper) return;
+      try {
+        const saved = JSON.parse(localStorage.getItem('SAO_JOSE_SAVED_ADDRESSES') || '[]');
+        if (saved && saved.length > 0 && orderMode === 'delivery') {
+          wrapper.classList.remove('hidden');
+        } else {
+          wrapper.classList.add('hidden');
+        }
+      } catch (e) {}
+    }
+
+    function selectSavedAddress(idx) {
+      try {
+        const saved = JSON.parse(localStorage.getItem('SAO_JOSE_SAVED_ADDRESSES') || '[]');
+        const addr = saved[idx];
+        if (!addr) return;
+
+        if (addr.street) document.getElementById('customer-street').value = addr.street;
+        if (addr.number) document.getElementById('customer-number').value = addr.number;
+        if (addr.complement) document.getElementById('customer-complement').value = addr.complement;
+        if (addr.reference) document.getElementById('customer-reference').value = addr.reference;
+        if (addr.cep) document.getElementById('customer-cep').value = addr.cep;
+
+        if (addr.neighborhood) {
+          const select = document.getElementById('customer-neighborhood-select');
+          if (select) {
+            select.value = addr.neighborhood;
+            handleNeighborhoodChange(addr.neighborhood);
+          }
+        }
+
+        showToast("Endereço selecionado com sucesso! 🏠");
+      } catch (e) {}
+    }
+
+    function deleteSavedAddress(idx) {
+      try {
+        const saved = JSON.parse(localStorage.getItem('SAO_JOSE_SAVED_ADDRESSES') || '[]');
+        saved.splice(idx, 1);
+        localStorage.setItem('SAO_JOSE_SAVED_ADDRESSES', JSON.stringify(saved));
+        renderSavedAddresses();
+        showToast("Endereço excluído.");
+      } catch (e) {}
     }
 
     function renderCart() {
@@ -1975,6 +2284,8 @@
       const floatingBadge = document.getElementById('floating-cart-count');
       const subtotalEl = document.getElementById('cart-subtotal-val');
       const totalEl = document.getElementById('cart-total-val');
+      const feeEl = document.getElementById('cart-delivery-fee');
+      const feeLabelEl = document.getElementById('cart-delivery-label');
       const checkoutBtn = document.getElementById('btn-checkout-whatsapp');
 
       const totalCount = cart.reduce((acc, item) => acc + item.quantity, 0);
@@ -1982,6 +2293,26 @@
 
       navBadge.innerText = totalCount;
       floatingBadge.innerText = `${totalCount} item${totalCount !== 1 ? 's' : ''}`;
+
+      let deliveryFeeAmount = 0;
+      if (orderMode === 'delivery') {
+        deliveryFeeAmount = currentDeliveryFee;
+        if (feeEl) feeEl.innerText = `R$ ${deliveryFeeAmount.toFixed(2).replace('.', ',')}`;
+        if (feeEl) feeEl.className = "text-amber-400 font-anton text-xs font-bold";
+        if (feeLabelEl) feeLabelEl.innerText = `Taxa de Entrega (${selectedNeighborhoodName}):`;
+      } else if (orderMode === 'pickup') {
+        deliveryFeeAmount = 0;
+        if (feeEl) feeEl.innerText = "Grátis (Retirada no Balcão)";
+        if (feeEl) feeEl.className = "text-emerald-400 font-poppins text-xs font-bold";
+        if (feeLabelEl) feeLabelEl.innerText = "Taxa de Entrega:";
+      } else if (orderMode === 'dine_in') {
+        deliveryFeeAmount = 0;
+        if (feeEl) feeEl.innerText = "Grátis (Consumo no Local)";
+        if (feeEl) feeEl.className = "text-blue-400 font-poppins text-xs font-bold";
+        if (feeLabelEl) feeLabelEl.innerText = "Taxa de Serviço:";
+      }
+
+      const finalTotal = subtotal + deliveryFeeAmount;
 
       if (cart.length === 0) {
         container.innerHTML = `
@@ -1991,13 +2322,13 @@
             <p class="text-xs mt-1 text-stone-400">Adicione hambúrgueres e combos do cardápio!</p>
           </div>
         `;
-        subtotalEl.innerText = "R$ 0,00";
-        totalEl.innerText = "R$ 0,00";
-        checkoutBtn.disabled = true;
+        if (subtotalEl) subtotalEl.innerText = "R$ 0,00";
+        if (totalEl) totalEl.innerText = "R$ 0,00";
+        if (checkoutBtn) checkoutBtn.disabled = true;
         return;
       }
 
-      checkoutBtn.disabled = false;
+      if (checkoutBtn) checkoutBtn.disabled = false;
 
       container.innerHTML = cart.map((item, idx) => `
         <div class="bg-white/5 p-3.5 rounded-2xl border border-white/10 flex items-start justify-between gap-3 shadow-sm font-poppins">
@@ -2015,9 +2346,11 @@
         </div>
       `).join('');
 
-      const formattedTotal = subtotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-      subtotalEl.innerText = formattedTotal;
-      totalEl.innerText = formattedTotal;
+      const formattedSubtotal = subtotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      const formattedTotal = finalTotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      
+      if (subtotalEl) subtotalEl.innerText = formattedSubtotal;
+      if (totalEl) totalEl.innerText = formattedTotal;
 
       const dockBadge = document.getElementById('mobile-dock-badge');
       const dockTotal = document.getElementById('mobile-dock-total');
@@ -2141,10 +2474,9 @@
       const phoneInput = document.getElementById('customer-phone');
       const streetInput = document.getElementById('customer-street');
       const numberInput = document.getElementById('customer-number');
-      const neighborhoodInput = document.getElementById('customer-neighborhood');
 
       // Limpar estilos de erro
-      [nameInput, phoneInput, streetInput, numberInput, neighborhoodInput].forEach(inp => {
+      [nameInput, phoneInput, streetInput, numberInput].forEach(inp => {
         if (inp) inp.classList.remove('border-red-500', 'bg-red-500/10');
       });
 
@@ -2156,6 +2488,7 @@
           nameInput.classList.add('border-red-500', 'bg-red-500/10');
           nameInput.focus();
         }
+        if (isEditingProfile === false) toggleCustomerEditMode();
         showToast('⚠️ Por favor, digite seu Nome Completo!');
         return;
       }
@@ -2164,16 +2497,20 @@
           phoneInput.classList.add('border-red-500', 'bg-red-500/10');
           phoneInput.focus();
         }
+        if (isEditingProfile === false) toggleCustomerEditMode();
         showToast('⚠️ Por favor, digite seu Telefone / WhatsApp!');
         return;
       }
 
+      saveCustomerProfile();
+
       const street = streetInput ? streetInput.value.trim() : '';
       const number = numberInput ? numberInput.value.trim() : '';
-      const neighborhood = neighborhoodInput ? neighborhoodInput.value.trim() : '';
+      const neighborhood = selectedNeighborhoodName;
       const cep = document.getElementById('customer-cep') ? document.getElementById('customer-cep').value.trim() : '';
       const reference = document.getElementById('customer-reference') ? document.getElementById('customer-reference').value.trim() : '';
       const complement = document.getElementById('customer-complement') ? document.getElementById('customer-complement').value.trim() : '';
+      const tableNumber = document.getElementById('customer-table') ? document.getElementById('customer-table').value.trim() : '';
       const notes = document.getElementById('customer-notes') ? document.getElementById('customer-notes').value.trim() : '';
       const changeVal = document.getElementById('customer-change') ? document.getElementById('customer-change').value.trim() : '';
 
@@ -2194,34 +2531,53 @@
           showToast('⚠️ Informe o Número da sua residência!');
           return;
         }
+
+        // Salvar endereço no histórico de endereços
+        try {
+          const saved = JSON.parse(localStorage.getItem('SAO_JOSE_SAVED_ADDRESSES') || '[]');
+          const exists = saved.some(s => s.street.toLowerCase() === street.toLowerCase() && s.number === number && s.neighborhood === neighborhood);
+          if (!exists) {
+            saved.unshift({ street, number, neighborhood, complement, reference, cep });
+            if (saved.length > 5) saved.pop();
+            localStorage.setItem('SAO_JOSE_SAVED_ADDRESSES', JSON.stringify(saved));
+          }
+        } catch (e) {}
       }
 
       const subtotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+      const deliveryFee = orderMode === 'delivery' ? currentDeliveryFee : 0;
+      const grandTotal = subtotal + deliveryFee;
 
       let payLabel = "💠 PIX Instantâneo";
-      if (selectedPayment === 'cartao') payLabel = "💳 Cartão de Crédito/Débito (Máquina na entrega)";
+      if (selectedPayment === 'cartao') payLabel = "💳 Cartão (Máquina com entregador)";
       if (selectedPayment === 'dinheiro') {
         payLabel = `💵 Dinheiro em Espécie${changeVal ? ` (Troco para: ${changeVal})` : ' (Sem troco)'}`;
       }
 
+      let modeLabel = "🛵 Entrega Delivery";
+      if (orderMode === 'pickup') modeLabel = "🏪 Retirada no Balcão";
+      if (orderMode === 'dine_in') modeLabel = `🍽️ Consumir no Local${tableNumber ? ` (Mesa: ${tableNumber})` : ''}`;
+
       let msg = `*🍔 NOVO PEDIDO - SÃO JOSÉ BURGUER*\n`;
       msg += `------------------------------------------\n\n`;
-      msg += `*👤 DADOS DO CLIENTE:*\n`;
-      msg += `• *Nome:* ${name}\n`;
-      msg += `• *Telefone:* ${phone}\n\n`;
+      msg += `*👤 CLIENTE:* ${name}\n`;
+      msg += `*📱 WHATSAPP:* ${phone}\n\n`;
+      msg += `*📦 FORMA DE RECEBIMENTO:*\n• ${modeLabel}\n\n`;
 
       if (orderMode === 'delivery') {
         msg += `*📍 ENDEREÇO DE ENTREGA:*\n`;
         msg += `• *Rua:* ${street}, Nº ${number}\n`;
-        if (neighborhood) msg += `• *Bairro:* ${neighborhood}\n`;
+        msg += `• *Bairro:* ${neighborhood} (Pedreiras)\n`;
         if (cep) msg += `• *CEP:* ${cep}\n`;
-        if (reference) msg += `• *Ponto de Referência:* ${reference}\n`;
+        if (reference) msg += `• *Referência:* ${reference}\n`;
         if (complement) msg += `• *Complemento:* ${complement}\n\n`;
-      } else {
-        msg += `*🏪 MODALIDADE:* Retirada no Balcão (Avenida Mariano Lisboa, 1370 - Engenho)\n\n`;
+      } else if (orderMode === 'pickup') {
+        msg += `*📍 RETIRADA:* Avenida Mariano Lisboa, 1370 - Engenho, Pedreiras\n\n`;
+      } else if (orderMode === 'dine_in') {
+        msg += `*📍 SALÃO:* Consumo no Local${tableNumber ? ` • *Mesa:* ${tableNumber}` : ''}\n\n`;
       }
 
-      msg += `*💳 FORMA DE PAGAMENTO:*\n• ${payLabel}\n\n`;
+      msg += `*💳 PAGAMENTO:* ${payLabel}\n\n`;
       msg += `*🍔 ITENS DO PEDIDO:*\n`;
 
       cart.forEach((item, index) => {
@@ -2232,28 +2588,44 @@
       });
 
       if (notes) {
-        msg += `\n*📝 Observações Gerais:* ${notes}\n`;
+        msg += `\n*📝 Observações:* ${notes}\n`;
       }
 
       msg += `\n------------------------------------------\n`;
       msg += `*💰 SUBTOTAL:* R$ ${ subtotal.toFixed(2).replace('.', ',') }\n`;
-      msg += `*🛵 TAXA DE ENTREGA:* ${orderMode === 'delivery' ? 'A combinar' : 'Grátis (Retirada)'}\n`;
-      msg += `*🔥 TOTAL:* R$ ${ subtotal.toFixed(2).replace('.', ',') }\n`;
+      if (orderMode === 'delivery') {
+        msg += `*🛵 TAXA DE ENTREGA (${neighborhood}):* R$ ${ deliveryFee.toFixed(2).replace('.', ',') }\n`;
+      } else {
+        msg += `*🛵 TAXA DE ENTREGA:* Grátis\n`;
+      }
+      msg += `*🔥 TOTAL GERAL:* R$ ${ grandTotal.toFixed(2).replace('.', ',') }\n`;
       msg += `------------------------------------------\n\n`;
       msg += `Por favor, confirmem o pedido e o tempo estimado!`;
 
       // Salvar pedido no localStorage para o Painel do Admin
       try {
+        let orderAddress = "Retirada no Balcão";
+        if (orderMode === 'delivery') {
+          orderAddress = `${street}, Nº ${number} - ${neighborhood}`;
+        } else if (orderMode === 'dine_in') {
+          orderAddress = `Consumo no Local ${tableNumber ? `(Mesa ${tableNumber})` : ''}`;
+        }
+
         const orderObj = {
           id: "PED-" + (Math.floor(Math.random() * 9000) + 1000),
           date: new Date().toISOString(),
           customer: { name: name, phone: phone },
-          address: orderMode === 'delivery' ? `${street}, Nº ${number}${neighborhood ? ` - ${neighborhood}` : ''}` : 'Retirada no Balcão',
+          address: orderAddress,
           mode: orderMode,
+          deliveryFee: deliveryFee,
+          neighborhood: neighborhood,
+          table: tableNumber,
           payment: selectedPayment.toUpperCase(),
           items: cart.map(c => ({ title: c.title, qty: c.quantity, price: c.price })),
-          total: subtotal,
-          status: 'pending'
+          subtotal: subtotal,
+          total: grandTotal,
+          status: 'pending',
+          isPaid: false
         };
 
         const existingOrders = JSON.parse(localStorage.getItem('SAO_JOSE_ORDERS') || '[]');
@@ -2291,7 +2663,6 @@
 
       showToast("Pedido gerado com sucesso! Abrindo WhatsApp... 🚀");
 
-      // Redirecionamento direto e seguro dentro do evento de clique
       const win = window.open(whatsappUrl, '_blank');
       if (!win || win.closed || typeof win.closed === 'undefined') {
         window.location.href = whatsappUrl;
@@ -2393,7 +2764,9 @@
       });
     }
 
-    // Inicialização do status em tempo real
+    // Inicialização do status em tempo real, bairros e perfil do cliente
+    initNeighborhoodSelect();
+    loadCustomerProfile();
     updateStoreLiveStatus();
     setInterval(updateStoreLiveStatus, 15000); // Atualiza a cada 15 segundos
   </script>
