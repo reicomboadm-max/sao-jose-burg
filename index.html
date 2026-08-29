@@ -418,9 +418,12 @@
     </section>
 
     <!-- ========================================================================= -->
-    <!-- 3. HERO FEATURED BANNER (OFERTA DO DIA / DESTAQUE PROMOÇÃO) -->
+    <!-- CONTAINER DE DESTAQUES & OFERTAS (RECOLHE AUTOMATICAMENTE EM OUTRAS CATEGORIAS) -->
     <!-- ========================================================================= -->
-    <section onclick="openProductById('6a8f2939efa864ebad3960cf')" class="star-border-container star-border-dark electric-card cursor-pointer group rounded-3xl overflow-hidden shadow-2xl">
+    <div id="hero-featured-banners-section" class="space-y-8 transition-all duration-300">
+
+      <!-- 3. HERO FEATURED BANNER (OFERTA DO DIA / DESTAQUE PROMOÇÃO) -->
+      <section onclick="openProductById('6a8f2939efa864ebad3960cf')" class="star-border-container star-border-dark electric-card cursor-pointer group rounded-3xl overflow-hidden shadow-2xl">
       <div class="border-gradient-bottom"></div>
       <div class="border-gradient-top"></div>
 
@@ -591,11 +594,12 @@
 
       </div>
     </section>
+    </div>
 
     <!-- ========================================================================= -->
     <!-- 5. CATÁLOGO PRINCIPAL DE PRODUTOS (GRID RESPONSIVO) -->
     <!-- ========================================================================= -->
-    <section class="space-y-6">
+    <section id="main-products-section" class="space-y-6 scroll-mt-24">
       <div class="flex items-center justify-between">
         <div>
           <h3 id="current-section-title" class="text-2xl sm:text-3xl font-anton text-white tracking-wider">
@@ -1723,10 +1727,30 @@
       activeCategoryIndex = idx;
       renderCategoryPills();
       const cat = STORE_DATA.categories[idx];
+      const bannerSection = document.getElementById('hero-featured-banners-section');
+      const productsSection = document.getElementById('main-products-section');
+
       if (cat) {
         document.getElementById('current-section-title').innerText = cat.name.toUpperCase();
         document.getElementById('products-count-badge').innerText = `${cat.items.length} opções`;
         renderProducts(cat);
+
+        // Se o usuário selecionou qualquer outra categoria (Bebidas, Combos, Batatas, Molhos, etc.),
+        // recolhe a tela de oferta/mais pedidos para exibir imediatamente todos os produtos da categoria
+        if (bannerSection) {
+          if (idx === 0) {
+            bannerSection.classList.remove('hidden');
+          } else {
+            bannerSection.classList.add('hidden');
+          }
+        }
+
+        // Rola suavemente para posicionar o cardápio logo abaixo da barra de categorias
+        if (productsSection) {
+          const stickyOffset = 135; // Altura do Header + Barra de Categorias persistente
+          const targetY = productsSection.getBoundingClientRect().top + window.pageYOffset - stickyOffset;
+          window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+        }
       }
 
       const activeEl = document.querySelectorAll('.category-pill')[idx];
@@ -1739,7 +1763,6 @@
       const idx = STORE_DATA.categories.findIndex(c => c.name.toLowerCase().includes(name.toLowerCase()));
       if (idx !== -1) {
         selectCategoryByIndex(idx);
-        document.getElementById('current-section-title').scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }
 
@@ -1774,6 +1797,9 @@
           }
         });
 
+        const bannerSection = document.getElementById('hero-featured-banners-section');
+        if (bannerSection) bannerSection.classList.add('hidden');
+
         if (sectionTitle) sectionTitle.innerText = `RESULTADOS: "${query.toUpperCase()}"`;
         if (countBadge) countBadge.innerText = `${allItems.length} encontrados`;
 
@@ -1791,6 +1817,9 @@
       } else {
         if (clearBtnDesk) clearBtnDesk.classList.add('hidden');
         if (clearBtnMob) clearBtnMob.classList.add('hidden');
+
+        const bannerSection = document.getElementById('hero-featured-banners-section');
+        if (bannerSection && activeCategoryIndex === 0) bannerSection.classList.remove('hidden');
 
         const cat = STORE_DATA.categories[activeCategoryIndex];
         if (sectionTitle && cat) sectionTitle.innerText = cat.name.toUpperCase();
