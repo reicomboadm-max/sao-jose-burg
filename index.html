@@ -2050,18 +2050,22 @@
     // CIDADES E TAXAS DE ENTREGA (PEDREIRAS / TRIZIDELA DO VALE - MA)
     // =========================================================================
     const DEFAULT_NEIGHBORHOODS = [
-      { name: "Pedreiras", fee: 5.00 },
-      { name: "Trizidela do Vale", fee: 7.00 },
-      { name: "Outro Local / Região", fee: 5.00 }
+      { name: "Pedreiras", fee: 5.00, cityKey: "pedreiras" },
+      { name: "Trizidela do Vale", fee: 7.00, cityKey: "trizidela" }
     ];
 
     let currentDeliveryFee = 5.00;
     let selectedNeighborhoodName = "Pedreiras";
+    let cachedMapData = null;
 
     function getStoreNeighborhoods() {
       try {
         const saved = localStorage.getItem('SAO_JOSE_NEIGHBORHOODS');
-        if (saved) return JSON.parse(saved);
+        if (saved) {
+          const list = JSON.parse(saved);
+          const filtered = list.filter(item => !item.name.toLowerCase().includes('outro'));
+          if (filtered.length > 0) return filtered;
+        }
       } catch (e) {}
       return DEFAULT_NEIGHBORHOODS;
     }
@@ -2073,7 +2077,7 @@
       const list = getStoreNeighborhoods();
       select.innerHTML = list.map(item => `
         <option value="${item.name}" data-fee="${item.fee}">
-          ${item.name} • Taxa: R$ ${item.fee.toFixed(2).replace('.', ',')}
+          📍 ${item.name} • Taxa: R$ ${item.fee.toFixed(2).replace('.', ',')}
         </option>
       `).join('');
 
@@ -2081,6 +2085,8 @@
         selectedNeighborhoodName = list[0].name;
         currentDeliveryFee = list[0].fee;
       }
+
+      updateStreetAutocompleteForCity(selectedNeighborhoodName);
     }
 
     function handleNeighborhoodChange(name) {
@@ -2091,22 +2097,51 @@
         currentDeliveryFee = found.fee;
       } else {
         selectedNeighborhoodName = name;
-        currentDeliveryFee = 5.00;
+        currentDeliveryFee = (name === "Trizidela do Vale") ? 7.00 : 5.00;
       }
+
+      updateStreetAutocompleteForCity(selectedNeighborhoodName);
+
+      const bairroInput = document.getElementById('customer-bairro-text');
+      if (bairroInput) {
+        if (selectedNeighborhoodName === "Trizidela do Vale") {
+          bairroInput.placeholder = "Seu Bairro em Trizidela (Ex: Aeroporto, Santo Antônio, etc.) *";
+        } else {
+          bairroInput.placeholder = "Seu Bairro em Pedreiras (Ex: Engenho, Centro, Goiabal, etc.) *";
+        }
+      }
+
       renderCart();
     }
 
-    function initStreetAutocomplete() {
+    function updateStreetAutocompleteForCity(cityName) {
       const datalist = document.getElementById('pedreiras-streets-datalist');
       if (!datalist) return;
-      fetch('assets/pedreiras_trizidela_map_data.json')
-        .then(res => res.json())
-        .then(data => {
-          if (data && data.ruas_principais) {
-            datalist.innerHTML = data.ruas_principais.map(rua => `<option value="${rua}"></option>`).join('');
-          }
-        })
-        .catch(() => {});
+
+      const populate = (data) => {
+        if (!data || !data.cidades) return;
+        const key = (cityName && cityName.toLowerCase().includes('trizidela')) ? 'trizidela' : 'pedreiras';
+        const cityObj = data.cidades[key];
+        if (cityObj && cityObj.ruas) {
+          datalist.innerHTML = cityObj.ruas.map(rua => `<option value="${rua}"></option>`).join('');
+        }
+      };
+
+      if (cachedMapData) {
+        populate(cachedMapData);
+      } else {
+        fetch('assets/pedreiras_trizidela_map_data.json')
+          .then(res => res.json())
+          .then(data => {
+            cachedMapData = data;
+            populate(data);
+          })
+          .catch(() => {});
+      }
+    }
+
+    function initStreetAutocomplete() {
+      updateStreetAutocompleteForCity(selectedNeighborhoodName);
     }
 
     // =========================================================================

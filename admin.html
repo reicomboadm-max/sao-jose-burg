@@ -570,22 +570,32 @@
           <!-- Card de Backup, Taxas de Entrega & Senha -->
           <div class="space-y-6">
             
-            <!-- Gestão de Bairros & Taxas de Entrega -->
+            <!-- Gestão de Cidades & Taxas de Entrega Separadas -->
             <div class="bg-[#120D0A] border border-white/10 rounded-3xl p-6 shadow-card-dark space-y-4">
               <div class="flex items-center justify-between">
                 <h3 class="font-anton text-lg text-white tracking-wide flex items-center gap-2">
                   <span>🛵</span>
-                  <span>TAXAS DE ENTREGA POR BAIRRO</span>
+                  <span>TAXAS DE ENTREGA POR CIDADE</span>
                 </h3>
               </div>
-              <p class="text-xs text-stone-400">Configure os valores cobrados para entrega em cada bairro de Pedreiras - MA.</p>
+              <p class="text-xs text-stone-400">Configure as taxas de entrega separadas para Pedreiras (65725-000) e Trizidela do Vale (65727-000).</p>
 
-              <!-- Formulário Adicionar Bairro -->
+              <!-- Abas de Cidades -->
+              <div class="flex items-center gap-2 p-1 bg-white/5 border border-white/10 rounded-2xl text-xs font-semibold">
+                <button type="button" id="tab-city-pedreiras" onclick="switchAdminCityTab('pedreiras')" class="flex-1 py-2 rounded-xl bg-brand-orange text-white font-bold transition-all flex items-center justify-center gap-1.5">
+                  <span>📍 Pedreiras</span>
+                </button>
+                <button type="button" id="tab-city-trizidela" onclick="switchAdminCityTab('trizidela')" class="flex-1 py-2 rounded-xl text-stone-400 hover:text-white transition-all flex items-center justify-center gap-1.5">
+                  <span>📍 Trizidela do Vale</span>
+                </button>
+              </div>
+
+              <!-- Formulário Adicionar Bairro/Região para a Cidade Selecionada -->
               <form onsubmit="addNeighborhoodAdmin(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
                 <input 
                   type="text" 
                   id="new-neigh-name" 
-                  placeholder="Nome do Bairro (Ex: Goiabal)" 
+                  placeholder="Nome do Bairro (Ex: Engenho, Aeroporto)" 
                   class="sm:col-span-2 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange" 
                   required 
                 />
@@ -598,13 +608,13 @@
                     class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white placeholder-stone-400 focus:outline-none focus:border-brand-orange font-bold text-amber-400" 
                     required 
                   />
-                  <button type="submit" class="px-3 py-2 bg-brand-orange hover:bg-orange-600 text-white font-bold rounded-xl active:scale-95 transition-all text-xs">
+                  <button type="submit" class="px-3 py-2 bg-brand-orange hover:bg-orange-600 text-white font-bold rounded-xl active:scale-95 transition-all text-xs" title="Adicionar">
                     +
                   </button>
                 </div>
               </form>
 
-              <!-- Lista de Bairros -->
+              <!-- Lista de Bairros da Cidade Ativa -->
               <div class="max-h-60 overflow-y-auto space-y-1.5 text-xs no-scrollbar pt-1" id="admin-neighborhoods-list"></div>
             </div>
 
@@ -1687,31 +1697,76 @@
     }
 
     // =========================================================================
-    // GESTÃO DE CIDADES / BAIRROS E TAXAS DE ENTREGA (PEDREIRAS / TRIZIDELA DO VALE)
+    // GESTÃO DE CIDADES & TAXAS DE ENTREGA SEPARADAS (PEDREIRAS / TRIZIDELA DO VALE)
     // =========================================================================
-    const DEFAULT_ADMIN_NEIGHBORHOODS = [
-      { name: "Pedreiras", fee: 5.00 },
-      { name: "Trizidela do Vale", fee: 7.00 },
-      { name: "Outro Local / Região", fee: 5.00 }
-    ];
+    let selectedAdminCityTab = 'pedreiras';
 
-    function getAdminNeighborhoods() {
+    const DEFAULT_CITY_CONFIGS = {
+      pedreiras: {
+        nome: "Pedreiras",
+        taxaPadrao: 5.00,
+        bairros: [
+          { name: "Pedreiras (Taxa Geral)", fee: 5.00 },
+          { name: "Engenho (Loja)", fee: 3.00 },
+          { name: "Centro", fee: 4.00 },
+          { name: "Goiabal", fee: 5.00 },
+          { name: "Mutirão", fee: 5.00 },
+          { name: "Loteamento Passos", fee: 5.00 },
+          { name: "Parque Henrique", fee: 6.00 },
+          { name: "Vila das Flores", fee: 5.00 }
+        ]
+      },
+      trizidela: {
+        nome: "Trizidela do Vale",
+        taxaPadrao: 7.00,
+        bairros: [
+          { name: "Trizidela do Vale (Taxa Geral)", fee: 7.00 },
+          { name: "Centro (Trizidela)", fee: 7.00 },
+          { name: "Aeroporto", fee: 7.00 },
+          { name: "Santo Antônio", fee: 7.00 },
+          { name: "Bela Vista do Mearim", fee: 7.00 },
+          { name: "Morro do Chupé", fee: 7.00 }
+        ]
+      }
+    };
+
+    function getAdminCityData() {
       try {
-        const saved = localStorage.getItem('SAO_JOSE_NEIGHBORHOODS');
+        const saved = localStorage.getItem('SAO_JOSE_CITY_RATES');
         if (saved) return JSON.parse(saved);
       } catch (e) {}
-      return DEFAULT_ADMIN_NEIGHBORHOODS;
+      return DEFAULT_CITY_CONFIGS;
+    }
+
+    function switchAdminCityTab(cityKey) {
+      selectedAdminCityTab = cityKey;
+      const tabPed = document.getElementById('tab-city-pedreiras');
+      const tabTriz = document.getElementById('tab-city-trizidela');
+
+      if (cityKey === 'pedreiras') {
+        if (tabPed) tabPed.className = "flex-1 py-2 rounded-xl bg-brand-orange text-white font-bold transition-all flex items-center justify-center gap-1.5";
+        if (tabTriz) tabTriz.className = "flex-1 py-2 rounded-xl text-stone-400 hover:text-white transition-all flex items-center justify-center gap-1.5";
+      } else {
+        if (tabTriz) tabTriz.className = "flex-1 py-2 rounded-xl bg-brand-orange text-white font-bold transition-all flex items-center justify-center gap-1.5";
+        if (tabPed) tabPed.className = "flex-1 py-2 rounded-xl text-stone-400 hover:text-white transition-all flex items-center justify-center gap-1.5";
+      }
+
+      renderNeighborhoodsAdmin();
     }
 
     function renderNeighborhoodsAdmin() {
       const container = document.getElementById('admin-neighborhoods-list');
       if (!container) return;
 
-      const list = getAdminNeighborhoods();
-      container.innerHTML = list.map((n, idx) => `
+      const data = getAdminCityData();
+      const currentCity = data[selectedAdminCityTab] || data.pedreiras;
+      const list = currentCity.bairros || [];
+
+      container.innerHTML = list.map((item, idx) => `
         <div class="flex items-center justify-between p-2.5 bg-black/40 border border-white/10 rounded-xl">
           <div class="flex-1 pr-2">
-            <strong class="text-white text-xs block">${n.name}</strong>
+            <strong class="text-white text-xs block">${item.name}</strong>
+            <span class="text-[10px] text-stone-400">${currentCity.nome}</span>
           </div>
           <div class="flex items-center gap-2">
             <div class="flex items-center bg-white/5 px-2 py-1 rounded-lg border border-white/10">
@@ -1719,14 +1774,16 @@
               <input 
                 type="number" 
                 step="0.50" 
-                value="${n.fee.toFixed(2)}" 
+                value="${item.fee.toFixed(2)}" 
                 onchange="saveNeighborhoodFeeAdmin(${idx}, this.value)"
                 class="w-14 bg-transparent text-amber-400 font-bold text-xs focus:outline-none text-right"
               />
             </div>
-            <button onclick="deleteNeighborhoodAdmin(${idx})" class="p-1 text-red-400 hover:text-red-300 font-bold text-xs" title="Excluir bairro">
-              ✕
-            </button>
+            ${idx > 0 ? `
+              <button onclick="deleteNeighborhoodAdmin(${idx})" class="p-1 text-red-400 hover:text-red-300 font-bold text-xs" title="Excluir taxa">
+                ✕
+              </button>
+            ` : ''}
           </div>
         </div>
       `).join('');
@@ -1739,35 +1796,55 @@
 
       if (!name) return;
 
-      const list = getAdminNeighborhoods();
-      list.push({ name, fee });
-      localStorage.setItem('SAO_JOSE_NEIGHBORHOODS', JSON.stringify(list));
+      const data = getAdminCityData();
+      if (!data[selectedAdminCityTab].bairros) data[selectedAdminCityTab].bairros = [];
+      data[selectedAdminCityTab].bairros.push({ name, fee });
+
+      localStorage.setItem('SAO_JOSE_CITY_RATES', JSON.stringify(data));
+      syncCityRatesToLegacy();
 
       document.getElementById('new-neigh-name').value = '';
       document.getElementById('new-neigh-fee').value = '';
 
       renderNeighborhoodsAdmin();
-      showAdminToast(`Bairro "${name}" adicionado com taxa de R$ ${fee.toFixed(2)}! 🛵`);
+      showAdminToast(`Local "${name}" adicionado em ${data[selectedAdminCityTab].nome} com taxa de R$ ${fee.toFixed(2)}! 🛵`);
     }
 
     function saveNeighborhoodFeeAdmin(idx, val) {
-      const list = getAdminNeighborhoods();
+      const data = getAdminCityData();
       const fee = parseFloat(val);
-      if (!isNaN(fee) && list[idx]) {
-        list[idx].fee = fee;
-        localStorage.setItem('SAO_JOSE_NEIGHBORHOODS', JSON.stringify(list));
-        showAdminToast(`Taxa do bairro "${list[idx].name}" atualizada para R$ ${fee.toFixed(2)}! ✅`);
+      const currentCity = data[selectedAdminCityTab];
+
+      if (!isNaN(fee) && currentCity.bairros && currentCity.bairros[idx]) {
+        currentCity.bairros[idx].fee = fee;
+        if (idx === 0) currentCity.taxaPadrao = fee;
+
+        localStorage.setItem('SAO_JOSE_CITY_RATES', JSON.stringify(data));
+        syncCityRatesToLegacy();
+        showAdminToast(`Taxa de "${currentCity.bairros[idx].name}" atualizada para R$ ${fee.toFixed(2)}! ✅`);
       }
     }
 
     function deleteNeighborhoodAdmin(idx) {
-      const list = getAdminNeighborhoods();
-      if (list[idx] && confirm(`Excluir o bairro "${list[idx].name}"?`)) {
-        list.splice(idx, 1);
-        localStorage.setItem('SAO_JOSE_NEIGHBORHOODS', JSON.stringify(list));
+      const data = getAdminCityData();
+      const currentCity = data[selectedAdminCityTab];
+
+      if (currentCity.bairros && currentCity.bairros[idx] && confirm(`Excluir o bairro "${currentCity.bairros[idx].name}" de ${currentCity.nome}?`)) {
+        currentCity.bairros.splice(idx, 1);
+        localStorage.setItem('SAO_JOSE_CITY_RATES', JSON.stringify(data));
+        syncCityRatesToLegacy();
         renderNeighborhoodsAdmin();
         showAdminToast("Bairro removido com sucesso!");
       }
+    }
+
+    function syncCityRatesToLegacy() {
+      const data = getAdminCityData();
+      const legacyList = [
+        { name: "Pedreiras", fee: data.pedreiras.taxaPadrao || 5.00 },
+        { name: "Trizidela do Vale", fee: data.trizidela.taxaPadrao || 7.00 }
+      ];
+      localStorage.setItem('SAO_JOSE_NEIGHBORHOODS', JSON.stringify(legacyList));
     }
 
     function saveStoreSettings(e) {
